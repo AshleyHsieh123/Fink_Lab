@@ -8,6 +8,7 @@ from google.colab import files
 from google.colab import drive
 import gdown
 import math
+from IPython.display import display
 
 file_id = '1okgLzOmMDBQbKDWUXoqN4rXYW0vP9NSA'
 filename = gdown.download(f"https://drive.google.com/uc?id={file_id}", "downloaded_file.xlsx", quiet=False)
@@ -305,7 +306,7 @@ HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1[0][4
 
 fig.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
 plt.tight_layout()
-plt.show()
+display(fig)
 print('\n\n')
 
 # Figure 2, histograms showing the L-R x-positions
@@ -336,7 +337,7 @@ for i in range(2):
 plt.figtext(0.265,1,f'Left side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
 plt.figtext(0.755,1,f'Right side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
 plt.tight_layout()
-plt.show()
+display(fig)
 print('\n\n')
 
 # Figure 3, histograms showing the L-R z-positions
@@ -367,7 +368,7 @@ for i in range(2):
 plt.figtext(0.265,1,f'Left side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
 plt.figtext(0.755,1,f'Right side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
 plt.tight_layout()
-plt.show()
+display(fig)
 print('\n\n')
 
 LRidgeAT1000PRCS = mousefile ['At 1000PRCS, L positions of LEFT temporal ridge (µm)']
