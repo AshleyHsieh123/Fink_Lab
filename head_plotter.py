@@ -9,6 +9,7 @@ from google.colab import drive
 import gdown
 import math
 from IPython.display import display
+%matplotlib inline
 
 file_id = '1okgLzOmMDBQbKDWUXoqN4rXYW0vP9NSA'
 filename = gdown.download(f"https://drive.google.com/uc?id={file_id}", "downloaded_file.xlsx", quiet=False)
