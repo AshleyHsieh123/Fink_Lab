@@ -178,7 +178,7 @@ minLz, maxLz = np.nanmin(leftRidgeZ, axis=1), np.nanmax(leftRidgeZ, axis=1)
 
 # Figure 1
 
-fig, axs = plt.subplots(3,5,figsize = (22,18))
+fig1, axs = plt.subplots(3,5,figsize = (22,18))
 for i in range(3):
     for j in range(5):
         axs[i,j].spines['top'].set_visible(False)
@@ -304,9 +304,9 @@ HistoSubplot(RightEarBarInitial,'Right ear bar',2,2,'mm',mouseData1[0][2])
 HistoSubplot(NoseDVposition,'Nose DV position',2,3,'˚',mouseData1[0][3])
 HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1[0][4])
 
-fig.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
+fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
 plt.tight_layout()
-display(fig)
+display(fig1)
 print('\n\n')
 
 # Figure 2, histograms showing the L-R x-positions
@@ -329,7 +329,7 @@ bins = 50
 
 # plotting using HistoSubplot function
 # row = 8 (j), col = 2 (i)
-fig,axs = plt.subplots(8,2,figsize = (12,12))
+fig2,axs = plt.subplots(8,2,figsize = (12,12))
 for i in range(2):
     for j in range(8):
         HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData2[j][i],bins = bins)
@@ -337,7 +337,7 @@ for i in range(2):
 plt.figtext(0.265,1,f'Left side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
 plt.figtext(0.755,1,f'Right side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
 plt.tight_layout()
-display(fig)
+display(fig2)
 print('\n\n')
 
 # Figure 3, histograms showing the L-R z-positions
@@ -360,7 +360,7 @@ bins = 40
 
 # plotting using HistoSubplot function
 # row = 8 (j), col = 2 (i)
-fig,axs = plt.subplots(8,2,figsize = (12,12))
+fig3,axs = plt.subplots(8,2,figsize = (12,12))
 for i in range(2):
     for j in range(8):
         HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData3[j][i],bins = bins)
@@ -368,7 +368,7 @@ for i in range(2):
 plt.figtext(0.265,1,f'Left side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
 plt.figtext(0.755,1,f'Right side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
 plt.tight_layout()
-display(fig)
+display(fig3)
 print('\n\n')
 
 LRidgeAT1000PRCS = mousefile ['At 1000PRCS, L positions of LEFT temporal ridge (µm)']
