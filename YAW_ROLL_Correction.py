@@ -206,26 +206,49 @@ def update_correction_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1
 
 # Callback function to finish correction and update the Google Sheet
 def finish_correction():
-    # Fetch the head_parameter DataFrame from Google Sheets
-    file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Use the correct Google Sheet ID
-    sh = gc.open_by_key(file_id)  # Open the Google Sheet with the file_id
-    worksheet = sh.get_worksheet(0)  # Select the first sheet
+    try:
+        # Fetch values from the frontend directly via JavaScript variables
+        display(Javascript('''
+        var val1 = document.getElementById("xR1000").value;
+        var val2 = document.getElementById("xR3000").value;
+        var val3 = document.getElementById("zR1000").value;
+        var val4 = document.getElementById("zR3000").value;
+        var val5 = document.getElementById("xL1000").value;
+        var val6 = document.getElementById("xL3000").value;
+        var val7 = document.getElementById("zL1000").value;
+        var val8 = document.getElementById("zL3000").value;
+        google.colab.kernel.invokeFunction("notebook.save_final_correction", [val1, val2, val3, val4, val5, val6, val7, val8], {});
+        '''))
 
-    head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
-    
-    # Update the sheet with the final values
-    head_parameter.iloc[17, -1] = input("Enter final xR1000") # Replace with the final value entered
-    head_parameter.iloc[21, -1] = input("Enter final xR3000") 
-    head_parameter.iloc[33, -1] = input("Enter final zR1000")
-    head_parameter.iloc[37, -1] = input("Enter final zR3000") 
-    head_parameter.iloc[9, -1] = input("Enter final xL1000")
-    head_parameter.iloc[13, -1] = input("Enter final xL3000") 
-    head_parameter.iloc[25, -1] = input("Enter final zL1000")
-    head_parameter.iloc[29, -1] = input("Enter final zL3000") 
+    except Exception as e:
+        print(f"Error in finish_correction: {e}")
 
-    # Write the updated DataFrame back to the sheet
-    worksheet.clear()
-    set_with_dataframe(worksheet, head_parameter)
+def save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
+    try:
+        file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Your Google Sheet ID
+        sh = gc.open_by_key(file_id)  # Open the Google Sheet
+        worksheet = sh.get_worksheet(0)  # Select the first sheet
+
+        head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records
+        
+        # Update DataFrame values
+        head_parameter.iloc[17, -1] = float(xR1000)
+        head_parameter.iloc[21, -1] = float(xR3000)
+        head_parameter.iloc[33, -1] = float(zR1000)
+        head_parameter.iloc[37, -1] = float(zR3000)
+        head_parameter.iloc[9, -1] = float(xL1000)
+        head_parameter.iloc[13, -1] = float(xL3000)
+        head_parameter.iloc[25, -1] = float(zL1000)
+        head_parameter.iloc[29, -1] = float(zL3000)
+
+        # Write the updated DataFrame back to the sheet
+        worksheet.clear()
+        set_with_dataframe(worksheet, head_parameter)
+        
+        print("Google Sheet updated successfully!")
+
+    except Exception as e:
+        print(f"Error updating Google Sheet: {e}")
 
 # Register the callbacks for updating corrections and finishing the process
 output.register_callback('notebook.update_correction_result', update_correction_result)
