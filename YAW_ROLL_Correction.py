@@ -223,3 +223,16 @@ output.register_callback('notebook.finish_correction', finish_correction)
 
 # Initialize the input boxes and the callback
 create_input_boxes()
+
+print(f"Theta_Lº = {Theta_Lº}")
+print(f"Theta_Rº = {Theta_Rº}")
+#print(f"DVoffset (µm) = {DVoffset}")
+print(f"RCSλDistance (µm) = {RCSλDistance}")
+print(f"Zoffset1000 (µm) = {Zoffset1000}")
+print(f"Zoffset3000 (µm) = {Zoffset3000}")
+print(f"Xoffset1000 (µm) = {Xoffset1000}")
+print(f"Xoffset3000 (µm) = {Xoffset3000}")
+print(f"Ratio1000 = {Ratio1000}")
+print(f"Ratio3000 = {Ratio3000}")
+print(F"Angle1000º = {Angle1000º}")
+print(F"Angle3000º = {Angle3000º}")
