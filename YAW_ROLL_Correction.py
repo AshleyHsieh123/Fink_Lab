@@ -165,13 +165,6 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
             f"Yaw correction: {YawCorrection}°\\n\\n"
             f"Roll correction: {RollCorrection}°\\n\\n"
         )
-
-        # Return results
-        return YawCorrection, RollCorrection, result
-
-    except ValueError:
-        result = "⚠️ Please enter valid numerical values."
-        return None, None, result
         print(Theta_L)
         print(Theta_R)
         print(Zoffset1000)
@@ -182,6 +175,13 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         print(Ratio3000)
         print(Angle1000)
         print(Angle3000)
+        # Return results
+        return YawCorrection, RollCorrection, result
+
+    except ValueError:
+        result = "⚠️ Please enter valid numerical values."
+        return None, None, result
+
 
 # Display result in the result box
 def output_result(result):
