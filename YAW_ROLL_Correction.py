@@ -172,6 +172,16 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
     except ValueError:
         result = "⚠️ Please enter valid numerical values."
         return None, None, result
+        print(Theta_L)
+        print(Theta_R)
+        print(Zoffset1000)
+        print(Zoffset3000)
+        print(Xoffset1000)
+        print(Xoffset3000)
+        print(Ratio1000)
+        print(Ratio3000)
+        print(Angle1000)
+        print(Angle3000)
 
 # Display result in the result box
 def output_result(result):
@@ -223,14 +233,3 @@ output.register_callback('notebook.finish_correction', finish_correction)
 
 # Initialize the input boxes and the callback
 create_input_boxes()
-
-print(Theta_L)
-print(Theta_R)
-print(Zoffset1000)
-print(Zoffset3000)
-print(Xoffset1000)
-print(Xoffset3000)
-print(Ratio1000)
-print(Ratio3000)
-print(Angle1000)
-print(Angle3000)
