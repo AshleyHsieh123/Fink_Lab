@@ -165,23 +165,13 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
             f"Yaw correction: {YawCorrection}°\\n\\n"
             f"Roll correction: {RollCorrection}°\\n\\n"
         )
-        print(f"Theta_L = {Theta_L}")
-        print(f"Theta_R = {Theta_R}")
-        print(f"Zoffset1000 (µm) = {Zoffset1000}")
-        print(f"Zoffset3000 (µm) = {Zoffset3000}")
-        print(f"Xoffset1000 (µm) = {Xoffset1000}")
-        print(f"Xoffset3000 (µm) = {Xoffset3000}")
-        print(f"Ratio1000 = {Ratio1000}")
-        print(f"Ratio3000 = {Ratio3000}")
-        print(F"Angle1000 = {Angle1000}")
-        print(F"Angle3000 = {Angle3000}")
+
         # Return results
         return YawCorrection, RollCorrection, result
 
     except ValueError:
-        result = "Please enter valid numerical values."
+        result = "⚠️ Please enter valid numerical values."
         return None, None, result
-
 
 # Display result in the result box
 def output_result(result):
@@ -212,31 +202,16 @@ def finish_correction():
     worksheet = sh.get_worksheet(0)  # Select the first sheet
 
     head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
-
-    # Collect final input values from the HTML input fields (created earlier)
-    final_xR1000 = document.getElementById("xR1000").value
-    final_xR3000 = document.getElementById("xR3000").value
-    final_zR1000 = document.getElementById("zR1000").value
-    final_zR3000 = document.getElementById("zR3000").value
-    final_xL1000 = document.getElementById("xL1000").value
-    final_xL3000 = document.getElementById("xL3000").value
-    final_zL1000 = document.getElementById("zL1000").value
-    final_zL3000 = document.getElementById("zL3000").value
-
-    # Convert values to float before writing them to the Google Sheet
-    try:
-        final_xR1000 = float(final_xR1000)
-        final_xR3000 = float(final_xR3000)
-        final_zR1000 = float(final_zR1000)
-        final_zR3000 = float(final_zR3000)
-        final_xL1000 = float(final_xL1000)
-        final_xL3000 = float(final_xL3000)
-        final_zL1000 = float(final_zL1000)
-        final_zL3000 = float(final_zL3000)
-    except ValueError:
-        # If any input is not a valid float, display an error
-        output_result("Please enter valid numerical values.")
-        return
+    
+    # Collect final input for all columns via JavaScript prompt (ensure user interaction)
+    final_xR1000 = prompt("Enter final xR1000");
+    final_xR3000 = prompt("Enter final xR3000");
+    final_zR1000 = prompt("Enter final zR1000");
+    final_zR3000 = prompt("Enter final zR3000");
+    final_xL1000 = prompt("Enter final xL1000");
+    final_xL3000 = prompt("Enter final xL3000");
+    final_zL1000 = prompt("Enter final zL1000");
+    final_zL3000 = prompt("Enter final zL3000");
 
     # Update the sheet with the final values
     head_parameter.iloc[17, -1] = final_xR1000
@@ -252,8 +227,9 @@ def finish_correction():
     worksheet.clear()
     set_with_dataframe(worksheet, head_parameter)
 
-    # Confirm the update is done
-    output_result("Correction data has been successfully updated in the sheet.")
+# Register the callbacks for updating corrections and finishing the process
+output.register_callback('notebook.update_correction_result', update_correction_result)
+output.register_callback('notebook.finish_correction', finish_correction)
 
 # Initialize the input boxes and the callback
 create_input_boxes()
