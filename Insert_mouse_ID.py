@@ -18,19 +18,16 @@ worksheet = sh.get_worksheet(0)  # Select the first sheet
 
 head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
 new_mouse_id = str(input("Mouse ID: "))
+ # Calculate the column letter for the new column (e.g., "Z" for the 26th column)
+new_column_index = len(head_parameter.columns)  # Index of the newly added column
 head_parameter[new_mouse_id] = ""
 
 worksheet.clear()
 set_with_dataframe(worksheet, head_parameter)
 
- # Calculate the column letter for the new column (e.g., "Z" for the 26th column)
-    new_column_index = len(head_parameter.columns)  # Index of the newly added column
-    column_letter = chr(65 + new_column_index - 1)  # Convert column index to letter (A=65 in ASCII)
+column_letter = chr(65 + new_column_index - 1)  # Convert column index to letter (A=65 in ASCII)
 
-    # Apply formatting for the new Mouse ID column header (e.g., bold)
-    worksheet.format(f'{column_letter}1', {'textFormat': {'bold': True}})
+# Apply formatting for the new Mouse ID column header (e.g., bold)
+worksheet.format(f'{column_letter}1', {'textFormat': {'bold': True}})
 
-    # Optionally, adjust the column width to match other columns
-    worksheet.set_column(new_column_index, new_column_index, 20)  # Adjust the width of the column
-
-    print(f"Mouse ID column '{new_mouse_id}' added to the sheet.")
+print(f"Mouse ID column '{new_mouse_id}' added to the sheet.")
