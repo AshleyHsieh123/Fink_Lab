@@ -20,5 +20,6 @@ head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records 
 new_mouse_id = str(input("Mouse ID: "))
 head_parameter[new_mouse_id] = ""
 
+worksheet.format(f'{chr(65 + len(head_parameter.columns))}1', {'textFormat': {'bold': True}})
 worksheet.clear()
 set_with_dataframe(worksheet, head_parameter)
