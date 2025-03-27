@@ -152,6 +152,7 @@ def update_angle_result(val1, val2, val3):
     head_parameter.iloc[7, -1] = val2 # RCS-Lambda distance
     head_parameter.iloc[8, -1] = advised_angle
     
+    
     # Write the updated DataFrame back to the sheet
     worksheet.clear()
     set_with_dataframe(worksheet, head_parameter)
