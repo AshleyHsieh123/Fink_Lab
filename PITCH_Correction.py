@@ -209,7 +209,6 @@ def plot_histogram(mousedata):
 
     display(Javascript(f'''
     var plotBox = document.getElementById("plotBox");
-    plotBox.innerHTML = '';  // Clear previous plot
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
 
