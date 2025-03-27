@@ -273,3 +273,6 @@ def save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
 
 # Register the callback
 output.register_callback('notebook.save_final_correction', save_final_correction)
+
+# Initialize the input boxes and the callback
+create_input_boxes()
