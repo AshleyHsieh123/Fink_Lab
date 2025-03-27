@@ -254,3 +254,6 @@ def finish_correction():
 
     # Confirm the update is done
     output_result("Correction data has been successfully updated in the sheet.")
+
+# Initialize the input boxes and the callback
+create_input_boxes()
