@@ -208,15 +208,21 @@ def update_correction_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1
 def finish_correction():
     try:
        display(Javascript('''
-        var val1 = document.getElementById("xR1000").value;
-        var val2 = document.getElementById("xR3000").value;
-        var val3 = document.getElementById("zR1000").value;
-        var val4 = document.getElementById("zR3000").value;
-        var val5 = document.getElementById("xL1000").value;
-        var val6 = document.getElementById("xL3000").value;
-        var val7 = document.getElementById("zL1000").value;
-        var val8 = document.getElementById("zL3000").value;
-        google.colab.kernel.invokeFunction("notebook.save_final_correction", [val1, val2, val3, val4, val5, val6, val7, val8], {});
+        async function sendFinalValues() {
+            var val1 = document.getElementById("xR1000").value;
+            var val2 = document.getElementById("xR3000").value;
+            var val3 = document.getElementById("zR1000").value;
+            var val4 = document.getElementById("zR3000").value;
+            var val5 = document.getElementById("xL1000").value;
+            var val6 = document.getElementById("xL3000").value;
+            var val7 = document.getElementById("zL1000").value;
+            var val8 = document.getElementById("zL3000").value;
+
+            // Ensure values are retrieved before calling the function
+            await google.colab.kernel.invokeFunction("notebook.save_final_correction", 
+                [val1, val2, val3, val4, val5, val6, val7, val8], {});
+        }
+        sendFinalValues(); // Call the function
         '''))
 
     except Exception as e:
@@ -224,28 +230,37 @@ def finish_correction():
         
 def save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
     try:
+        # Ensure no missing values
+        if any(v == '' or v is None for v in [xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000]):
+            print("⚠️ Error: Some values were not received from JavaScript.")
+            return
+
+        # Convert values to float safely
+        try:
+            values = [float(v) for v in [xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000]]
+        except ValueError:
+            print("⚠️ Invalid input detected. Ensure all inputs are valid numbers.")
+            return
+
+        # Open Google Sheet
         file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Your Google Sheet ID
         sh = gc.open_by_key(file_id)  # Open the Google Sheet
         worksheet = sh.get_worksheet(0)  # Select the first sheet
 
-        head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records
-        
-        # Convert values to float (handle errors if non-numeric)
-        try:
-            values = [float(v) for v in [xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000]]
-        except ValueError:
-            print("Invalid input detected. Ensure all inputs are numbers.")
-            return
+        # Fetch Google Sheet data
+        head_parameter = pd.DataFrame(worksheet.get_all_records())  
 
-        # Assign values to the correct row
-        head_parameter.iloc[17, head_parameter.columns.get_loc("Final Values")] = values[0]
-        head_parameter.iloc[21, head_parameter.columns.get_loc("Final Values")] = values[1]
-        head_parameter.iloc[33, head_parameter.columns.get_loc("Final Values")] = values[2]
-        head_parameter.iloc[37, head_parameter.columns.get_loc("Final Values")] = values[3]
-        head_parameter.iloc[9, head_parameter.columns.get_loc("Final Values")] = values[4]
-        head_parameter.iloc[13, head_parameter.columns.get_loc("Final Values")] = values[5]
-        head_parameter.iloc[25, head_parameter.columns.get_loc("Final Values")] = values[6]
-        head_parameter.iloc[29, head_parameter.columns.get_loc("Final Values")] = values[7]
+        # Assign values to the correct row (ensure column exists)
+        column_name = "Final Values"  # Change this to match your actual column header in the sheet
+
+        head_parameter.iloc[17, head_parameter.columns.get_loc(column_name)] = values[0]
+        head_parameter.iloc[21, head_parameter.columns.get_loc(column_name)] = values[1]
+        head_parameter.iloc[33, head_parameter.columns.get_loc(column_name)] = values[2]
+        head_parameter.iloc[37, head_parameter.columns.get_loc(column_name)] = values[3]
+        head_parameter.iloc[9, head_parameter.columns.get_loc(column_name)] = values[4]
+        head_parameter.iloc[13, head_parameter.columns.get_loc(column_name)] = values[5]
+        head_parameter.iloc[25, head_parameter.columns.get_loc(column_name)] = values[6]
+        head_parameter.iloc[29, head_parameter.columns.get_loc(column_name)] = values[7]
 
         # Update the Google Sheet
         worksheet.clear()
