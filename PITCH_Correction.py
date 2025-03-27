@@ -151,17 +151,6 @@ def update_angle_result(val1, val2, val3):
     # Update the sheet with the advised angle at the 8th column (index 8)
     head_parameter.iloc[7, -1] = val2 # RCS-Lambda distance
     head_parameter.iloc[8, -1] = advised_angle
-
-    # Ensure data matches the format of the sheet
-    try:
-        # Clean up and convert the input values to the correct formats
-        RCSL = float(val2.strip())  # Ensure RCS-lambda distance is a float, remove extra spaces
-        advised_angle = float(advised_angle.strip())  # Ensure advised angle is a float
-
-    except ValueError as e:
-        # If the conversion fails, output an error message
-        output_result(f"⚠️ Error: {str(e)}. Please enter valid numerical values.")
-        return
     
     # Write the updated DataFrame back to the sheet
     worksheet.clear()
