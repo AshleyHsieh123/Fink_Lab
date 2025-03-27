@@ -148,6 +148,19 @@ def update_angle_result(val1, val2, val3):
     head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
     new_mouse_id = head_parameter.columns[-1]  # Assuming last column is new mouse ID
 
+     # Ensure data matches the format of the sheet
+    try:
+        # Convert the input values to the correct formats (numeric values)
+        RCSL = float(val2)  # Ensure RCS-lambda distance is float
+        advised_angle = float(advised_angle)  # Ensure advised angle is float
+        
+        # You can further format other data as needed. For example:
+        # If you need to handle specific date formats, you can use `datetime` to format the input
+
+    except ValueError as e:
+        output_result("⚠️ Please enter valid numerical values.")
+        return
+
     # Update the sheet with the advised angle at the 8th column (index 8)
     head_parameter.iloc[7, -1] = val2 # RCS-Lambda distance
     head_parameter.iloc[8, -1] = advised_angle
