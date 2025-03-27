@@ -25,9 +25,17 @@ head_parameter[new_mouse_id] = ""
 worksheet.clear()
 set_with_dataframe(worksheet, head_parameter)
 
+def get_column_letter(col_idx):
+        letter = ''
+        while col_idx >= 0:
+            letter = chr(col_idx % 26 + 65) + letter
+            col_idx = col_idx // 26 - 1
+        return letter
+
 column_letter = chr(65 + new_column_index - 1)  # Convert column index to letter (A=65 in ASCII)
 
-# Apply formatting for the new Mouse ID column header (e.g., bold)
+  # Apply formatting for the new Mouse ID column header (e.g., bold)
 worksheet.format(f'{column_letter}1', {'textFormat': {'bold': True}})
+
 
 print(f"Mouse ID column '{new_mouse_id}' added to the sheet.")
