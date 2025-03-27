@@ -175,6 +175,7 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         print(f"Ratio3000 = {Ratio3000}")
         print(F"Angle1000 = {Angle1000}")
         print(F"Angle3000 = {Angle3000}")
+        print(f"Raw Input - zL3000: {zL3000}, zR3000: {zR3000}")
         # Return results
         return YawCorrection, RollCorrection, result
 
