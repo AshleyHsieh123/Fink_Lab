@@ -179,7 +179,7 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         return YawCorrection, RollCorrection, result
 
     except ValueError:
-        result = "⚠️ Please enter valid numerical values."
+        result = "Please enter valid numerical values."
         return None, None, result
 
 
@@ -206,73 +206,51 @@ def update_correction_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1
 
 # Callback function to finish correction and update the Google Sheet
 def finish_correction():
+    # Fetch the head_parameter DataFrame from Google Sheets
+    file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Use the correct Google Sheet ID
+    sh = gc.open_by_key(file_id)  # Open the Google Sheet with the file_id
+    worksheet = sh.get_worksheet(0)  # Select the first sheet
+
+    head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
+
+    # Collect final input values from the HTML input fields (created earlier)
+    final_xR1000 = document.getElementById("xR1000").value
+    final_xR3000 = document.getElementById("xR3000").value
+    final_zR1000 = document.getElementById("zR1000").value
+    final_zR3000 = document.getElementById("zR3000").value
+    final_xL1000 = document.getElementById("xL1000").value
+    final_xL3000 = document.getElementById("xL3000").value
+    final_zL1000 = document.getElementById("zL1000").value
+    final_zL3000 = document.getElementById("zL3000").value
+
+    # Convert values to float before writing them to the Google Sheet
     try:
-       display(Javascript('''
-        async function sendFinalValues() {
-            var val1 = document.getElementById("xR1000").value;
-            var val2 = document.getElementById("xR3000").value;
-            var val3 = document.getElementById("zR1000").value;
-            var val4 = document.getElementById("zR3000").value;
-            var val5 = document.getElementById("xL1000").value;
-            var val6 = document.getElementById("xL3000").value;
-            var val7 = document.getElementById("zL1000").value;
-            var val8 = document.getElementById("zL3000").value;
+        final_xR1000 = float(final_xR1000)
+        final_xR3000 = float(final_xR3000)
+        final_zR1000 = float(final_zR1000)
+        final_zR3000 = float(final_zR3000)
+        final_xL1000 = float(final_xL1000)
+        final_xL3000 = float(final_xL3000)
+        final_zL1000 = float(final_zL1000)
+        final_zL3000 = float(final_zL3000)
+    except ValueError:
+        # If any input is not a valid float, display an error
+        output_result("Please enter valid numerical values.")
+        return
 
-            // Ensure values are retrieved before calling the function
-            await google.colab.kernel.invokeFunction("notebook.save_final_correction", 
-                [val1, val2, val3, val4, val5, val6, val7, val8], {});
-        }
-        sendFinalValues(); // Call the function
-        '''))
+    # Update the sheet with the final values
+    head_parameter.iloc[17, -1] = final_xR1000
+    head_parameter.iloc[21, -1] = final_xR3000
+    head_parameter.iloc[33, -1] = final_zR1000
+    head_parameter.iloc[37, -1] = final_zR3000
+    head_parameter.iloc[9, -1] = final_xL1000
+    head_parameter.iloc[13, -1] = final_xL3000
+    head_parameter.iloc[25, -1] = final_zL1000
+    head_parameter.iloc[29, -1] = final_zL3000
 
-    except Exception as e:
-        print(f"Error in finish_correction: {e}")
-        
-def save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
-    try:
-        # Ensure no missing values
-        if any(v == '' or v is None for v in [xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000]):
-            print("⚠️ Error: Some values were not received from JavaScript.")
-            return
+    # Write the updated DataFrame back to the sheet
+    worksheet.clear()
+    set_with_dataframe(worksheet, head_parameter)
 
-        # Convert values to float safely
-        try:
-            values = [float(v) for v in [xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000]]
-        except ValueError:
-            print("⚠️ Invalid input detected. Ensure all inputs are valid numbers.")
-            return
-
-        # Open Google Sheet
-        file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Your Google Sheet ID
-        sh = gc.open_by_key(file_id)  # Open the Google Sheet
-        worksheet = sh.get_worksheet(0)  # Select the first sheet
-
-        # Fetch Google Sheet data
-        head_parameter = pd.DataFrame(worksheet.get_all_records())  
-
-        # Assign values to the correct row (ensure column exists)
-        column_name = "Final Values"  # Change this to match your actual column header in the sheet
-
-        head_parameter.iloc[17, head_parameter.columns.get_loc(column_name)] = values[0]
-        head_parameter.iloc[21, head_parameter.columns.get_loc(column_name)] = values[1]
-        head_parameter.iloc[33, head_parameter.columns.get_loc(column_name)] = values[2]
-        head_parameter.iloc[37, head_parameter.columns.get_loc(column_name)] = values[3]
-        head_parameter.iloc[9, head_parameter.columns.get_loc(column_name)] = values[4]
-        head_parameter.iloc[13, head_parameter.columns.get_loc(column_name)] = values[5]
-        head_parameter.iloc[25, head_parameter.columns.get_loc(column_name)] = values[6]
-        head_parameter.iloc[29, head_parameter.columns.get_loc(column_name)] = values[7]
-
-        # Update the Google Sheet
-        worksheet.clear()
-        set_with_dataframe(worksheet, head_parameter)
-
-        print("Google Sheet updated successfully!")
-
-    except Exception as e:
-        print(f"Error updating Google Sheet: {e}")
-
-# Register the callback
-output.register_callback('notebook.save_final_correction', save_final_correction)
-
-# Initialize the input boxes and the callback
-create_input_boxes()
+    # Confirm the update is done
+    output_result("Correction data has been successfully updated in the sheet.")
