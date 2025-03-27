@@ -175,7 +175,6 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         print(f"Ratio3000 = {Ratio3000}")
         print(F"Angle1000 = {Angle1000}")
         print(F"Angle3000 = {Angle3000}")
-        print(f"Raw Input - zL3000: {zL3000}, zR3000: {zR3000}")
         # Return results
         return YawCorrection, RollCorrection, result
 
@@ -208,21 +207,21 @@ def update_correction_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1
 # Callback function to finish correction and update the Google Sheet
 def finish_correction():
     try:
-         # Fetch values from the UI input fields and pass them to `save_final_correction`
-        xR1000 = input("Enter final xR1000: ")
-        xR3000 = input("Enter final xR3000: ")
-        zR1000 = input("Enter final zR1000: ")
-        zR3000 = input("Enter final zR3000: ")
-        xL1000 = input("Enter final xL1000: ")
-        xL3000 = input("Enter final xL3000: ")
-        zL1000 = input("Enter final zL1000: ")
-        zL3000 = input("Enter final zL3000: ")
-
-        save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000)
+       display(Javascript('''
+        var val1 = document.getElementById("xR1000").value;
+        var val2 = document.getElementById("xR3000").value;
+        var val3 = document.getElementById("zR1000").value;
+        var val4 = document.getElementById("zR3000").value;
+        var val5 = document.getElementById("xL1000").value;
+        var val6 = document.getElementById("xL3000").value;
+        var val7 = document.getElementById("zL1000").value;
+        var val8 = document.getElementById("zL3000").value;
+        google.colab.kernel.invokeFunction("notebook.save_final_correction", [val1, val2, val3, val4, val5, val6, val7, val8], {});
+        '''))
 
     except Exception as e:
         print(f"Error in finish_correction: {e}")
-
+        
 def save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
     try:
         file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Your Google Sheet ID
@@ -231,15 +230,14 @@ def save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
 
         head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records
         
-        # Convert values to float for safety
-        values = [xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000]
-        values = [float(v) if v.replace('.', '', 1).isdigit() else None for v in values]
-
-        if None in values:
-            print("Invalid input detected. Please ensure all values are numbers.")
+        # Convert values to float (handle errors if non-numeric)
+        try:
+            values = [float(v) for v in [xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000]]
+        except ValueError:
+            print("Invalid input detected. Ensure all inputs are numbers.")
             return
 
-        # Assign values to the correct row/column
+        # Assign values to the correct row
         head_parameter.iloc[17, head_parameter.columns.get_loc("Final Values")] = values[0]
         head_parameter.iloc[21, head_parameter.columns.get_loc("Final Values")] = values[1]
         head_parameter.iloc[33, head_parameter.columns.get_loc("Final Values")] = values[2]
@@ -249,7 +247,7 @@ def save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         head_parameter.iloc[25, head_parameter.columns.get_loc("Final Values")] = values[6]
         head_parameter.iloc[29, head_parameter.columns.get_loc("Final Values")] = values[7]
 
-        # Clear and update the worksheet with the new data
+        # Update the Google Sheet
         worksheet.clear()
         set_with_dataframe(worksheet, head_parameter)
 
@@ -258,9 +256,8 @@ def save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
     except Exception as e:
         print(f"Error updating Google Sheet: {e}")
 
-# Register the callbacks for updating corrections and finishing the process
-output.register_callback('notebook.update_correction_result', update_correction_result)
-output.register_callback('notebook.finish_correction', finish_correction)
+# Register the callback
+output.register_callback('notebook.save_final_correction', save_final_correction)
 
 # Initialize the input boxes and the callback
 create_input_boxes()
