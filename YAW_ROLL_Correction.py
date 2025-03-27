@@ -207,18 +207,17 @@ def update_correction_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1
 # Callback function to finish correction and update the Google Sheet
 def finish_correction():
     try:
-        # Fetch values from the frontend directly via JavaScript variables
-        display(Javascript('''
-        var val1 = document.getElementById("xR1000").value;
-        var val2 = document.getElementById("xR3000").value;
-        var val3 = document.getElementById("zR1000").value;
-        var val4 = document.getElementById("zR3000").value;
-        var val5 = document.getElementById("xL1000").value;
-        var val6 = document.getElementById("xL3000").value;
-        var val7 = document.getElementById("zL1000").value;
-        var val8 = document.getElementById("zL3000").value;
-        google.colab.kernel.invokeFunction("notebook.save_final_correction", [val1, val2, val3, val4, val5, val6, val7, val8], {});
-        '''))
+         # Fetch values from the UI input fields and pass them to `save_final_correction`
+        xR1000 = input("Enter final xR1000: ")
+        xR3000 = input("Enter final xR3000: ")
+        zR1000 = input("Enter final zR1000: ")
+        zR3000 = input("Enter final zR3000: ")
+        xL1000 = input("Enter final xL1000: ")
+        xL3000 = input("Enter final xL3000: ")
+        zL1000 = input("Enter final zL1000: ")
+        zL3000 = input("Enter final zL3000: ")
+
+        save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000)
 
     except Exception as e:
         print(f"Error in finish_correction: {e}")
@@ -231,20 +230,28 @@ def save_final_correction(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
 
         head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records
         
-        # Update DataFrame values
-        head_parameter.iloc[17, -1] = float(xR1000)
-        head_parameter.iloc[21, -1] = float(xR3000)
-        head_parameter.iloc[33, -1] = float(zR1000)
-        head_parameter.iloc[37, -1] = float(zR3000)
-        head_parameter.iloc[9, -1] = float(xL1000)
-        head_parameter.iloc[13, -1] = float(xL3000)
-        head_parameter.iloc[25, -1] = float(zL1000)
-        head_parameter.iloc[29, -1] = float(zL3000)
+        # Convert values to float for safety
+        values = [xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000]
+        values = [float(v) if v.replace('.', '', 1).isdigit() else None for v in values]
 
-        # Write the updated DataFrame back to the sheet
+        if None in values:
+            print("Invalid input detected. Please ensure all values are numbers.")
+            return
+
+        # Assign values to the correct row/column
+        head_parameter.iloc[17, head_parameter.columns.get_loc("Final Values")] = values[0]
+        head_parameter.iloc[21, head_parameter.columns.get_loc("Final Values")] = values[1]
+        head_parameter.iloc[33, head_parameter.columns.get_loc("Final Values")] = values[2]
+        head_parameter.iloc[37, head_parameter.columns.get_loc("Final Values")] = values[3]
+        head_parameter.iloc[9, head_parameter.columns.get_loc("Final Values")] = values[4]
+        head_parameter.iloc[13, head_parameter.columns.get_loc("Final Values")] = values[5]
+        head_parameter.iloc[25, head_parameter.columns.get_loc("Final Values")] = values[6]
+        head_parameter.iloc[29, head_parameter.columns.get_loc("Final Values")] = values[7]
+
+        # Clear and update the worksheet with the new data
         worksheet.clear()
         set_with_dataframe(worksheet, head_parameter)
-        
+
         print("Google Sheet updated successfully!")
 
     except Exception as e:
