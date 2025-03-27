@@ -125,7 +125,15 @@ def create_input_boxes():
     }
 
     finishButton.onclick = function() {
-        google.colab.kernel.invokeFunction("notebook.finish_correction", [], {});
+        var val1 = document.getElementById("xR1000").value;
+        var val2 = document.getElementById("xR3000").value;
+        var val3 = document.getElementById("zR1000").value;
+        var val4 = document.getElementById("zR3000").value;
+        var val5 = document.getElementById("xL1000").value;
+        var val6 = document.getElementById("xL3000").value;
+        var val7 = document.getElementById("zL1000").value;
+        var val8 = document.getElementById("zL3000").value;
+        google.colab.kernel.invokeFunction("notebook.finish_correction", [val1, val2, val3, val4, val5, val6, val7, val8], {});
     }
     '''))
     
@@ -156,8 +164,8 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         Ratio3000 = Zoffset3000 / Xoffset3000
 
         # Angle Calculations
-        Angle1000 = round(math.atan(Ratio1000) * 360 / (2 * math.pi), 2)
-        Angle3000 = round(math.atan(Ratio3000) * 360 / (2 * math.pi), 2)
+        Angle1000 = round(math.atan(Ratio1000) * 180 /math.pi, 2)
+        Angle3000 = round(math.atan(Ratio3000) * 180 /math.pi, 2)
         RollCorrection = round((Angle1000 + Angle3000) / 2, 2)
 
         # Compose result
@@ -170,7 +178,7 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         return YawCorrection, RollCorrection, result
 
     except ValueError:
-        result = "⚠️ Please enter valid numerical values."
+        result = "Please enter valid numerical values."
         return None, None, result
 
 # Display result in the result box
@@ -180,7 +188,7 @@ def output_result(result):
     resultBox.style.display = "block";
     resultBox.value = `{result}`;
     '''))
-
+    
 # Callback function to update corrections and update the sheet
 def update_correction_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
     # Capture the YawCorrection, RollCorrection, and result from the calculation
@@ -195,7 +203,7 @@ def update_correction_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1
     output_result(result)
 
 # Callback function to finish correction and update the Google Sheet
-def finish_correction():
+def finish_correction(final_xR1000,final_xR3000,final_zR1000,final_zR3000,final_xL1000,final_xL3000,final_zL1000,final_zL3000):
     # Fetch the head_parameter DataFrame from Google Sheets
     file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Use the correct Google Sheet ID
     sh = gc.open_by_key(file_id)  # Open the Google Sheet with the file_id
@@ -203,16 +211,6 @@ def finish_correction():
 
     head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
     
-    # Collect final input for all columns via JavaScript prompt (ensure user interaction)
-    final_xR1000 = prompt("Enter final xR1000");
-    final_xR3000 = prompt("Enter final xR3000");
-    final_zR1000 = prompt("Enter final zR1000");
-    final_zR3000 = prompt("Enter final zR3000");
-    final_xL1000 = prompt("Enter final xL1000");
-    final_xL3000 = prompt("Enter final xL3000");
-    final_zL1000 = prompt("Enter final zL1000");
-    final_zL3000 = prompt("Enter final zL3000");
-
     # Update the sheet with the final values
     head_parameter.iloc[17, -1] = final_xR1000
     head_parameter.iloc[21, -1] = final_xR3000
