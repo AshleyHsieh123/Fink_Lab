@@ -170,8 +170,14 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
 
         # Compose result
         result = (
-            f"Yaw correction: {YawCorrection}°\\n\\n"
-            f"Roll correction: {RollCorrection}°\\n\\n"
+            if YawCorrection > 0:
+                f"Yaw correction: {YawCorrection}°, 'clockwise'\\n\\n"
+            else:
+                f"Yaw correction: {YawCorrection}°, 'counterclockwise'\\n\\n"
+            if RollCorrection > 0:
+                f"Roll correction: {RollCorrection}°, 'clockwise'\\n\\n"
+            else:
+                f"Roll correction: {RollCorrection}°, 'counterclockwise'\\n\\n"
         )
 
         # Return results
