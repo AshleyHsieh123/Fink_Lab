@@ -83,17 +83,6 @@ def create_input_boxes():
     finishButton.style.borderRadius = "8px";
     finishButton.style.cursor = "pointer";
 
-    // Result output box
-    var resultBox = document.createElement("textarea");
-    resultBox.id = "resultBox";
-    resultBox.style.margin = "10px";
-    resultBox.style.padding = "12px";
-    resultBox.style.fontSize = "16px";
-    resultBox.style.width = "250px";
-    resultBox.style.height = "100px";
-    resultBox.style.display = "block";  // Ensure it's visible by default
-    resultBox.readOnly = true;
-
     // Create a container for the input fields and arrange them in 6 columns
     var inputContainer = document.createElement("div");
     inputContainer.style.display = "grid";
@@ -138,7 +127,6 @@ def create_input_boxes():
     container.appendChild(inputContainer);
     container.appendChild(button);
     container.appendChild(finishButton);
-    container.appendChild(resultBox);
     document.body.appendChild(container);
 
     // Button click actions for Submit and Finish correction
@@ -172,40 +160,19 @@ def create_input_boxes():
     }
 
     finishButton.onclick = function() {
-        var val1 = document.getElementById("xL1500").value;
-        var val2 = document.getElementById("xL2000").value;
-        var val3 = document.getElementById("xL2500").value;
-        var val4 = document.getElementById("xL3500").value;
-        var val5 = document.getElementById("xL4000").value;
-        var val6 = document.getElementById("xL4500").value;
-        var val7 = document.getElementById("xR1500").value;
-        var val8 = document.getElementById("xR2000").value;
-        var val9 = document.getElementById("xR2500").value;
-        var val10 = document.getElementById("xR3500").value;
-        var val11 = document.getElementById("xR4000").value;
-        var val12 = document.getElementById("xR4500").value;
-        var val13 = document.getElementById("zL1500").value;
-        var val14 = document.getElementById("zL2000").value;
-        var val15 = document.getElementById("zL2500").value;
-        var val16 = document.getElementById("zL3500").value;
-        var val17 = document.getElementById("zL4000").value;
-        var val18 = document.getElementById("zL4500").value;
-        var val19 = document.getElementById("zR1500").value;
-        var val20 = document.getElementById("zR2000").value;
-        var val21 = document.getElementById("zR2500").value;
-        var val22 = document.getElementById("zR3500").value;
-        var val23 = document.getElementById("zR4000").value;
-        var val24 = document.getElementById("zR4500").value;
-        google.colab.kernel.invokeFunction("notebook.finish_correction", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24], {});
+        google.colab.kernel.invokeFunction("notebook.finish_correction", [], {});
     }
     '''))
 
+def midline_correction(xL_values, xR_values):
+    differences = []
+    for xL, xR in zip(xL_values, xR_values):
+        differences.append(xL + xR)  # Difference between corresponding xL and xR
+    midline = np.mean(differences) / 2  # Calculate the midline by averaging differences and dividing by 2
+    return midline
     
 # Python callback to update the sheet and calculate the midline
 def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24):
-    # Debugging: Print the values received
-    print(f"Received values from JavaScript: {val1}, {val2}, {val3}, {val4}, {val5}, {val6}, {val7}, {val8}, {val9}, {val10}, {val11}, {val12}, {val13}, {val14}, {val15}, {val16}, {val17}, {val18}, {val19}, {val20}, {val21}, {val22}, {val23}, {val24}")
-
     try:
         # Fetch the head_parameter DataFrame from Google Sheets
         worksheet = gc.open_by_key(file_id).sheet1
@@ -237,31 +204,10 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         head_parameter.iloc[39, -1] = val23
         head_parameter.iloc[40, -1] = val24
 
-        # Calculate the midline using xL and xR values at different points
-        # Fetching xL1000, xR1000, xL3000, xR3000 from the sheet
-        xL_values = [
-            float(val1),  # xL1500
-            float(val2),  # xL2000
-            float(val3),  # xL2500
-            float(head_parameter.iloc[9,-1]),  # xL1000 from the sheet
-            float(head_parameter.iloc[13,-1])   # xL3000 from the sheet
-        ]
+        xL_values = list(head_parameter.iloc[9:13,-1])
+        xR_values = list(head_parameter.iloc[17:21,-1])
         
-        xR_values = [
-            float(val7),  # xR1500
-            float(val8),  # xR2000
-            float(val9),  # xR2500
-            float(head_parameter.iloc[17,-1]),  # xR1000 from the sheet
-            float(head_parameter.iloc[21,-1])   # xR3000 from the sheet
-        ]
-
-        differences = []
-        print(xL_values)
-        print(xR_values)
-        for xL, xR in zip(xL_values, xR_values):
-            differences.append(xL + xR)  # Difference between corresponding xL and xR
-
-        midline = np.mean(differences) / 2  # Calculate the midline by averaging differences and dividing by 2
+        midline = midline_correction(xL_values,xR_values)
         
         # Display result in result box
         if midline > 0:
@@ -272,11 +218,21 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         # Write the updated DataFrame back to the sheet
         worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
         set_with_dataframe(worksheet, head_parameter)  # Update the sheet
-
-        print("Values have been updated successfully in the sheet.")
+        return midline
+        
     except Exception as e:
         print(f"Error in callback: {e}")
 
+def finish_correction():
+    worksheet = gc.open_by_key(file_id).sheet1
+    head_parameter = pd.DataFrame(worksheet.get_all_records())
+
+    midline = midline_correction(list(head_parameter.iloc[9:13,-1]),list(head_parameter.iloc[17:21,-1]))
+    head_parameter.iloc[9:16, -1] += midline
+    head_parameter.iloc[17:24, -1] += midline
+    worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
+    set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+    
 # Register the callback function
 from google.colab import output
 output.register_callback('notebook.update_correction_result', update_correction_result)
