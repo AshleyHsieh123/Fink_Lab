@@ -75,14 +75,14 @@ def create_input_boxes():
     resultBox.style.display = "block";  // Ensure it's visible by default
     resultBox.readOnly = true;
 
-    // Create a container for the input fields and arrange them in 4 columns
+    // Create a container for the input fields and arrange them in 3 columns
     var inputContainer = document.createElement("div");
     inputContainer.style.display = "grid";
-    inputContainer.style.gridTemplateColumns = "1fr 1fr 1fr 1fr"; // 4 columns
+    inputContainer.style.gridTemplateColumns = "1fr 1fr 1fr"; // 3 columns
     inputContainer.style.gridGap = "10px";
     inputContainer.style.marginTop = "20px";
 
-    // Append inputs to the container in the desired order (4 columns)
+    // Append inputs to the container in the desired order (3 columns)
     inputContainer.appendChild(input1); // xL1500
     inputContainer.appendChild(input2); // xL2000
     inputContainer.appendChild(input3); // xL2500
