@@ -4,11 +4,11 @@ from google.colab import drive
 from gspread_dataframe import set_with_dataframe
 from google.auth import default
 from google.colab import auth
+from IPython.display import display, Javascript
 
 # Mount Google Drive and authenticate
 drive.mount('/content/drive')
 auth.authenticate_user()  # Authenticate manually to avoid errors
-# Get authenticated credentials
 creds, _ = default()
 gc = gspread.authorize(creds)
 
@@ -36,7 +36,7 @@ def create_input_boxes():
         return input;
     }
 
-    var input1 = createInput("dateofsurgery", "Enter zR1000");
+    var input1 = createInput("dateofsurgery", "Enter Date of surgery");
     var input2 = createInput("animalWeight", "Enter Weight before surgery (g)");
     var input3 = createInput("mousebirth", "Mouse date of birth ");
     var input6 = createInput("mouseage", "Enter Mouse age (days)");
@@ -90,7 +90,7 @@ def create_input_boxes():
         var val4 = document.getElementById("mouseage").value;
         var val5 = document.getElementById("LeftEarBarInitial").value;
         var val6 = document.getElementById("RightEarBarInitial").value;
-        google.colab.kernel.invokeFunction("notebook.update_correction_result", [val1, val2, val3, val4, val5, val6], {});
+        google.colab.kernel.invokeFunction("notebook.update_data", [val1, val2, val3, val4, val5, val6], {});
     }
     '''))
 
@@ -111,12 +111,20 @@ def update_data(val1, val2, val3, val4, val5, val6):
         head_parameter.iloc[48, -1] = val4
         head_parameter.iloc[3, -1] = val5
         head_parameter.iloc[4, -1] = val6
-      
-# Register the callbacks for updating corrections and finishing the process
+
+        # Write the updated DataFrame back to the sheet
+        worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
+        set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+
+        print("Values have been updated successfully in the sheet.")
+
+    except Exception as e:
+        # Print the error message if something goes wrong
+        print(f"Error while updating the sheet: {e}")
+
+# Register the callback function
+from google.colab import output
 output.register_callback('notebook.update_data', update_data)
 
 # Initialize the input boxes and the callback
 create_input_boxes()
-
-worksheet.clear()
-set_with_dataframe(worksheet, head_parameter)
