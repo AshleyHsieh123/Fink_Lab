@@ -130,6 +130,7 @@ def create_input_boxes():
         var val10 = document.getElementById("zR1500").value;
         var val11 = document.getElementById("zR2000").value;
         var val12 = document.getElementById("zR2500").value;
+        console.log("Submitting data to Python:", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12]);
         google.colab.kernel.invokeFunction("notebook.update_correction_result", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12], {});
     }
 
@@ -153,56 +154,62 @@ def create_input_boxes():
     
 # Python callback to update the sheet and calculate the midline
 def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12):
-    # Fetch the head_parameter DataFrame from Google Sheets
-    worksheet = gc.open_by_key(file_id).sheet1
-    head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
+    # Debugging: Print the values received
+    print(f"Received values from JavaScript: {val1}, {val2}, {val3}, {val4}, {val5}, {val6}, {val7}, {val8}, {val9}, {val10}, {val11}, {val12}")
 
-    # Overwrite the values in the sheet
-    head_parameter.iloc[10, -1] = val1
-    head_parameter.iloc[11, -1] = val2
-    head_parameter.iloc[12, -1] = val3
-    head_parameter.iloc[18, -1] = val4
-    head_parameter.iloc[19, -1] = val5
-    head_parameter.iloc[20, -1] = val6
-    head_parameter.iloc[26, -1] = val7
-    head_parameter.iloc[27, -1] = val8
-    head_parameter.iloc[28, -1] = val9
-    head_parameter.iloc[34, -1] = val10
-    head_parameter.iloc[35, -1] = val11
-    head_parameter.iloc[36, -1] = val12
+    try:
+        # Fetch the head_parameter DataFrame from Google Sheets
+        worksheet = gc.open_by_key(file_id).sheet1
+        head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
 
-    # Calculate the midline using xL and xR values at different points
-    # Fetching xL1000, xR1000, xL3000, xR3000 from the sheet
-    xL_values = [
-        float(val1),  # xL1500
-        float(val2),  # xL2000
-        float(val3),  # xL2500
-        float(head_parameter['xL1000'][0]),  # xL1000 from the sheet
-        float(head_parameter['xL3000'][0])   # xL3000 from the sheet
-    ]
-    
-    xR_values = [
-        float(val4),  # xR1500
-        float(val5),  # xR2000
-        float(val6),  # xR2500
-        float(head_parameter['xR1000'][0]),  # xR1000 from the sheet
-        float(head_parameter['xR3000'][0])   # xR3000 from the sheet
-    ]
+        # Overwrite the values in the sheet
+        head_parameter.iloc[10, -1] = val1
+        head_parameter.iloc[11, -1] = val2
+        head_parameter.iloc[12, -1] = val3
+        head_parameter.iloc[18, -1] = val4
+        head_parameter.iloc[19, -1] = val5
+        head_parameter.iloc[20, -1] = val6
+        head_parameter.iloc[26, -1] = val7
+        head_parameter.iloc[27, -1] = val8
+        head_parameter.iloc[28, -1] = val9
+        head_parameter.iloc[34, -1] = val10
+        head_parameter.iloc[35, -1] = val11
+        head_parameter.iloc[36, -1] = val12
 
-    differences = []
-    for xL, xR in zip(xL_values, xR_values):
-        differences.append(xL + xR)  # Difference between corresponding xL and xR
+        # Calculate the midline using xL and xR values at different points
+        # Fetching xL1000, xR1000, xL3000, xR3000 from the sheet
+        xL_values = [
+            float(val1),  # xL1500
+            float(val2),  # xL2000
+            float(val3),  # xL2500
+            float(head_parameter['xL1000'][0]),  # xL1000 from the sheet
+            float(head_parameter['xL3000'][0])   # xL3000 from the sheet
+        ]
+        
+        xR_values = [
+            float(val4),  # xR1500
+            float(val5),  # xR2000
+            float(val6),  # xR2500
+            float(head_parameter['xR1000'][0]),  # xR1000 from the sheet
+            float(head_parameter['xR3000'][0])   # xR3000 from the sheet
+        ]
 
-    midline = sum(differences) / len(differences) / 2  # Calculate the midline by averaging differences and dividing by 2
-    
-    # Display result in result box
-    print(f"Calculated midline: {midline}")
-    
-    # Write the updated DataFrame back to the sheet
-    worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
-    set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+        differences = []
+        for xL, xR in zip(xL_values, xR_values):
+            differences.append(xL + xR)  # Difference between corresponding xL and xR
 
-    print("Values have been updated successfully in the sheet.")
+        midline = sum(differences) / len(differences) / 2  # Calculate the midline by averaging differences and dividing by 2
+        
+        # Display result in result box
+        print(f"Calculated midline: {midline}")
+        
+        # Write the updated DataFrame back to the sheet
+        worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
+        set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+
+        print("Values have been updated successfully in the sheet.")
+    except Exception as e:
+        print(f"Error in callback: {e}")
 
 # Register the callback function
 from google.colab import output
