@@ -94,7 +94,7 @@ def update_data(val1, val2, val3, val4, val5, val6):
         worksheet = gc.open_by_key(file_id).sheet1
         head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
 
-        head_parameter.[new_mouse_id] = ""
+        head_parameter[new_mouse_id] = ""
 
         # Overwrite the values in the sheet (you can change the rows and columns as needed)
         head_parameter.iloc[49, -1] = val1
