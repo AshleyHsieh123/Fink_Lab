@@ -206,7 +206,8 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
 
         xL_values = [float(x) for x in list(head_parameter.iloc[9:13,-1])]
         xR_values = [float(x) for x in list(head_parameter.iloc[17:21,-1])]
-        
+        print(xL_values)
+        print(xR_values)
         midline = midline_correction(xL_values,xR_values)
         
         # Display result in result box
@@ -218,7 +219,6 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         # Write the updated DataFrame back to the sheet
         worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
         set_with_dataframe(worksheet, head_parameter)  # Update the sheet
-        return midline
         
     except Exception as e:
         print(f"Error in callback: {e}")
@@ -239,6 +239,7 @@ def finish_correction():
 # Register the callback function
 from google.colab import output
 output.register_callback('notebook.update_correction_result', update_correction_result)
+output.register_callback('notebook.finish_correction', finish_correction)
 
 # Initialize the input boxes and the callback
 create_input_boxes()
