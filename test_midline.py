@@ -248,9 +248,9 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         ]
         
         xR_values = [
-            float(val4),  # xR1500
-            float(val5),  # xR2000
-            float(val6),  # xR2500
+            float(val7),  # xR1500
+            float(val8),  # xR2000
+            float(val9),  # xR2500
             float(head_parameter.iloc[17,-1]),  # xR1000 from the sheet
             float(head_parameter.iloc[21,-1])   # xR3000 from the sheet
         ]
