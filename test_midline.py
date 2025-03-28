@@ -39,6 +39,12 @@ def create_input_boxes():
     var input4 = createInput("xR1500", "Enter xR1500");
     var input5 = createInput("xR2000", "Enter xR2000");
     var input6 = createInput("xR2500", "Enter xR2500");
+    var input7 = createInput("zL1500", "Enter zL1500");
+    var input8 = createInput("zL2000", "Enter zL2000");
+    var input9 = createInput("zL2500", "Enter zL2500");
+    var input10 = createInput("zR1500", "Enter zR1500");
+    var input11 = createInput("zR2000", "Enter zR2000");
+    var input12 = createInput("zR2500", "Enter zR2500");
 
     // Submit button
     var button = document.createElement("button");
@@ -89,6 +95,12 @@ def create_input_boxes():
     inputContainer.appendChild(input4); // xR1500
     inputContainer.appendChild(input5); // xR2000
     inputContainer.appendChild(input6); // xR2500
+    inputContainer.appendChild(input7); // zL1500
+    inputContainer.appendChild(input8); // zL2000
+    inputContainer.appendChild(input9); // zL2500
+    inputContainer.appendChild(input10); // zR1500
+    inputContainer.appendChild(input11); // zR2000
+    inputContainer.appendChild(input12); // zR2500
 
     // Add the container, buttons, and result box to the page
     var container = document.createElement("div");
@@ -112,7 +124,13 @@ def create_input_boxes():
         var val4 = document.getElementById("xR1500").value;
         var val5 = document.getElementById("xR2000").value;
         var val6 = document.getElementById("xR2500").value;
-        google.colab.kernel.invokeFunction("notebook.update_correction_result", [val1, val2, val3, val4, val5, val6], {});
+        var val7 = document.getElementById("zL1500").value;
+        var val8 = document.getElementById("zL2000").value;
+        var val9 = document.getElementById("zL2500").value;
+        var val10 = document.getElementById("zR1500").value;
+        var val11 = document.getElementById("zR2000").value;
+        var val12 = document.getElementById("zR2500").value;
+        google.colab.kernel.invokeFunction("notebook.update_correction_result", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12], {});
     }
 
     finishButton.onclick = function() {
@@ -122,24 +140,34 @@ def create_input_boxes():
         var val4 = document.getElementById("xR1500").value;
         var val5 = document.getElementById("xR2000").value;
         var val6 = document.getElementById("xR2500").value;
-        google.colab.kernel.invokeFunction("notebook.finish_correction", [val1, val2, val3, val4, val5, val6], {});
+        var val7 = document.getElementById("zL1500").value;
+        var val8 = document.getElementById("zL2000").value;
+        var val9 = document.getElementById("zL2500").value;
+        var val10 = document.getElementById("zR1500").value;
+        var val11 = document.getElementById("zR2000").value;
+        var val12 = document.getElementById("zR2500").value;
+        google.colab.kernel.invokeFunction("notebook.finish_correction", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12], {});
     }
     '''))
     
 # Python callback to update the sheet
-def update_correction_result(val1, val2, val3, val4, val5, val6):
+def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12):
     # Fetch the head_parameter DataFrame from Google Sheets
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
 
-    # Assuming you want to overwrite specific cells (e.g., 1st row for xL1500, xL2000, etc.)
-    # Here we assume that you're overwriting columns in the first row (adjust as necessary)
     head_parameter.iloc[10, -1] = val1
     head_parameter.iloc[11, -1] = val2
     head_parameter.iloc[12, -1] = val3
     head_parameter.iloc[18, -1] = val4
     head_parameter.iloc[19, -1] = val5
     head_parameter.iloc[20, -1] = val6
+    head_parameter.iloc[35, -1] = val7
+    head_parameter.iloc[36, -1] = val8
+    head_parameter.iloc[37, -1] = val9
+    head_parameter.iloc[43, -1] = val10
+    head_parameter.iloc[44, -1] = val11
+    head_parameter.iloc[45, -1] = val12
 
     # Write the updated DataFrame back to the sheet
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
