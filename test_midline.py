@@ -204,8 +204,8 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         head_parameter.iloc[39, -1] = val23
         head_parameter.iloc[40, -1] = val24
 
-        xL_values = [float(x) for x in list(head_parameter.iloc[9:13,-1])]
-        xR_values = [float(x) for x in list(head_parameter.iloc[17:21,-1])]
+        xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
+        xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
         print(xL_values)
         print(xR_values)
         midline = midline_correction(xL_values,xR_values)
