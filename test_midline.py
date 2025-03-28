@@ -314,7 +314,7 @@ def finish_correction():
 
     def HistoSubplot(raw_data,name,row,col,unit,mousedata,**kwargs):
         # Data processing
-        raw_data = pd.head_parameter(raw_data)
+        raw_data = pd.DataFrame(raw_data)
         raw_data.columns = [0]
         data = raw_data.dropna() # drop NaN values
         data_mean = data.mean()[0]
@@ -554,6 +554,7 @@ def finish_correction():
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
     display(fig1)
+    plt.show()
     print('\n\n')
     
     # Figure 2, histograms showing the L-R x-positions
@@ -596,6 +597,7 @@ def finish_correction():
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
     display(fig2)
+    plt.show()
     print('\n\n')
     
     # Figure 3, histograms showing the L-R z-positions
@@ -638,6 +640,7 @@ def finish_correction():
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
     display(fig3)
+    plt.show()
     print('\n\n')
 
     
