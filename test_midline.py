@@ -162,12 +162,12 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     head_parameter.iloc[18, -1] = val4
     head_parameter.iloc[19, -1] = val5
     head_parameter.iloc[20, -1] = val6
-    head_parameter.iloc[35, -1] = val7
-    head_parameter.iloc[36, -1] = val8
-    head_parameter.iloc[37, -1] = val9
-    head_parameter.iloc[43, -1] = val10
-    head_parameter.iloc[44, -1] = val11
-    head_parameter.iloc[45, -1] = val12
+    head_parameter.iloc[26, -1] = val7
+    head_parameter.iloc[27, -1] = val8
+    head_parameter.iloc[28, -1] = val9
+    head_parameter.iloc[34, -1] = val10
+    head_parameter.iloc[35, -1] = val11
+    head_parameter.iloc[36, -1] = val12
 
     # Write the updated DataFrame back to the sheet
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
