@@ -1,11 +1,17 @@
 import gspread
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import glob
+import os
+import gdown
+from google.colab import files
 from google.colab import drive
 from gspread_dataframe import set_with_dataframe
 from google.auth import default
 from google.colab import auth
 from IPython.display import display, Javascript
-import numpy as np
 
 # Mount Google Drive and authenticate
 drive.mount('/content/drive')
@@ -236,12 +242,12 @@ def finish_correction():
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
 
-    mice = np.array(file_id.iloc[0,:])
+    mice = np.array(head_parameter.iloc[0,:])
     num_mice = len(mice[60:]) # count the number of mice
 
     mouse_index = np.where(mice == mouse_id)[0][0]  # Find the index of the mouse
-    mousefile = file_id.iloc[0:53,mouse_index]
-    mousefile.index = file_id.iloc[0:53,1].to_list()
+    mousefile = head_parameter.iloc[0:53,mouse_index]
+    mousefile.index = head_parameter.iloc[0:53,1].to_list()
     mouseData1 = [[mousefile['Weight before surgery (g)'],mousefile['Left ear bar (initial) (mm)'],mousefile['Right ear bar (initial) (mm)'],mousefile['Nose DV position º'],mousefile['RCS-lambda distance (µm)']]]
     mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
                   [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
@@ -262,20 +268,20 @@ def finish_correction():
 
      # All previous MetaData
 
-    leftRidge = file_id.iloc[9:17,60:]
-    leftRidge.columns = file_id.iloc[0,60:]
-    rightRidge = file_id.iloc[17:25,60:]
-    rightRidge.columns = file_id.iloc[0,60:]
-    leftRidgeZ = file_id.iloc[25:33,60:]
-    leftRidgeZ.columns = file_id.iloc[0,60:]
-    rightRidgeZ = file_id.iloc[33:41,60:]
-    rightRidgeZ.columns = file_id.iloc[0,60:]
+    leftRidge = head_parameter.iloc[9:17,60:]
+    leftRidge.columns = head_parameter.iloc[0,60:]
+    rightRidge = head_parameter.iloc[17:25,60:]
+    rightRidge.columns = head_parameter.iloc[0,60:]
+    leftRidgeZ = head_parameter.iloc[25:33,60:]
+    leftRidgeZ.columns = head_parameter.iloc[0,60:]
+    rightRidgeZ = head_parameter.iloc[33:41,60:]
+    rightRidgeZ.columns = head_parameter.iloc[0,60:]
 
-    animalWeight = file_id.iloc[0,60:]
-    LeftEarBarInitial = file_id.iloc[3,60:]
-    RightEarBarInitial = file_id.iloc[4,60:]
-    NoseDVposition = file_id.iloc[8,60:]
-    RCSlambdaDistance = file_id.iloc[7,60:]
+    animalWeight = head_parameter.iloc[0,60:]
+    LeftEarBarInitial = head_parameter.iloc[3,60:]
+    RightEarBarInitial = head_parameter.iloc[4,60:]
+    NoseDVposition = head_parameter.iloc[8,60:]
+    RCSlambdaDistance = head_parameter.iloc[7,60:]
 
     # Functions
 
