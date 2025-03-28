@@ -25,7 +25,7 @@ def create_input_boxes():
     var input1 = createInput("dateofsurgery", "Enter Date of surgery");
     var input2 = createInput("animalWeight", "Enter Weight before surgery (g)");
     var input3 = createInput("mousebirth", "Mouse date of birth ");
-    var input6 = createInput("mouseage", "Enter Mouse age (days)");
+    var input4 = createInput("mouseage", "Enter Mouse age (days)");
     var input5 = createInput("LeftEarBarInitial", "Enter Left ear bar (initial) (mm)");
     var input6 = createInput("RightEarBarInitial", "Enter Right ear bar (initial) (mm)");
 
@@ -41,7 +41,7 @@ def create_input_boxes():
     button.style.borderRadius = "8px";
     button.style.cursor = "pointer";
 
-     // Create a container for the input fields and arrange them in 2 columns
+    // Create a container for the input fields and arrange them in 2 columns
     var inputContainer = document.createElement("div");
     inputContainer.style.display = "grid";
     inputContainer.style.gridTemplateColumns = "1fr 1fr"; // 2 columns
@@ -80,7 +80,7 @@ def create_input_boxes():
     }
     '''))
 
-# Python callback to update the sheet and calculate the midline
+# Python callback to update the sheet
 def update_data(val1, val2, val3, val4, val5, val6):
     try:
         # Mount Google Drive and authenticate
@@ -93,9 +93,8 @@ def update_data(val1, val2, val3, val4, val5, val6):
         # Fetch the head_parameter DataFrame from Google Sheets
         worksheet = gc.open_by_key(file_id).sheet1
         head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
-        head_parameter[new_mouse_id] = ""
         
-        # Overwrite the values in the sheet
+        # Overwrite the values in the sheet (you can change the rows and columns as needed)
         head_parameter.iloc[49, -1] = val1
         head_parameter.iloc[0, -1] = val2
         head_parameter.iloc[50, -1] = val3
@@ -108,7 +107,6 @@ def update_data(val1, val2, val3, val4, val5, val6):
         set_with_dataframe(worksheet, head_parameter)  # Update the sheet
 
         print("Values have been updated successfully in the sheet.")
-
     except Exception as e:
         # Print the error message if something goes wrong
         print(f"Error while updating the sheet: {e}")
@@ -117,6 +115,8 @@ def update_data(val1, val2, val3, val4, val5, val6):
 from google.colab import output
 output.register_callback('notebook.update_data', update_data)
 
+# Step 1: Ask for Mouse ID first
 new_mouse_id = str(input("Mouse ID: "))
-# Initialize the input boxes and the callback
+
+# Step 2: Initialize the input boxes and the callback after Mouse ID is entered
 create_input_boxes()
