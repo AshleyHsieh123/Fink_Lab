@@ -65,6 +65,12 @@ def create_input_boxes():
     var input23 = createInput("zR4000", "Enter zR4000");
     var input24 = createInput("zR4500", "Enter zR4500");
 
+    // Plot result box (for embedding the plot)
+    var plotBox = document.createElement("div");
+    plotBox.id = "plotBox";
+    plotBox.style.margin = "10px";
+    plotBox.style.height = "400px";  // Set a height for the plot display
+
     // Submit button
     var button = document.createElement("button");
     button.innerHTML = "Submit";
@@ -133,6 +139,7 @@ def create_input_boxes():
     container.appendChild(inputContainer);
     container.appendChild(button);
     container.appendChild(finishButton);
+    container.appendChild(plotBox);
     document.body.appendChild(container);
 
     // Button click actions for Submit and Finish correction
