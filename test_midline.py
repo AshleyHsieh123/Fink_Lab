@@ -2,6 +2,8 @@ import gspread
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 import seaborn as sns
 import glob
 import os
@@ -540,6 +542,17 @@ def finish_correction():
     plt.tight_layout()
     display(fig1)
     print('\n\n')
+    # Convert plot to image and display in result box
+    img_buf = BytesIO()
+    fig.savefig(img_buf, format='png')
+    img_buf.seek(0)
+    img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
+
+    display(Javascript(f'''
+    var plotBox = document.getElementById("plotBox");
+    plotBox.innerHTML = '';  // Clear previous plot
+    plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
+    '''))
     
     # Figure 2, histograms showing the L-R x-positions
     
@@ -571,6 +584,17 @@ def finish_correction():
     plt.tight_layout()
     display(fig2)
     print('\n\n')
+    # Convert plot to image and display in result box
+    img_buf = BytesIO()
+    fig.savefig(img_buf, format='png')
+    img_buf.seek(0)
+    img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
+
+    display(Javascript(f'''
+    var plotBox = document.getElementById("plotBox");
+    plotBox.innerHTML = '';  // Clear previous plot
+    plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
+    '''))
     
     # Figure 3, histograms showing the L-R z-positions
     
@@ -602,7 +626,6 @@ def finish_correction():
     plt.tight_layout()
     display(fig3)
     print('\n\n')
-
     # Convert plot to image and display in result box
     img_buf = BytesIO()
     fig.savefig(img_buf, format='png')
@@ -614,6 +637,7 @@ def finish_correction():
     plotBox.innerHTML = '';  // Clear previous plot
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
+
     
 # Register the callback function
 from google.colab import output
