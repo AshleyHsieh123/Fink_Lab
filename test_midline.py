@@ -134,12 +134,12 @@ def update_correction_result(val1, val2, val3, val4, val5, val6):
 
     # Assuming you want to overwrite specific cells (e.g., 1st row for xL1500, xL2000, etc.)
     # Here we assume that you're overwriting columns in the first row (adjust as necessary)
-    head_parameter.loc[10, -1] = val1
-    head_parameter.loc[11, -1] = val2
-    head_parameter.loc[12, -1] = val3
-    head_parameter.loc[18, -1] = val4
-    head_parameter.loc[19, -1] = val5
-    head_parameter.loc[20, -1] = val6
+    head_parameter.iloc[10, -1] = val1
+    head_parameter.iloc[11, -1] = val2
+    head_parameter.iloc[12, -1] = val3
+    head_parameter.iloc[18, -1] = val4
+    head_parameter.iloc[19, -1] = val5
+    head_parameter.iloc[20, -1] = val6
 
     # Write the updated DataFrame back to the sheet
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
