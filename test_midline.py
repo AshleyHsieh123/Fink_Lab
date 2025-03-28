@@ -314,7 +314,7 @@ def finish_correction():
 
     def HistoSubplot(raw_data,name,row,col,unit,mousedata,**kwargs):
         # Data processing
-        raw_data = pd.DataFrame(raw_data)
+        raw_data = pd.head_plotter(raw_data)
         raw_data.columns = [0]
         data = raw_data.dropna() # drop NaN values
         data_mean = data.mean()[0]
