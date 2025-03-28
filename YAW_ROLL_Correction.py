@@ -168,16 +168,20 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         Angle3000 = round(math.atan(Ratio3000) * 180 /math.pi, 2)
         RollCorrection = round((Angle1000 + Angle3000) / 2, 2)
 
+        if YawCorrection > 0:
+            Yawdirection = 'clockwise'
+        elif YawCorrection < 0:
+            Yawdirection = 'counterclockwise'
+
+        if RollCorrection > 0:
+            Rolldirection = 'clockwise'
+        elif RollCorrection < 0:
+            Rolldirection = 'counterclockwise'
+        
         # Compose result
         result = (
-            if YawCorrection > 0:
-                f"Yaw correction: {YawCorrection}°, 'clockwise'\\n\\n"
-            elif YawCorrection < 0:
-                f"Yaw correction: {YawCorrection}°, 'counterclockwise'\\n\\n"
-            if RollCorrection > 0:
-                f"Roll correction: {RollCorrection}°, 'clockwise'\\n\\n"
-            elif RollCorrection < 0:
-                f"Roll correction: {RollCorrection}°, 'counterclockwise'\\n\\n"
+            f"Yaw correction: {YawCorrection}°, {Yawdirection}\\n\\n"
+            f"Roll correction: {RollCorrection}°, {Rolldirection}\\n\\n"
         )
 
         # Return results
