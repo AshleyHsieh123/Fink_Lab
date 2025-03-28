@@ -7,12 +7,12 @@ from google.colab import auth
 from IPython.display import display, Javascript
 import numpy as np
 
-mice = np.array(file.iloc[9,:])
+mice = np.array(file_id.iloc[9,:])
 num_mice = len(mice[60:]) # count the number of mice
 
 mouse_index = np.where(mice == mouse_id)[0][0]  # Find the index of the mouse
-mousefile = file.iloc[9:57,mouse_index]
-mousefile.index = file.iloc[9:57,1].to_list()
+mousefile = file_id.iloc[9:57,mouse_index]
+mousefile.index = file_id.iloc[9:57,1].to_list()
 mouseData1 = [[mousefile['Weight before surgery (g)'],mousefile['Left ear bar (initial) (mm)'],mousefile['Right ear bar (initial) (mm)'],mousefile['Nose DV position º'],mousefile['RCS-lambda distance (µm)']]]
 mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
               [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
@@ -33,20 +33,20 @@ mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'
 
  # All previous MetaData
 
-leftRidge = file.iloc[19:27,60:]
-leftRidge.columns = file.iloc[9,60:]
-rightRidge = file.iloc[27:35,60:]
-rightRidge.columns = file.iloc[9,60:]
-leftRidgeZ = file.iloc[35:43,60:]
-leftRidgeZ.columns = file.iloc[9,60:]
-rightRidgeZ = file.iloc[43:51,60:]
-rightRidgeZ.columns = file.iloc[9,60:]
+  leftRidge = file_id.iloc[9:17,60:]
+  leftRidge.columns = file_id.iloc[0,60:]
+  rightRidge = file_id.iloc[17:25,60:]
+  rightRidge.columns = file_id.iloc[0,60:]
+  leftRidgeZ = file_id.iloc[25:33,60:]
+  leftRidgeZ.columns = file_id.iloc[0,60:]
+  rightRidgeZ = file_id.iloc[33:41,60:]
+  rightRidgeZ.columns = file_id.iloc[0,60:]
 
-animalWeight = file.iloc[10,60:]
-LeftEarBarInitial = file.iloc[13,60:]
-RightEarBarInitial = file.iloc[14,60:]
-NoseDVposition = file.iloc[18,60:]
-RCSlambdaDistance = file.iloc[17,60:]
+  animalWeight = file_id.iloc[0,60:]
+  LeftEarBarInitial = file_id.iloc[3,60:]
+  RightEarBarInitial = file_id.iloc[4,60:]
+  NoseDVposition = file_id.iloc[8,60:]
+  RCSlambdaDistance = file_id.iloc[7,60:]
 
 # Functions
 
