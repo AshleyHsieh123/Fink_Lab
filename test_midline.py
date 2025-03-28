@@ -14,6 +14,7 @@ from gspread_dataframe import set_with_dataframe
 from google.auth import default
 from google.colab import auth
 from IPython.display import display, Javascript
+from IPython.display import display, Image
 
 # Mount Google Drive and authenticate
 drive.mount('/content/drive')
@@ -71,8 +72,9 @@ def create_input_boxes():
     var plotBox = document.createElement("div");
     plotBox.id = "plotBox";
     plotBox.style.margin = "10px";
-    plotBox.style.height = "400px";  // Set a height for the plot display
-
+    plotBox.style.height = "600px";  // Adjusted height for better image display
+    plotBox.style.width = "100%";    // Adjust width to take up available space
+    
     // Submit button
     var button = document.createElement("button");
     button.innerHTML = "Submit";
@@ -540,8 +542,7 @@ def finish_correction():
     
     fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
     plt.tight_layout()
-    display(fig1)
-    print('\n\n')
+
     # Convert plot to image and display in result box
     img_buf = BytesIO()
     fig1.savefig(img_buf, format='png')
@@ -552,6 +553,8 @@ def finish_correction():
     var plotBox = document.getElementById("plotBox");
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
+    display(fig1)
+    print('\n\n')
     
     # Figure 2, histograms showing the L-R x-positions
     
@@ -581,8 +584,7 @@ def finish_correction():
     plt.figtext(0.265,1,f'Left side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
     plt.figtext(0.755,1,f'Right side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
     plt.tight_layout()
-    display(fig2)
-    print('\n\n')
+    
     # Convert plot to image and display in result box
     img_buf = BytesIO()
     fig2.savefig(img_buf, format='png')
@@ -593,6 +595,8 @@ def finish_correction():
     var plotBox = document.getElementById("plotBox");
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
+    display(fig2)
+    print('\n\n')
     
     # Figure 3, histograms showing the L-R z-positions
     
@@ -622,8 +626,7 @@ def finish_correction():
     plt.figtext(0.265,1,f'Left side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
     plt.figtext(0.755,1,f'Right side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
     plt.tight_layout()
-    display(fig3)
-    print('\n\n')
+
     # Convert plot to image and display in result box
     img_buf = BytesIO()
     fig3.savefig(img_buf, format='png')
@@ -634,6 +637,8 @@ def finish_correction():
     var plotBox = document.getElementById("plotBox");
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
+    display(fig3)
+    print('\n\n')
 
     
 # Register the callback function
