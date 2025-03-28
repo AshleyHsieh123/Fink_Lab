@@ -6,8 +6,6 @@ from google.auth import default
 from google.colab import auth
 from IPython.display import display, Javascript
 
-new_mouse_id = str(input("Mouse ID: "))
-
 # Function to create input boxes and submit button using JS
 def create_input_boxes():
     display(Javascript('''
@@ -119,5 +117,6 @@ def update_data(val1, val2, val3, val4, val5, val6):
 from google.colab import output
 output.register_callback('notebook.update_data', update_data)
 
+new_mouse_id = str(input("Mouse ID: "))
 # Initialize the input boxes and the callback
 create_input_boxes()
