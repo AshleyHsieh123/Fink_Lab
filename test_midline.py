@@ -5,6 +5,7 @@ from gspread_dataframe import set_with_dataframe
 from google.auth import default
 from google.colab import auth
 from IPython.display import display, Javascript
+import numpy as np
 
 # Mount Google Drive and authenticate
 drive.mount('/content/drive')
