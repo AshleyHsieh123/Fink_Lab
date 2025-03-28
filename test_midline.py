@@ -29,8 +29,8 @@ def create_input_boxes():
         input.style.margin = "10px";
         input.style.padding = "12px";
         input.style.fontSize = "16px";
-        input.style.width = "250px";
-        input.style.height = "40px";
+        input.style.width = "200px";
+        input.style.height = "32px";
         return input;
     }
 
