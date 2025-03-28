@@ -228,9 +228,10 @@ def finish_correction():
     xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
     
     midline = midline_correction(xL_values,xR_values)
+    midline_rounded = round(midline, 0)
     
-    round(head_parameter.iloc[9:17, -1] += midline, 0)
-    round(head_parameter.iloc[17:25, -1] += midline, 0)
+    head_parameter.iloc[9:17, -1] += midline_rounded
+    head_parameter.iloc[17:25, -1] += midline_rounded
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
 
