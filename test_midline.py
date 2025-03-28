@@ -544,13 +544,12 @@ def finish_correction():
     print('\n\n')
     # Convert plot to image and display in result box
     img_buf = BytesIO()
-    fig.savefig(img_buf, format='png')
+    fig1.savefig(img_buf, format='png')
     img_buf.seek(0)
     img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
 
     display(Javascript(f'''
     var plotBox = document.getElementById("plotBox");
-    plotBox.innerHTML = '';  // Clear previous plot
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
     
@@ -586,13 +585,12 @@ def finish_correction():
     print('\n\n')
     # Convert plot to image and display in result box
     img_buf = BytesIO()
-    fig.savefig(img_buf, format='png')
+    fig2.savefig(img_buf, format='png')
     img_buf.seek(0)
     img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
 
     display(Javascript(f'''
     var plotBox = document.getElementById("plotBox");
-    plotBox.innerHTML = '';  // Clear previous plot
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
     
@@ -628,13 +626,12 @@ def finish_correction():
     print('\n\n')
     # Convert plot to image and display in result box
     img_buf = BytesIO()
-    fig.savefig(img_buf, format='png')
+    fig3.savefig(img_buf, format='png')
     img_buf.seek(0)
     img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
 
     display(Javascript(f'''
     var plotBox = document.getElementById("plotBox");
-    plotBox.innerHTML = '';  // Clear previous plot
     plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
     '''))
 
