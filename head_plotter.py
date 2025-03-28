@@ -7,7 +7,17 @@ from google.colab import auth
 from IPython.display import display, Javascript
 import numpy as np
 
+# Mount Google Drive and authenticate
+drive.mount('/content/drive')
+auth.authenticate_user()  # Authenticate manually to avoid errors
+# Get authenticated credentials
+creds, _ = default()
+gc = gspread.authorize(creds)
+
 file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'
+sh = gc.open_by_key(file_id)  # Open the Google Sheet with the file_id
+worksheet = sh.get_worksheet(0)  # Select the first sheet
+
 mice = np.array(file_id.iloc[9,:])
 num_mice = len(mice[60:]) # count the number of mice
 
