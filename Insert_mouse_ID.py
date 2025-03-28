@@ -20,8 +20,8 @@ head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records 
 new_mouse_id = str(input("Mouse ID: "))
 head_parameter[new_mouse_id] = ""
 
-# Initialize the input boxes and the callback
-create_input_boxes()
+worksheet.clear()
+set_with_dataframe(worksheet, head_parameter)
 
 # Function to create input boxes and submit button using JS
 def create_input_boxes():
@@ -129,3 +129,5 @@ def update_data(val1, val2, val3, val4, val5, val6):
 from google.colab import output
 output.register_callback('notebook.update_data', update_data)
 
+# Initialize the input boxes and the callback
+create_input_boxes()
