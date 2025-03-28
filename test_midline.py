@@ -149,13 +149,15 @@ def create_input_boxes():
         google.colab.kernel.invokeFunction("notebook.finish_correction", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12], {});
     }
     '''))
+
     
-# Python callback to update the sheet
+# Python callback to update the sheet and calculate the midline
 def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12):
     # Fetch the head_parameter DataFrame from Google Sheets
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
 
+    # Overwrite the values in the sheet
     head_parameter.iloc[10, -1] = val1
     head_parameter.iloc[11, -1] = val2
     head_parameter.iloc[12, -1] = val3
@@ -169,11 +171,29 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     head_parameter.iloc[35, -1] = val11
     head_parameter.iloc[36, -1] = val12
 
+    # Retrieve values for xL1000, xR1000, xL3000, xR3000, and others
+    xL1000 = float(head_parameter['xL1000'][0])
+    xR1000 = float(head_parameter['xR1000'][0])
+    xL3000 = float(head_parameter['xL3000'][0])
+    xR3000 = float(head_parameter['xR3000'][0])
+
+    # Calculate the differences: xL - (-xR) = xL + xR
+    differences = []
+    xL_values = [float(val1), float(val2), float(val3), xL1000, xL3000]  # Including xL1000, xL3000
+    xR_values = [float(val4), float(val5), float(val6), xR1000, xR3000]  # Including xR1000, xR3000
+    
+    for xL, xR in zip(xL_values, xR_values):
+        differences.append(xL + xR)  # Difference between corresponding xL and xR
+
+    # Calculate the midline by averaging differences and dividing by 2
+    midline = sum(differences) / len(differences) / 2
+    
     # Write the updated DataFrame back to the sheet
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
 
-    print("Values have been updated successfully in the sheet.")
+    print(f"Calculated midline: {midline}")
+    return midline
 
 # Register the callback function
 from google.colab import output
