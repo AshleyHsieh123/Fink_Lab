@@ -264,7 +264,10 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         midline = np.mean(differences) / 2  # Calculate the midline by averaging differences and dividing by 2
         
         # Display result in result box
-        print(f"Calculated midline: {midline}")
+        if midline > 0:
+            print(f"Calculated midline: {midline}", 'To the left')
+        else:
+            print(f"Calculated midline: {midline}", 'To the right')
         
         # Write the updated DataFrame back to the sheet
         worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
