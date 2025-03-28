@@ -6,22 +6,7 @@ from google.auth import default
 from google.colab import auth
 from IPython.display import display, Javascript
 
-# Mount Google Drive and authenticate
-drive.mount('/content/drive')
-auth.authenticate_user()  # Authenticate manually to avoid errors
-creds, _ = default()
-gc = gspread.authorize(creds)
-
-file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Use the correct Google Sheet ID here
-sh = gc.open_by_key(file_id)  # Open the Google Sheet with the file_id
-worksheet = sh.get_worksheet(0)  # Select the first sheet
-
-head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
 new_mouse_id = str(input("Mouse ID: "))
-head_parameter[new_mouse_id] = ""
-
-worksheet.clear()
-set_with_dataframe(worksheet, head_parameter)
 
 # Function to create input boxes and submit button using JS
 def create_input_boxes():
@@ -99,14 +84,19 @@ def create_input_boxes():
 
 # Python callback to update the sheet and calculate the midline
 def update_data(val1, val2, val3, val4, val5, val6):
-    # Debugging: Print the values received
-    print(f"Received values from JavaScript: {val1}, {val2}, {val3}, {val4}, {val5}, {val6}")
-
     try:
+        # Mount Google Drive and authenticate
+        drive.mount('/content/drive')
+        auth.authenticate_user()  # Authenticate manually to avoid errors
+        creds, _ = default()
+        gc = gspread.authorize(creds)
+
+        file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Use the correct Google Sheet ID here
         # Fetch the head_parameter DataFrame from Google Sheets
         worksheet = gc.open_by_key(file_id).sheet1
         head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
-
+        head_parameter[new_mouse_id] = ""
+        
         # Overwrite the values in the sheet
         head_parameter.iloc[49, -1] = val1
         head_parameter.iloc[0, -1] = val2
