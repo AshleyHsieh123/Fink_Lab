@@ -226,12 +226,13 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
 def finish_correction():
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())
-    xL_values = [float(x) for x in list(head_parameter.iloc[9:13,-1])]
-    xR_values = [float(x) for x in list(head_parameter.iloc[17:21,-1])]
+    xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
+    xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
     
     midline = midline_correction(xL_values,xR_values)
-    head_parameter.iloc[9:16, -1] += midline
-    head_parameter.iloc[17:24, -1] += midline
+    
+    head_parameter.iloc[9:17, -1] += midline
+    head_parameter.iloc[17:25, -1] += midline
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
     
