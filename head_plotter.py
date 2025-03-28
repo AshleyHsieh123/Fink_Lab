@@ -1,3 +1,12 @@
+import gspread
+import pandas as pd
+from google.colab import drive
+from gspread_dataframe import set_with_dataframe
+from google.auth import default
+from google.colab import auth
+from IPython.display import display, Javascript
+import numpy as np
+
 mice = np.array(file.iloc[9,:])
 num_mice = len(mice[60:]) # count the number of mice
 
