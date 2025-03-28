@@ -201,7 +201,7 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         for xL, xR in zip(xL_values, xR_values):
             differences.append(xL + xR)  # Difference between corresponding xL and xR
 
-        midline = np.mean(difference) / 2  # Calculate the midline by averaging differences and dividing by 2
+        midline = np.mean(differences) / 2  # Calculate the midline by averaging differences and dividing by 2
         
         # Display result in result box
         print(f"Calculated midline: {midline}")
