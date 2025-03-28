@@ -69,11 +69,23 @@ def create_input_boxes():
     var input24 = createInput("zR4500", "Enter zR4500");
 
     // Plot result box (for embedding the plot)
-    var plotBox = document.createElement("div");
-    plotBox.id = "plotBox";
-    plotBox.style.margin = "10px";
-    plotBox.style.height = "600px";  // Adjusted height for better image display
-    plotBox.style.width = "100%";    // Adjust width to take up available space
+    var plotBox1 = document.createElement("div");
+    plotBox1.id = "plotBox1";
+    plotBox1.style.margin = "10px";
+    plotBox1.style.height = "600px";  // Adjusted height for better image display
+    plotBox1.style.width = "100%";
+
+    var plotBox2 = document.createElement("div");
+    plotBox2.id = "plotBox2";
+    plotBox2.style.margin = "10px";
+    plotBox2.style.height = "600px";  // Adjusted height for better image display
+    plotBox2.style.width = "100%";
+
+    var plotBox3 = document.createElement("div");
+    plotBox3.id = "plotBox3";
+    plotBox3.style.margin = "10px";
+    plotBox3.style.height = "600px";  // Adjusted height for better image display
+    plotBox3.style.width = "100%";
     
     // Submit button
     var button = document.createElement("button");
@@ -143,7 +155,9 @@ def create_input_boxes():
     container.appendChild(inputContainer);
     container.appendChild(button);
     container.appendChild(finishButton);
-    container.appendChild(plotBox);
+    container.appendChild(plotBox1);
+    container.appendChild(plotBox2);
+    container.appendChild(plotBox3);
     document.body.appendChild(container);
 
     // Button click actions for Submit and Finish correction
@@ -238,6 +252,103 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     except Exception as e:
         print(f"Error in callback: {e}")
 
+# Functions
+
+# Function to determine if the value is in the range mean ± STD
+def isInside(value,mean,std):
+    if value <= mean + 2*std and value >= mean - 2*std:
+        return True # Value is inside the range
+    else:
+        return False # Value is outside the range
+
+
+# Function for histogram
+# raw_data: list like or pandas DataFrame, with only on dimension. Can tolerant nan or str in the data (drop it automatically)
+# name: name of the histogram.
+# row: row of the subplot
+# col: column of the subplot
+# unit: unit of the histogram
+# mousedata: individual mouse data, with one value only
+
+def HistoSubplot(raw_data,name,row,col,unit,mousedata,**kwargs):
+    # Data processing
+    raw_data = pd.DataFrame(raw_data)
+    raw_data.columns = [0]
+    data = raw_data.dropna() # drop NaN values
+    data_mean = data.mean()[0]
+    data_std = data.std()[0]
+
+    # if 'bins' exist in the input, set the binwidth to the bins input
+    # else: set the binwidth to STD/2
+    if 'bins' in kwargs:
+        binwidth = kwargs['bins']
+    else:
+        binwidth = data_std/2 # binsize
+    bins = np.arange(data.min()[0], data.max()[0] + binwidth, binwidth)
+
+    y, x, _ = axs[row,col].hist(data, color = 'black',bins = bins, rwidth = 0.8) # obtain x and y of the histogram
+    mouseY = 1.1*max(y) # calculate max height of the histogram
+
+    # plotting histogram for [i,j] panel
+    axs[row,col].axvline(data_mean,lw = 2,color = 'black', ls = '--') # mean
+    for n in [1,-1]:
+        axs[row,col].axvline(data_mean + n*data_std ,lw = 1,color = 'black', ls = '--') # 1 std
+        axs[row,col].axvline(data_mean + 2*n*data_std ,lw = 1,color = 'black', ls = 'dotted') # 2 std
+    axs[row,col].set_xlabel(name + f' ({unit})')
+    axs[row,col].set_ylabel('Number of mice')
+    axs[row,col].set_xlim(data_mean-4*data_std,data_mean+4*data_std)
+    axs[row,col].set_ylim(0,mouseY*1.1)
+
+    if isInside(mousedata,data_mean,data_std):
+        axs[row,col].scatter(mousedata, mouseY, color = 'red', marker = '*', s = 100)
+    elif np.isnan(mousedata):
+        axs[row,col].set_title("Does not exist!", fontweight="bold")
+    else:
+        axs[row,col].scatter(mousedata, mouseY, facecolors='none',edgecolor = 'blue', marker = 'o', s = 100)
+        axs[row,col].scatter(mousedata, mouseY, color = 'blue' ,marker = '.', s = 50)
+        axs[row,col].set_title("PARAMETER OUT OF BOUNDS!", fontweight="bold")
+
+# Functions of linear regression
+from sklearn.linear_model import LinearRegression
+
+def clear_data(raw_data):
+    raw_data = raw_data.dropna() # drop NaN values
+    data = [x for x in raw_data if type(x) != str] # create a list with miniloop and select items that are not string
+    return data
+
+def linear_regression_plot_axs(x,y,linespace,i,j,**kwargs):
+    x = np.array(x).reshape(-1,1)
+    model = LinearRegression()
+    model.fit(x,y)
+    slope = model.coef_[0]
+    intercept = model.intercept_
+    x0 = linespace
+    y0 = x0*slope + intercept
+    if 'color' in kwargs:
+        color = kwargs['color']
+        alpha = 1
+    else:
+        color = 'grey'
+        alpha = 0.3
+    if 'lw' in kwargs:
+        lw = kwargs['lw']
+    else:
+        lw = 1
+    axs[i,j].plot(x0,y0,lw=lw,color=color,alpha = alpha)
+    return [slope,intercept]
+
+def linear_regression(x,y):
+    x = np.array(x).reshape(-1,1)
+    model = LinearRegression()
+    model.fit(x,y)
+    slope = model.coef_[0]
+    intercept = model.intercept_
+    return [slope,intercept]
+
+
+
+
+
 def finish_correction():
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())
@@ -293,124 +404,6 @@ def finish_correction():
     RightEarBarInitial = head_parameter.iloc[4,60:]
     NoseDVposition = head_parameter.iloc[8,60:]
     RCSlambdaDistance = head_parameter.iloc[7,60:]
-
-    # Functions
-
-    # Function to determine if the value is in the range mean ± STD
-    def isInside(value,mean,std):
-        if value <= mean + 2*std and value >= mean - 2*std:
-            return True # Value is inside the range
-        else:
-            return False # Value is outside the range
-
-
-    # Function for histogram
-    # raw_data: list like or pandas DataFrame, with only on dimension. Can tolerant nan or str in the data (drop it automatically)
-    # name: name of the histogram.
-    # row: row of the subplot
-    # col: column of the subplot
-    # unit: unit of the histogram
-    # mousedata: individual mouse data, with one value only
-
-    def HistoSubplot(raw_data,name,row,col,unit,mousedata,**kwargs):
-        # Data processing
-        raw_data = pd.DataFrame(raw_data)
-        raw_data.columns = [0]
-        data = raw_data.dropna() # drop NaN values
-        data_mean = data.mean()[0]
-        data_std = data.std()[0]
-
-        # if 'bins' exist in the input, set the binwidth to the bins input
-        # else: set the binwidth to STD/2
-        if 'bins' in kwargs:
-            binwidth = kwargs['bins']
-        else:
-            binwidth = data_std/2 # binsize
-        bins = np.arange(data.min()[0], data.max()[0] + binwidth, binwidth)
-    
-        y, x, _ = axs[row,col].hist(data, color = 'black',bins = bins, rwidth = 0.8) # obtain x and y of the histogram
-        mouseY = 1.1*max(y) # calculate max height of the histogram
-    
-        # plotting histogram for [i,j] panel
-        axs[row,col].axvline(data_mean,lw = 2,color = 'black', ls = '--') # mean
-        for n in [1,-1]:
-            axs[row,col].axvline(data_mean + n*data_std ,lw = 1,color = 'black', ls = '--') # 1 std
-            axs[row,col].axvline(data_mean + 2*n*data_std ,lw = 1,color = 'black', ls = 'dotted') # 2 std
-        axs[row,col].set_xlabel(name + f' ({unit})')
-        axs[row,col].set_ylabel('Number of mice')
-        axs[row,col].set_xlim(data_mean-4*data_std,data_mean+4*data_std)
-        axs[row,col].set_ylim(0,mouseY*1.1)
-    
-        if isInside(mousedata,data_mean,data_std):
-            axs[row,col].scatter(mousedata, mouseY, color = 'red', marker = '*', s = 100)
-        elif np.isnan(mousedata):
-            axs[row,col].set_title("Does not exist!", fontweight="bold")
-        else:
-            axs[row,col].scatter(mousedata, mouseY, facecolors='none',edgecolor = 'blue', marker = 'o', s = 100)
-            axs[row,col].scatter(mousedata, mouseY, color = 'blue' ,marker = '.', s = 50)
-            axs[row,col].set_title("PARAMETER OUT OF BOUNDS!", fontweight="bold")
-    
-    # Functions of linear regression
-    from sklearn.linear_model import LinearRegression
-    
-    def clear_data(raw_data):
-        raw_data = raw_data.dropna() # drop NaN values
-        data = [x for x in raw_data if type(x) != str] # create a list with miniloop and select items that are not string
-        return data
-    
-    def linear_regression_plot_axs(x,y,linespace,i,j,**kwargs):
-        x = np.array(x).reshape(-1,1)
-        model = LinearRegression()
-        model.fit(x,y)
-        slope = model.coef_[0]
-        intercept = model.intercept_
-        x0 = linespace
-        y0 = x0*slope + intercept
-        if 'color' in kwargs:
-            color = kwargs['color']
-            alpha = 1
-        else:
-            color = 'grey'
-            alpha = 0.3
-        if 'lw' in kwargs:
-            lw = kwargs['lw']
-        else:
-            lw = 1
-        axs[i,j].plot(x0,y0,lw=lw,color=color,alpha = alpha)
-        return [slope,intercept]
-    
-    def linear_regression(x,y):
-        x = np.array(x).reshape(-1,1)
-        model = LinearRegression()
-        model.fit(x,y)
-        slope = model.coef_[0]
-        intercept = model.intercept_
-        return [slope,intercept]
-    
-    # Calculated data
-    
-    mouseXLR = list(map(list, zip(*mouseData2)))
-    mouseZLR = list(map(list, zip(*mouseData3)))
-    
-    yPositions = np.array([1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500])
-    rightRidge = rightRidge.apply(pd.to_numeric, errors='coerce')  # Convert columns to numeric
-    leftRidge = leftRidge.apply(pd.to_numeric, errors='coerce')
-    rightRidgeZ = rightRidgeZ.apply(pd.to_numeric, errors='coerce')
-    leftRidgeZ = leftRidgeZ.apply(pd.to_numeric, errors='coerce')
-    
-    meanR = np.nanmean(rightRidge, axis=1)
-    stdR = np.nanstd(rightRidge, axis=1)
-    meanL = np.nanmean(leftRidge, axis=1)
-    stdL = np.nanstd(leftRidge, axis=1)
-    minR, maxR = np.nanmin(rightRidge, axis=1), np.nanmax(rightRidge, axis=1)
-    minL, maxL = np.nanmin(leftRidge, axis=1), np.nanmax(leftRidge, axis=1)
-    
-    meanRz = np.nanmean(rightRidgeZ, axis=1)
-    stdRz = np.nanstd(rightRidgeZ, axis=1)
-    meanLz = np.nanmean(leftRidgeZ, axis=1)
-    stdLz = np.nanstd(leftRidgeZ, axis=1)
-    minRz, maxRz = np.nanmin(rightRidgeZ, axis=1), np.nanmax(rightRidgeZ, axis=1)
-    minLz, maxLz = np.nanmin(leftRidgeZ, axis=1), np.nanmax(leftRidgeZ, axis=1)
     
     # Figure 1
     
@@ -544,14 +537,14 @@ def finish_correction():
     plt.tight_layout()
 
     # Convert plot to image and display in result box
-    img_buf = BytesIO()
-    fig1.savefig(img_buf, format='png')
-    img_buf.seek(0)
-    img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
+    img_buf1 = BytesIO()
+    fig1.savefig(img_buf1, format='png')
+    img_buf1.seek(0)
+    img_base641 = base64.b64encode(img_buf1.read()).decode('utf-8')
 
     display(Javascript(f'''
-    var plotBox = document.getElementById("plotBox");
-    plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
+    var plotBox1 = document.getElementById("plotBox1");
+    plotBox1.innerHTML = '<img src="data:image/png;base64,' + "{img_base641}" + '" />';
     '''))
     display(fig1)
     plt.show()
@@ -587,14 +580,14 @@ def finish_correction():
     plt.tight_layout()
     
     # Convert plot to image and display in result box
-    img_buf = BytesIO()
-    fig2.savefig(img_buf, format='png')
-    img_buf.seek(0)
-    img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
+    img_buf2 = BytesIO()
+    fig2.savefig(img_buf2, format='png')
+    img_buf2.seek(0)
+    img_base642 = base64.b64encode(img_buf2.read()).decode('utf-8')
 
     display(Javascript(f'''
-    var plotBox = document.getElementById("plotBox");
-    plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
+    var plotBox2 = document.getElementById("plotBox2");
+    plotBox2.innerHTML = '<img src="data:image/png;base64,' + "{img_base642}" + '" />';
     '''))
     display(fig2)
     plt.show()
@@ -630,14 +623,14 @@ def finish_correction():
     plt.tight_layout()
 
     # Convert plot to image and display in result box
-    img_buf = BytesIO()
-    fig3.savefig(img_buf, format='png')
-    img_buf.seek(0)
-    img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
+    img_buf3 = BytesIO()
+    fig3.savefig(img_buf3, format='png')
+    img_buf3.seek(0)
+    img_base643 = base64.b64encode(img_buf3.read()).decode('utf-8')
 
     display(Javascript(f'''
-    var plotBox = document.getElementById("plotBox");
-    plotBox.innerHTML = '<img src="data:image/png;base64,' + "{img_base64}" + '" />';
+    var plotBox3 = document.getElementById("plotBox3");
+    plotBox3.innerHTML = '<img src="data:image/png;base64,' + "{img_base643}" + '" />';
     '''))
     display(fig3)
     plt.show()
