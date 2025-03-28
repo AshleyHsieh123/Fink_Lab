@@ -7,6 +7,7 @@ from google.colab import auth
 from IPython.display import display, Javascript
 import numpy as np
 
+file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'
 mice = np.array(file_id.iloc[9,:])
 num_mice = len(mice[60:]) # count the number of mice
 
