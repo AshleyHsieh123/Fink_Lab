@@ -429,6 +429,7 @@ def finish_correction():
     
     # Figure 1
     def update_figure_1():
+        global axs, fig1
         fig1, axs = plt.subplots(3,5,figsize = (22,18))
         for i in range(3):
             for j in range(5):
@@ -563,7 +564,8 @@ def finish_correction():
         fig1.savefig(img_buf1, format='png')
         img_buf1.seek(0)
         img_base641 = base64.b64encode(img_buf1.read()).decode('utf-8')
-    
+
+        print(img_base641[:100])
         display(Javascript(f'''
             var plotBox1 = document.getElementById("plotBox1");
             if (plotBox1) {{
@@ -599,6 +601,7 @@ def finish_correction():
         
         # plotting using HistoSubplot function
         # row = 8 (j), col = 2 (i)
+        global axs, fig2
         fig2,axs = plt.subplots(8,2,figsize = (12,12))
         for i in range(2):
             for j in range(8):
@@ -648,6 +651,7 @@ def finish_correction():
         
         # plotting using HistoSubplot function
         # row = 8 (j), col = 2 (i)
+        global axs, fig3
         fig3,axs = plt.subplots(8,2,figsize = (12,12))
         for i in range(2):
             for j in range(8):
@@ -685,8 +689,11 @@ def finish_correction():
     output.register_callback('notebook.update_figure_2', update_figure_2)
     output.register_callback('notebook.update_figure_3', update_figure_3)
     
+    print("Calling update_figure_1...")
     update_figure_1()
+    print("Calling update_figure_2...")
     update_figure_2()
+    print("Calling update_figure_3...")
     update_figure_3()
 
     
