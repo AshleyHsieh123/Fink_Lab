@@ -346,9 +346,6 @@ def linear_regression(x,y):
     return [slope,intercept]
 
 
-
-
-
 def finish_correction():
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())
