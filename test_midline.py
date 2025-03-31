@@ -427,268 +427,6 @@ def finish_correction():
     meanRz = rightRidgeZ.mean(axis=1).values
     stdRz = rightRidgeZ.std(axis=1).values
     
-    # Figure 1
-    def update_figure_1():
-        global axs, fig1
-        fig1, axs = plt.subplots(3,5,figsize = (22,18))
-        for i in range(3):
-            for j in range(5):
-                axs[i,j].spines['top'].set_visible(False)
-                axs[i,j].spines['right'].set_visible(False)
-        
-        # Left - Right Ridge x/z-Positions for specific mouse
-        # axs[1].plot(leftRidge, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
-        axs[0,0].plot(meanL, yPositions, color = 'red', linestyle = '-', linewidth = 2)
-        axs[0,0].plot(mouseXLR[0], yPositions, color = 'black', linestyle = '-', linewidth = 2)
-        axs[0,0].fill_betweenx(yPositions,meanL+stdL,meanL-stdL, color = 'grey', alpha = 0.4, linestyle = '--') # fill between x0 to x1 at y, std = 1
-        axs[0,0].fill_betweenx(yPositions,meanL+2*stdL,meanL-2*stdL, color = 'grey', alpha = 0.3, linestyle = 'dotted') # fill between x0 to x1 at y, std = 2
-        axs[0,0].scatter(mouseXLR[0], yPositions, color = 'black', marker = 'o', s = 25, zorder=100)
-        axs[0,0].set_xlabel('L lateral displacement (µm)')
-        axs[0,0].set_ylabel('A/P position (µm)')
-        axs[0,0].set_xlim([5000,2500])
-        axs[0,0].set_ylim([1000-100,4500+100])
-        
-        # axs[1].plot(rightRidge, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
-        axs[0,1].plot(meanR, yPositions, color = 'red', linestyle = '-', linewidth = 2)
-        axs[0,1].plot(mouseXLR[1], yPositions, color = 'black', linestyle = '-', linewidth = 2)
-        axs[0,1].fill_betweenx(yPositions,meanR+stdR,meanR-stdR, color = 'grey', alpha = 0.4, linestyle = '--') # fill between x0 to x1 at y, std = 1
-        axs[0,1].fill_betweenx(yPositions,meanR+2*stdR,meanR-2*stdR, color = 'grey', alpha = 0.3, linestyle = 'dotted') # fill between x0 to x1 at y, std = 2
-        axs[0,1].scatter(mouseXLR[1], yPositions, color = 'black', marker = 'o', s = 25, zorder=100)
-        axs[0,1].set_xlabel('R lateral displacement (µm)')
-        axs[0,1].set_ylabel('A/P position (µm)')
-        axs[0,1].set_xlim([-2500,-5000])
-        axs[0,1].set_ylim([1000-100,4500+100])
-        
-        # axs[5].plot(leftRidgeZ, yPositions, color = 'grey', linestyle = '--', linewidth = 0.1, alpha = 0.5)
-        axs[1,0].plot(meanLz, yPositions, color = 'red', linestyle = '-', linewidth = 2)
-        axs[1,0].plot(mouseZLR[0], yPositions, color = 'black', linestyle = '-', linewidth = 2)
-        axs[1,0].fill_betweenx(yPositions,meanLz+stdLz,meanLz-stdLz, color = 'grey', alpha = 0.4, linestyle = '--') # fill between x0 to x1 at y, std = 1
-        axs[1,0].fill_betweenx(yPositions,meanLz+2*stdLz,meanLz-2*stdLz, color = 'grey', alpha = 0.3, linestyle = 'dotted') # fill between x0 to x1 at y, std = 2
-        axs[1,0].scatter(mouseZLR[0], yPositions, color = 'black', marker = 'o', s = 25, zorder=100)
-        axs[1,0].set_xlabel('L vertical displacement (µm)')
-        axs[1,0].set_ylabel('A/P position (µm)')
-        axs[1,0].set_xlim([1600,400])
-        axs[1,0].set_ylim([1000-100,4500+100])
-        
-        # axs[6].plot(rightRidgeZ, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
-        axs[1,1].plot(meanRz, yPositions, color = 'red', linestyle = '-', linewidth = 2)
-        axs[1,1].plot(mouseZLR[1], yPositions, color = 'black', linestyle = '-', linewidth = 2)
-        axs[1,1].fill_betweenx(yPositions,meanRz+stdRz,meanRz-stdRz, color = 'grey', alpha = 0.4, linestyle = '--') # fill between x0 to x1 at y, std = 1
-        axs[1,1].fill_betweenx(yPositions,meanRz+2*stdRz,meanRz-2*stdRz, color = 'grey', alpha = 0.3, linestyle = 'dotted') # fill between x0 to x1 at y, std = 2
-        axs[1,1].scatter(mouseZLR[1], yPositions, color = 'black', marker = 'o', s = 25, zorder=100)
-        axs[1,1].set_xlabel('R vertical displacement (µm)')
-        axs[1,1].set_ylabel('A/P position (µm)')
-        axs[1,1].set_xlim([400,1600])
-        axs[1,1].set_ylim([1000-100,4500+100])
-        
-        # Specific Mouse Regression
-        # row 0, col 2
-        linespace = np.arange(2500,5000,100)
-        axs[0,2].plot(leftRidge, rightRidge, color = 'gray', linestyle = '-')
-        axs[0,2].scatter(mouseXLR[0], mouseXLR[1], color = 'black', s=25, marker = 's',zorder = 100)
-        axs[0,2].plot(linespace, -linespace, color = 'black', linestyle = ':', alpha = 0.5)
-        linear_regression_plot_axs(mouseXLR[0], mouseXLR[1], linespace,0,2, color = 'red',lw = 2)
-        axs[0,2].set_title(f'Regression for current mouse', size = 10)
-        axs[0,2].set_xlabel('L lateral displacement (µm)')
-        axs[0,2].set_ylabel('R lateral displacement (µm)')
-        
-        # row 1, col 2
-        linespace = np.arange(400,1500,100)
-        axs[1,2].plot(leftRidgeZ, rightRidgeZ, color = 'gray', linestyle = '-')
-        axs[1,2].scatter(mouseZLR[0], mouseZLR[1], color = 'black', s=25, marker = 's',zorder = 100)
-        axs[1,2].plot(linespace, linespace, color = 'black', linestyle = ':', alpha = 0.5)
-        linear_regression_plot_axs(mouseZLR[0], mouseZLR[1], linespace,1,2, color = 'red',lw = 2)
-        axs[1,2].set_title(f'Regression for current mouse', size = 10)
-        axs[1,2].set_xlabel('L vertical displacement (µm)')
-        axs[1,2].set_ylabel('R vertical displacement (µm)')
-        
-        mouseLRregression = [linear_regression(mouseXLR[0],mouseXLR[1]),linear_regression(mouseZLR[0],mouseZLR[1])]
-        # Calculate lateral linear regression
-        linespace = np.linspace(3000, 5000, 100)
-        XAllintercept = []
-        XAllslope = []
-        for i in range(num_mice):
-            positionsL = clear_data(leftRidge.iloc[:,i])
-            positionsR = clear_data(rightRidge.iloc[:,i])
-            if len(positionsL) > 1 and len(positionsR) > 1:
-                slope, intercept = linear_regression(positionsL,positionsR)
-                XAllslope.append(slope)
-                XAllintercept.append(intercept)
-            else:
-                XAllslope.append(np.nan)
-                XAllintercept.append(np.nan)
-        
-        HistoSubplot(XAllslope,'',0,3,'',mouseLRregression[0][0])
-        axs[0,3].set_xlabel('Slopes')
-        axs[0,3].set_title('Slope of L-R lateral displacement')
-        
-        HistoSubplot(XAllintercept,'',0,4,'',mouseLRregression[0][1])
-        axs[0,4].set_xlabel('Intercepts')
-        axs[0,4].set_title('Intercept of L-R lateral displacement')
-        
-        # Calculate vertical linear regression
-        linespace = np.linspace(500, 1500, 100)
-        ZAllintercept = []
-        ZAllslope = []
-        for i in range(num_mice):
-            positionsLz = clear_data(leftRidgeZ.iloc[:,i])
-            positionsRz = clear_data(rightRidgeZ.iloc[:,i])
-            if len(positionsLz) > 1 and len(positionsRz) > 1:
-                slope, intercept = linear_regression(positionsLz,positionsRz)
-                ZAllslope.append(slope)
-                ZAllintercept.append(intercept)
-            else:
-                ZAllslope.append(np.nan)
-                ZAllintercept.append(np.nan)
-        
-        HistoSubplot(ZAllslope,'',1,3,'',mouseLRregression[1][0])
-        axs[1,3].set_xlabel('Slopes')
-        axs[1,3].set_title('Slope of L-R vertical displacement')
-        
-        HistoSubplot(ZAllintercept,'',1,4,'',mouseLRregression[1][1])
-        axs[1,4].set_xlabel('Intercepts')
-        axs[1,4].set_title('Intercept of L-R vertical displacement')
-        
-        # histograms of all values
-        HistoSubplot(animalWeight,'Animal Weight',2,0,'g',mouseData1[0][0])
-        HistoSubplot(LeftEarBarInitial,'Left ear bar',2,1,'mm',mouseData1[0][1])
-        HistoSubplot(RightEarBarInitial,'Right ear bar',2,2,'mm',mouseData1[0][2])
-        HistoSubplot(NoseDVposition,'Nose DV position',2,3,'˚',mouseData1[0][3])
-        HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1[0][4])
-        
-        fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
-        plt.tight_layout()
-    
-        # Convert plot to image and display in result box
-        img_buf1 = BytesIO()
-        fig1.savefig(img_buf1, format='png')
-        img_buf1.seek(0)
-        img_base641 = base64.b64encode(img_buf1.read()).decode('utf-8')
-
-        print(img_base641[:100])
-        display(Javascript(f'''
-            var plotBox1 = document.getElementById("plotBox1");
-            if (plotBox1) {{
-                plotBox1.innerHTML = '<img src="data:image/png;base64,' + "{img_base641}" + '" />';
-            }} else {{
-                console.log("Error: plotBox1 is not available.");
-            }}
-        '''))
-    
-        print("Figure 1 has been embedded in plotBox1.")
-        
-        display(fig1)
-        plt.show()
-        print('\n\n')
-    
-    # Figure 2, histograms showing the L-R x-positions
-    def update_figure_2():
-        # collecting master data from file
-        MasterListData = [leftRidge.reset_index(drop = True),rightRidge.reset_index(drop = True)]
-        MasterListName = [['LEFT displacement at y=1000 µm PRCS','RIGHT displacement at y=1000 µm PRCS'],
-                          ['LEFT displacement at y=1500 µm PRCS','RIGHT displacement at y=1500 µm PRCS'],
-                          ['LEFT displacement at y=2000 µm PRCS','RIGHT displacement at y=2000 µm PRCS'],
-                          ['LEFT displacement at y=2500 µm PRCS','RIGHT displacement at y=2500 µm PRCS'],
-                          ['LEFT displacement at y=3000 µm PRCS','RIGHT displacement at y=3000 µm PRCS'],
-                          ['LEFT displacement at y=3500 µm PRCS','RIGHT displacement at y=3500 µm PRCS'],
-                          ['LEFT displacement at y=4000 µm PRCS','RIGHT displacement at y=4000 µm PRCS'],
-                          ['LEFT displacement at y=4500 µm PRCS','RIGHT displacement at y=4500 µm PRCS']]
-        MasterListUnit = [['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm']]
-        
-        # setting a global xlim
-        xlim = [[5000,2500],[-2500,-5000]]
-        bins = 50
-        
-        # plotting using HistoSubplot function
-        # row = 8 (j), col = 2 (i)
-        global axs, fig2
-        fig2,axs = plt.subplots(8,2,figsize = (12,12))
-        for i in range(2):
-            for j in range(8):
-                HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData2[j][i],bins = bins)
-                axs[j,i].set_xlim(xlim[i])
-        plt.figtext(0.265,1,f'Left side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
-        plt.figtext(0.755,1,f'Right side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
-        plt.tight_layout()
-        
-        # Convert plot to image and display in result box
-        img_buf2 = BytesIO()
-        fig2.savefig(img_buf2, format='png')
-        img_buf2.seek(0)
-        img_base642 = base64.b64encode(img_buf2.read()).decode('utf-8')
-    
-        display(Javascript(f'''
-            var plotBox2 = document.getElementById("plotBox2");
-            if (plotBox2) {{
-                plotBox2.innerHTML = '<img src="data:image/png;base64,' + "{img_base642}" + '" />';
-            }} else {{
-                console.log("Error: plotBox2 is not available.");
-            }}
-        '''))
-        print("Figure 2 has been embedded in plotBox2.")
-
-        display(fig2)
-        plt.show()
-        print('\n\n')
-    
-    # Figure 3, histograms showing the L-R z-positions
-    def update_figure_3():
-        # collecting master data from file
-        MasterListData = [leftRidgeZ.reset_index(drop = True),rightRidgeZ.reset_index(drop = True)]
-        MasterListName = [['LEFT Z-displacement at y=1000 µm PRCS','RIGHT Z-displacement at y=1000 µm PRCS'],
-                          ['LEFT Z-displacement at y=1500 µm PRCS','RIGHT Z-displacement at y=1500 µm PRCS'],
-                          ['LEFT Z-displacement at y=2000 µm PRCS','RIGHT Z-displacement at y=2000 µm PRCS'],
-                          ['LEFT Z-displacement at y=2500 µm PRCS','RIGHT Z-displacement at y=2500 µm PRCS'],
-                          ['LEFT Z-displacement at y=3000 µm PRCS','RIGHT Z-displacement at y=3000 µm PRCS'],
-                          ['LEFT Z-displacement at y=3500 µm PRCS','RIGHT Z-displacement at y=3500 µm PRCS'],
-                          ['LEFT Z-displacement at y=4000 µm PRCS','RIGHT Z-displacement at y=4000 µm PRCS'],
-                          ['LEFT Z-displacement at y=4500 µm PRCS','RIGHT Z-displacement at y=4500 µm PRCS']]
-        MasterListUnit = [['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm']]
-        
-        # setting a global xlim
-        xlim = [[1600,400],[400,1600]]
-        bins = 40
-        
-        # plotting using HistoSubplot function
-        # row = 8 (j), col = 2 (i)
-        global axs, fig3
-        fig3,axs = plt.subplots(8,2,figsize = (12,12))
-        for i in range(2):
-            for j in range(8):
-                HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData3[j][i],bins = bins)
-                axs[j,i].set_xlim(xlim[i])
-        plt.figtext(0.265,1,f'Left side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
-        plt.figtext(0.755,1,f'Right side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
-        plt.tight_layout()
-    
-        # Convert plot to image and display in result box
-        img_buf3 = BytesIO()
-        fig3.savefig(img_buf3, format='png')
-        img_buf3.seek(0)
-        img_base643 = base64.b64encode(img_buf3.read()).decode('utf-8')
-    
-        display(Javascript(f'''
-            var plotBox3 = document.getElementById("plotBox3");
-            if (plotBox3) {{
-                plotBox3.innerHTML = '<img src="data:image/png;base64,' + "{img_base643}" + '" />';
-            }} else {{
-                console.log("Error: plotBox3 is not available.");
-            }}
-        '''))
-        print("Figure 3 has been embedded in plotBox3.")
-        
-        display(fig3)
-        plt.show()
-        print('\n\n')
-    
-        print("Figures saved and encoded in base64.")
-        print("JavaScript for embedding images executed.")
-
-    from google.colab import output
-    output.register_callback('notebook.update_figure_1', update_figure_1)
-    output.register_callback('notebook.update_figure_2', update_figure_2)
-    output.register_callback('notebook.update_figure_3', update_figure_3)
-    
     print("Calling update_figure_1...")
     update_figure_1()
     print("Calling update_figure_2...")
@@ -696,11 +434,270 @@ def finish_correction():
     print("Calling update_figure_3...")
     update_figure_3()
 
+# Figure 1
+def update_figure_1():
+    global axs, fig1
+    fig1, axs = plt.subplots(3,5,figsize = (22,18))
+    for i in range(3):
+        for j in range(5):
+            axs[i,j].spines['top'].set_visible(False)
+            axs[i,j].spines['right'].set_visible(False)
     
+    # Left - Right Ridge x/z-Positions for specific mouse
+    # axs[1].plot(leftRidge, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
+    axs[0,0].plot(meanL, yPositions, color = 'red', linestyle = '-', linewidth = 2)
+    axs[0,0].plot(mouseXLR[0], yPositions, color = 'black', linestyle = '-', linewidth = 2)
+    axs[0,0].fill_betweenx(yPositions,meanL+stdL,meanL-stdL, color = 'grey', alpha = 0.4, linestyle = '--') # fill between x0 to x1 at y, std = 1
+    axs[0,0].fill_betweenx(yPositions,meanL+2*stdL,meanL-2*stdL, color = 'grey', alpha = 0.3, linestyle = 'dotted') # fill between x0 to x1 at y, std = 2
+    axs[0,0].scatter(mouseXLR[0], yPositions, color = 'black', marker = 'o', s = 25, zorder=100)
+    axs[0,0].set_xlabel('L lateral displacement (µm)')
+    axs[0,0].set_ylabel('A/P position (µm)')
+    axs[0,0].set_xlim([5000,2500])
+    axs[0,0].set_ylim([1000-100,4500+100])
+    
+    # axs[1].plot(rightRidge, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
+    axs[0,1].plot(meanR, yPositions, color = 'red', linestyle = '-', linewidth = 2)
+    axs[0,1].plot(mouseXLR[1], yPositions, color = 'black', linestyle = '-', linewidth = 2)
+    axs[0,1].fill_betweenx(yPositions,meanR+stdR,meanR-stdR, color = 'grey', alpha = 0.4, linestyle = '--') # fill between x0 to x1 at y, std = 1
+    axs[0,1].fill_betweenx(yPositions,meanR+2*stdR,meanR-2*stdR, color = 'grey', alpha = 0.3, linestyle = 'dotted') # fill between x0 to x1 at y, std = 2
+    axs[0,1].scatter(mouseXLR[1], yPositions, color = 'black', marker = 'o', s = 25, zorder=100)
+    axs[0,1].set_xlabel('R lateral displacement (µm)')
+    axs[0,1].set_ylabel('A/P position (µm)')
+    axs[0,1].set_xlim([-2500,-5000])
+    axs[0,1].set_ylim([1000-100,4500+100])
+    
+    # axs[5].plot(leftRidgeZ, yPositions, color = 'grey', linestyle = '--', linewidth = 0.1, alpha = 0.5)
+    axs[1,0].plot(meanLz, yPositions, color = 'red', linestyle = '-', linewidth = 2)
+    axs[1,0].plot(mouseZLR[0], yPositions, color = 'black', linestyle = '-', linewidth = 2)
+    axs[1,0].fill_betweenx(yPositions,meanLz+stdLz,meanLz-stdLz, color = 'grey', alpha = 0.4, linestyle = '--') # fill between x0 to x1 at y, std = 1
+    axs[1,0].fill_betweenx(yPositions,meanLz+2*stdLz,meanLz-2*stdLz, color = 'grey', alpha = 0.3, linestyle = 'dotted') # fill between x0 to x1 at y, std = 2
+    axs[1,0].scatter(mouseZLR[0], yPositions, color = 'black', marker = 'o', s = 25, zorder=100)
+    axs[1,0].set_xlabel('L vertical displacement (µm)')
+    axs[1,0].set_ylabel('A/P position (µm)')
+    axs[1,0].set_xlim([1600,400])
+    axs[1,0].set_ylim([1000-100,4500+100])
+    
+    # axs[6].plot(rightRidgeZ, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
+    axs[1,1].plot(meanRz, yPositions, color = 'red', linestyle = '-', linewidth = 2)
+    axs[1,1].plot(mouseZLR[1], yPositions, color = 'black', linestyle = '-', linewidth = 2)
+    axs[1,1].fill_betweenx(yPositions,meanRz+stdRz,meanRz-stdRz, color = 'grey', alpha = 0.4, linestyle = '--') # fill between x0 to x1 at y, std = 1
+    axs[1,1].fill_betweenx(yPositions,meanRz+2*stdRz,meanRz-2*stdRz, color = 'grey', alpha = 0.3, linestyle = 'dotted') # fill between x0 to x1 at y, std = 2
+    axs[1,1].scatter(mouseZLR[1], yPositions, color = 'black', marker = 'o', s = 25, zorder=100)
+    axs[1,1].set_xlabel('R vertical displacement (µm)')
+    axs[1,1].set_ylabel('A/P position (µm)')
+    axs[1,1].set_xlim([400,1600])
+    axs[1,1].set_ylim([1000-100,4500+100])
+    
+    # Specific Mouse Regression
+    # row 0, col 2
+    linespace = np.arange(2500,5000,100)
+    axs[0,2].plot(leftRidge, rightRidge, color = 'gray', linestyle = '-')
+    axs[0,2].scatter(mouseXLR[0], mouseXLR[1], color = 'black', s=25, marker = 's',zorder = 100)
+    axs[0,2].plot(linespace, -linespace, color = 'black', linestyle = ':', alpha = 0.5)
+    linear_regression_plot_axs(mouseXLR[0], mouseXLR[1], linespace,0,2, color = 'red',lw = 2)
+    axs[0,2].set_title(f'Regression for current mouse', size = 10)
+    axs[0,2].set_xlabel('L lateral displacement (µm)')
+    axs[0,2].set_ylabel('R lateral displacement (µm)')
+    
+    # row 1, col 2
+    linespace = np.arange(400,1500,100)
+    axs[1,2].plot(leftRidgeZ, rightRidgeZ, color = 'gray', linestyle = '-')
+    axs[1,2].scatter(mouseZLR[0], mouseZLR[1], color = 'black', s=25, marker = 's',zorder = 100)
+    axs[1,2].plot(linespace, linespace, color = 'black', linestyle = ':', alpha = 0.5)
+    linear_regression_plot_axs(mouseZLR[0], mouseZLR[1], linespace,1,2, color = 'red',lw = 2)
+    axs[1,2].set_title(f'Regression for current mouse', size = 10)
+    axs[1,2].set_xlabel('L vertical displacement (µm)')
+    axs[1,2].set_ylabel('R vertical displacement (µm)')
+    
+    mouseLRregression = [linear_regression(mouseXLR[0],mouseXLR[1]),linear_regression(mouseZLR[0],mouseZLR[1])]
+    # Calculate lateral linear regression
+    linespace = np.linspace(3000, 5000, 100)
+    XAllintercept = []
+    XAllslope = []
+    for i in range(num_mice):
+        positionsL = clear_data(leftRidge.iloc[:,i])
+        positionsR = clear_data(rightRidge.iloc[:,i])
+        if len(positionsL) > 1 and len(positionsR) > 1:
+            slope, intercept = linear_regression(positionsL,positionsR)
+            XAllslope.append(slope)
+            XAllintercept.append(intercept)
+        else:
+            XAllslope.append(np.nan)
+            XAllintercept.append(np.nan)
+    
+    HistoSubplot(XAllslope,'',0,3,'',mouseLRregression[0][0])
+    axs[0,3].set_xlabel('Slopes')
+    axs[0,3].set_title('Slope of L-R lateral displacement')
+    
+    HistoSubplot(XAllintercept,'',0,4,'',mouseLRregression[0][1])
+    axs[0,4].set_xlabel('Intercepts')
+    axs[0,4].set_title('Intercept of L-R lateral displacement')
+    
+    # Calculate vertical linear regression
+    linespace = np.linspace(500, 1500, 100)
+    ZAllintercept = []
+    ZAllslope = []
+    for i in range(num_mice):
+        positionsLz = clear_data(leftRidgeZ.iloc[:,i])
+        positionsRz = clear_data(rightRidgeZ.iloc[:,i])
+        if len(positionsLz) > 1 and len(positionsRz) > 1:
+            slope, intercept = linear_regression(positionsLz,positionsRz)
+            ZAllslope.append(slope)
+            ZAllintercept.append(intercept)
+        else:
+            ZAllslope.append(np.nan)
+            ZAllintercept.append(np.nan)
+    
+    HistoSubplot(ZAllslope,'',1,3,'',mouseLRregression[1][0])
+    axs[1,3].set_xlabel('Slopes')
+    axs[1,3].set_title('Slope of L-R vertical displacement')
+    
+    HistoSubplot(ZAllintercept,'',1,4,'',mouseLRregression[1][1])
+    axs[1,4].set_xlabel('Intercepts')
+    axs[1,4].set_title('Intercept of L-R vertical displacement')
+    
+    # histograms of all values
+    HistoSubplot(animalWeight,'Animal Weight',2,0,'g',mouseData1[0][0])
+    HistoSubplot(LeftEarBarInitial,'Left ear bar',2,1,'mm',mouseData1[0][1])
+    HistoSubplot(RightEarBarInitial,'Right ear bar',2,2,'mm',mouseData1[0][2])
+    HistoSubplot(NoseDVposition,'Nose DV position',2,3,'˚',mouseData1[0][3])
+    HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1[0][4])
+    
+    fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
+    plt.tight_layout()
+
+    # Convert plot to image and display in result box
+    img_buf1 = BytesIO()
+    fig1.savefig(img_buf1, format='png')
+    img_buf1.seek(0)
+    img_base641 = base64.b64encode(img_buf1.read()).decode('utf-8')
+
+    print(img_base641[:100])
+    display(Javascript(f'''
+        var plotBox1 = document.getElementById("plotBox1");
+        if (plotBox1) {{
+            plotBox1.innerHTML = '<img src="data:image/png;base64,' + "{img_base641}" + '" />';
+        }} else {{
+            console.log("Error: plotBox1 is not available.");
+        }}
+    '''))
+
+    print("Figure 1 has been embedded in plotBox1.")
+    
+    display(fig1)
+    plt.show()
+    print('\n\n')
+
+# Figure 2, histograms showing the L-R x-positions
+def update_figure_2():
+    # collecting master data from file
+    MasterListData = [leftRidge.reset_index(drop = True),rightRidge.reset_index(drop = True)]
+    MasterListName = [['LEFT displacement at y=1000 µm PRCS','RIGHT displacement at y=1000 µm PRCS'],
+                      ['LEFT displacement at y=1500 µm PRCS','RIGHT displacement at y=1500 µm PRCS'],
+                      ['LEFT displacement at y=2000 µm PRCS','RIGHT displacement at y=2000 µm PRCS'],
+                      ['LEFT displacement at y=2500 µm PRCS','RIGHT displacement at y=2500 µm PRCS'],
+                      ['LEFT displacement at y=3000 µm PRCS','RIGHT displacement at y=3000 µm PRCS'],
+                      ['LEFT displacement at y=3500 µm PRCS','RIGHT displacement at y=3500 µm PRCS'],
+                      ['LEFT displacement at y=4000 µm PRCS','RIGHT displacement at y=4000 µm PRCS'],
+                      ['LEFT displacement at y=4500 µm PRCS','RIGHT displacement at y=4500 µm PRCS']]
+    MasterListUnit = [['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm']]
+    
+    # setting a global xlim
+    xlim = [[5000,2500],[-2500,-5000]]
+    bins = 50
+    
+    # plotting using HistoSubplot function
+    # row = 8 (j), col = 2 (i)
+    global axs, fig2
+    fig2,axs = plt.subplots(8,2,figsize = (12,12))
+    for i in range(2):
+        for j in range(8):
+            HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData2[j][i],bins = bins)
+            axs[j,i].set_xlim(xlim[i])
+    plt.figtext(0.265,1,f'Left side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
+    plt.figtext(0.755,1,f'Right side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
+    plt.tight_layout()
+    
+    # Convert plot to image and display in result box
+    img_buf2 = BytesIO()
+    fig2.savefig(img_buf2, format='png')
+    img_buf2.seek(0)
+    img_base642 = base64.b64encode(img_buf2.read()).decode('utf-8')
+
+    display(Javascript(f'''
+        var plotBox2 = document.getElementById("plotBox2");
+        if (plotBox2) {{
+            plotBox2.innerHTML = '<img src="data:image/png;base64,' + "{img_base642}" + '" />';
+        }} else {{
+            console.log("Error: plotBox2 is not available.");
+        }}
+    '''))
+    print("Figure 2 has been embedded in plotBox2.")
+
+    display(fig2)
+    plt.show()
+    print('\n\n')
+
+# Figure 3, histograms showing the L-R z-positions
+def update_figure_3():
+    # collecting master data from file
+    MasterListData = [leftRidgeZ.reset_index(drop = True),rightRidgeZ.reset_index(drop = True)]
+    MasterListName = [['LEFT Z-displacement at y=1000 µm PRCS','RIGHT Z-displacement at y=1000 µm PRCS'],
+                      ['LEFT Z-displacement at y=1500 µm PRCS','RIGHT Z-displacement at y=1500 µm PRCS'],
+                      ['LEFT Z-displacement at y=2000 µm PRCS','RIGHT Z-displacement at y=2000 µm PRCS'],
+                      ['LEFT Z-displacement at y=2500 µm PRCS','RIGHT Z-displacement at y=2500 µm PRCS'],
+                      ['LEFT Z-displacement at y=3000 µm PRCS','RIGHT Z-displacement at y=3000 µm PRCS'],
+                      ['LEFT Z-displacement at y=3500 µm PRCS','RIGHT Z-displacement at y=3500 µm PRCS'],
+                      ['LEFT Z-displacement at y=4000 µm PRCS','RIGHT Z-displacement at y=4000 µm PRCS'],
+                      ['LEFT Z-displacement at y=4500 µm PRCS','RIGHT Z-displacement at y=4500 µm PRCS']]
+    MasterListUnit = [['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm'],['µm','µm']]
+    
+    # setting a global xlim
+    xlim = [[1600,400],[400,1600]]
+    bins = 40
+    
+    # plotting using HistoSubplot function
+    # row = 8 (j), col = 2 (i)
+    global axs, fig3
+    fig3,axs = plt.subplots(8,2,figsize = (12,12))
+    for i in range(2):
+        for j in range(8):
+            HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData3[j][i],bins = bins)
+            axs[j,i].set_xlim(xlim[i])
+    plt.figtext(0.265,1,f'Left side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
+    plt.figtext(0.755,1,f'Right side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
+    plt.tight_layout()
+
+    # Convert plot to image and display in result box
+    img_buf3 = BytesIO()
+    fig3.savefig(img_buf3, format='png')
+    img_buf3.seek(0)
+    img_base643 = base64.b64encode(img_buf3.read()).decode('utf-8')
+
+    display(Javascript(f'''
+        var plotBox3 = document.getElementById("plotBox3");
+        if (plotBox3) {{
+            plotBox3.innerHTML = '<img src="data:image/png;base64,' + "{img_base643}" + '" />';
+        }} else {{
+            console.log("Error: plotBox3 is not available.");
+        }}
+    '''))
+    print("Figure 3 has been embedded in plotBox3.")
+    
+    display(fig3)
+    plt.show()
+    print('\n\n')
+
+    print("Figures saved and encoded in base64.")
+    print("JavaScript for embedding images executed.")    
+
 # Register the callback function
 from google.colab import output
 output.register_callback('notebook.update_correction_result', update_correction_result)
 output.register_callback('notebook.finish_correction', finish_correction)
+output.register_callback('notebook.update_figure_1', update_figure_1)
+output.register_callback('notebook.update_figure_2', update_figure_2)
+output.register_callback('notebook.update_figure_3', update_figure_3)
 
 # Initialize the input boxes and the callback
 create_input_boxes()
