@@ -368,12 +368,17 @@ def finish_correction():
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
     print("Finished updating the sheet")
 
+    global mouse_id
     mice = np.array(head_parameter.iloc[0,:])
     num_mice = len(mice[60:]) # count the number of mice
-
+    mouse_id = mice[-1]
     mouse_index = np.where(mice == mouse_id)[0][0]  # Find the index of the mouse
     mousefile = head_parameter.iloc[0:53,mouse_index]
     mousefile.index = head_parameter.iloc[0:53,1].to_list()
+
+    global mouseXLR, mouseZLR, yPositions
+    global meanL, stdL, meanR, stdR, meanLz, stdLz, meanRz, stdRz
+    
     mouseData1 = [[mousefile['Weight before surgery (g)'],mousefile['Left ear bar (initial) (mm)'],mousefile['Right ear bar (initial) (mm)'],mousefile['Nose DV position º'],mousefile['RCS-lambda distance (µm)']]]
     mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
                   [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
@@ -392,6 +397,10 @@ def finish_correction():
                   [mousefile['At 4000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, V positions of RIGHT temporal ridge (µm)']],
                   [mousefile['At 4500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, V positions of RIGHT temporal ridge (µm)']]]
 
+    mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
+    mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
+    yPositions = np.arange(1000, 4501, 500)
+
      # All previous MetaData
 
     leftRidge = head_parameter.iloc[9:17,60:]
@@ -408,6 +417,15 @@ def finish_correction():
     RightEarBarInitial = head_parameter.iloc[4,60:]
     NoseDVposition = head_parameter.iloc[8,60:]
     RCSlambdaDistance = head_parameter.iloc[7,60:]
+
+    meanL = leftRidge.mean(axis=1).values
+    stdL = leftRidge.std(axis=1).values
+    meanR = rightRidge.mean(axis=1).values
+    stdR = rightRidge.std(axis=1).values
+    meanLz = leftRidgeZ.mean(axis=1).values
+    stdLz = leftRidgeZ.std(axis=1).values
+    meanRz = rightRidgeZ.mean(axis=1).values
+    stdRz = rightRidgeZ.std(axis=1).values
     
     # Figure 1
     def update_figure_1():
@@ -666,6 +684,7 @@ def finish_correction():
     output.register_callback('notebook.update_figure_1', update_figure_1)
     output.register_callback('notebook.update_figure_2', update_figure_2)
     output.register_callback('notebook.update_figure_3', update_figure_3)
+    
     update_figure_1()
     update_figure_2()
     update_figure_3()
