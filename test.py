@@ -56,7 +56,7 @@ def submit_value(val):
 
     try:
         # Update cell A1 in your sheet
-        worksheet.update('A1', val)
+        worksheet.update('A1', [[val]])
 
         # Plot something using the value
         fig, ax = plt.subplots()
