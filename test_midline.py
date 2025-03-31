@@ -190,13 +190,13 @@ def create_input_boxes():
         google.colab.kernel.invokeFunction("notebook.update_correction_result", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24], {});
     }
 
-    finishButton.onclick = function() {
-        google.colab.kernel.invokeFunction("notebook.finish_correction", [], {}).then(() => {
-            google.colab.kernel.invokeFunction("notebook.update_figure_1", [], {});
-            google.colab.kernel.invokeFunction("notebook.update_figure_2", [], {});
-            google.colab.kernel.invokeFunction("notebook.update_figure_3", [], {});
-        });
-
+        finishButton.onclick = function() {
+            google.colab.kernel.invokeFunction("notebook.finish_correction", [], {}).then(() => {
+                google.colab.kernel.invokeFunction("notebook.update_figure_1", [], {});
+                google.colab.kernel.invokeFunction("notebook.update_figure_2", [], {});
+                google.colab.kernel.invokeFunction("notebook.update_figure_3", [], {});
+            });
+        }
     '''))
 
 def midline_correction(xL_values, xR_values):
