@@ -633,6 +633,8 @@ def finish_correction():
     plt.show()
     print('\n\n')
 
+    print("Figures should now be embedded in the result boxes.")
+
     
 # Register the callback function
 from google.colab import output
