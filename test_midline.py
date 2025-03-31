@@ -191,11 +191,7 @@ def create_input_boxes():
     }
 
         finishButton.onclick = function() {
-            google.colab.kernel.invokeFunction("notebook.finish_correction", [], {}).then(() => {
-                google.colab.kernel.invokeFunction("notebook.update_figure_1", [], {});
-                google.colab.kernel.invokeFunction("notebook.update_figure_2", [], {});
-                google.colab.kernel.invokeFunction("notebook.update_figure_3", [], {});
-            });
+          google.colab.kernel.invokeFunction("notebook.finish_correction", [], {});
         }
     '''))
 
