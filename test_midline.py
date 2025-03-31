@@ -191,8 +191,12 @@ def create_input_boxes():
     }
 
     finishButton.onclick = function() {
-        google.colab.kernel.invokeFunction("notebook.finish_correction", [], {});
-    }
+        google.colab.kernel.invokeFunction("notebook.finish_correction", [], {}).then(() => {
+            google.colab.kernel.invokeFunction("notebook.update_figure_1", [], {});
+            google.colab.kernel.invokeFunction("notebook.update_figure_2", [], {});
+            google.colab.kernel.invokeFunction("notebook.update_figure_3", [], {});
+        });
+
     '''))
 
 def midline_correction(xL_values, xR_values):
@@ -662,6 +666,10 @@ def finish_correction():
     output.register_callback('notebook.update_figure_1', update_figure_1)
     output.register_callback('notebook.update_figure_2', update_figure_2)
     output.register_callback('notebook.update_figure_3', update_figure_3)
+    update_figure_1()
+    update_figure_2()
+    update_figure_3()
+
     
 # Register the callback function
 from google.colab import output
