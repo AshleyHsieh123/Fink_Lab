@@ -385,7 +385,7 @@ head_parameter = head_parameter.replace('', np.nan)
 head_parameter = head_parameter.replace('lost', np.nan)
 
 global mouse_id
-mice = np.array(head_parameter.iloc[0,:])
+mice = np.array(head_parameter.columns[60:])
 num_mice = len(mice[60:]) # count the number of mice
 mouse_id = mice[-1]
 mouse_index = np.where(mice == mouse_id)[0][0]  # Find the index of the mouse
@@ -599,10 +599,6 @@ def update_figure_1():
     img_base641 = base64.b64encode(img_buf1.read()).decode('utf-8')
     
     display_inline_image(img_base641, "plotBox1")
-
-    print("Figure 1 has been embedded in plotBox1.")
-    
-    display(fig1)
     plt.close(fig1)
     print('\n\n')
 
@@ -643,10 +639,6 @@ def update_figure_2():
     img_base642 = base64.b64encode(img_buf2.read()).decode('utf-8')
 
     display_inline_image(img_base642, "plotBox2")
-    
-    print("Figure 2 has been embedded in plotBox2.")
-
-    display(fig2)
     plt.close(fig2)
     print('\n\n')
 
@@ -687,10 +679,6 @@ def update_figure_3():
     img_base643 = base64.b64encode(img_buf3.read()).decode('utf-8')
 
     display_inline_image(img_base643, "plotBox3")
-
-    print("Figure 3 has been embedded in plotBox3.")
-    
-    display(fig3)
     plt.close(fig3)
     print('\n\n')
 
