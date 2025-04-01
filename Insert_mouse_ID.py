@@ -72,7 +72,7 @@ def create_input_boxes():
     '''))
 
 # Python callback to update the sheet
-def update_data(val1, val2, val3, val4):
+def update_data(val1, val2, val3):
     try:
         # Mount Google Drive and authenticate
         drive.mount('/content/drive')
@@ -101,7 +101,6 @@ def update_data(val1, val2, val3, val4):
         head_parameter.iloc[49, -1] = val1
         head_parameter.iloc[0, -1] = val2
         head_parameter.iloc[50, -1] = val3
-        head_parameter.iloc[48, -1] = val4
 
         # Write the updated DataFrame back to the sheet
         worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
