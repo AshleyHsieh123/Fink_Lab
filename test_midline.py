@@ -609,23 +609,24 @@ def update_figure_1():
                 console.log("plotBox1 not found");
             }}
         }}, 500);
+    '''))
     
     display(Javascript(f"""
         (function() {{
-    const box = document.getElementById('plotBox1');
-    if (box) {{
-      const img = document.createElement('img');
-      img.src = 'data:image/png;base64,{img_base641}';
-      img.style.maxWidth = '100%';
-      img.style.height = 'auto';
-      box.innerHTML = '';
-      box.appendChild(img);
-      console.log("Image injected into plotBox1");
-    }} else {{
-      console.error("plotBox1 not found in DOM");
-    }}
-  }})();
-"""))
+            const box = document.getElementById('plotBox1');
+            if (box) {{
+              const img = document.createElement('img');
+              img.src = 'data:image/png;base64,{img_base641}';
+              img.style.maxWidth = '100%';
+              img.style.height = 'auto';
+              box.innerHTML = '';
+              box.appendChild(img);
+              console.log("Image injected into plotBox1");
+            }} else {{
+                console.error("plotBox1 not found in DOM");
+            }}
+          }})();
+    """))
 
     print("Figure 1 has been embedded in plotBox1.")
     
@@ -680,6 +681,23 @@ def update_figure_2():
             }}
         }}, 500);
     '''))
+
+    display(Javascript(f"""
+        (function() {{
+            const box = document.getElementById('plotBox2');
+            if (box) {{
+              const img = document.createElement('img');
+              img.src = 'data:image/png;base64,{img_base642}';
+              img.style.maxWidth = '100%';
+              img.style.height = 'auto';
+              box.innerHTML = '';
+              box.appendChild(img);
+              console.log("Image injected into plotBox2");
+            }} else {{
+                console.error("plotBox2 not found in DOM");
+            }}
+          }})();
+    """))
     print("Figure 2 has been embedded in plotBox2.")
 
     display(fig2)
@@ -723,7 +741,7 @@ def update_figure_3():
     img_buf3.seek(0)
     img_base643 = base64.b64encode(img_buf3.read()).decode('utf-8')
 
-    display(Javascript(f"""
+    display(Javascript(f'''
         setTimeout(function() {{
             var plotBox3 = document.getElementById("plotBox3");
             if (plotBox3) {{
@@ -732,7 +750,25 @@ def update_figure_3():
                 console.log("plotBox3 not found");
             }}
         }}, 500);
+    '''))
+
+    display(Javascript(f"""
+        (function() {{
+            const box = document.getElementById('plotBox3');
+            if (box) {{
+              const img = document.createElement('img');
+              img.src = 'data:image/png;base64,{img_base643}';
+              img.style.maxWidth = '100%';
+              img.style.height = 'auto';
+              box.innerHTML = '';
+              box.appendChild(img);
+              console.log("Image injected into plotBox3");
+            }} else {{
+                console.error("plotBox3 not found in DOM");
+            }}
+          }})();
     """))
+
     print("Figure 3 has been embedded in plotBox3.")
     
     display(fig3)
