@@ -425,12 +425,11 @@ leftRidgeZ.columns = head_parameter.iloc[0,60:]
 rightRidgeZ = head_parameter.iloc[33:41,60:]
 rightRidgeZ.columns = head_parameter.iloc[0,60:]
 
-
-animalWeight = [float(x) for x in list(head_parameter.iloc[0,60:])]
-LeftEarBarInitial = [float(x) for x in list(head_parameter.iloc[3,60:])]
-RightEarBarInitial = [float(x) for x in list(head_parameter.iloc[4,60:])]
-NoseDVposition = [float(x) for x in list(head_parameter.iloc[8,60:])]
-RCSlambdaDistance = [float(x) for x in list(head_parameter.iloc[7,60:])]
+animalWeight = [float(x) for x in head_parameter.iloc[0,60:].values if x != '']
+LeftEarBarInitial = [float(x) for x in head_parameter.iloc[3,60:].values if x != '']
+RightEarBarInitial = [float(x) for x in head_parameter.iloc[4,60:].values if x != '']
+NoseDVposition = [float(x) for x in head_parameter.iloc[8,60:].values if x != '']
+RCSlambdaDistance = [float(x) for x in head_parameter.iloc[7,60:].values if x != '']
 
 meanL = leftRidge.mean(axis=1).values
 stdL = leftRidge.std(axis=1).values
