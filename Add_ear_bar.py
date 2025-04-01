@@ -71,7 +71,7 @@ def create_input_boxes():
     button.onclick = function() {
         var val1 = document.getElementById("LeftEarBarInitial").value;
         var val2 = document.getElementById("RightEarBarInitial").value;
-        google.colab.kernel.invokeFunction("notebook.update_data", [val1, val2, {});
+        google.colab.kernel.invokeFunction("notebook.update_data", [val1, val2], {});
     }
     '''))
 
