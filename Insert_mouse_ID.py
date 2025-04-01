@@ -123,7 +123,7 @@ def update_data(val1, val2, val3):
         worksheet.clear()
         set_with_dataframe(worksheet, head_parameter)
 
-        print("✅ Values updated successfully in the sheet.")
+        print("Values updated successfully in the sheet.")
 
     except Exception as e:
         print(f"❌ Error while updating the sheet: {e}")
