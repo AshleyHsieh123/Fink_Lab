@@ -26,8 +26,6 @@ def create_input_boxes():
     var input2 = createInput("animalWeight", "Enter Weight before surgery (g)");
     var input3 = createInput("mousebirth", "Mouse date of birth ");
     var input4 = createInput("mouseage", "Enter Mouse age (days)");
-    var input5 = createInput("LeftEarBarInitial", "Enter Left ear bar (initial) (mm)");
-    var input6 = createInput("RightEarBarInitial", "Enter Right ear bar (initial) (mm)");
 
     // Submit button
     var button = document.createElement("button");
@@ -53,8 +51,6 @@ def create_input_boxes():
     inputContainer.appendChild(input2); // animalWeight
     inputContainer.appendChild(input3); // mousebirth
     inputContainer.appendChild(input4); // mouseage
-    inputContainer.appendChild(input5); // LeftEarBarInitial
-    inputContainer.appendChild(input6); // RightEarBarInitial
 
     // Add the container and buttons to the page
     var container = document.createElement("div");
@@ -76,12 +72,12 @@ def create_input_boxes():
         var val4 = document.getElementById("mouseage").value;
         var val5 = document.getElementById("LeftEarBarInitial").value;
         var val6 = document.getElementById("RightEarBarInitial").value;
-        google.colab.kernel.invokeFunction("notebook.update_data", [val1, val2, val3, val4, val5, val6], {});
+        google.colab.kernel.invokeFunction("notebook.update_data", [val1, val2, val3, val4], {});
     }
     '''))
 
 # Python callback to update the sheet
-def update_data(val1, val2, val3, val4, val5, val6):
+def update_data(val1, val2, val3, val4):
     try:
         # Mount Google Drive and authenticate
         drive.mount('/content/drive')
@@ -101,8 +97,6 @@ def update_data(val1, val2, val3, val4, val5, val6):
         head_parameter.iloc[0, -1] = val2
         head_parameter.iloc[50, -1] = val3
         head_parameter.iloc[48, -1] = val4
-        head_parameter.iloc[3, -1] = val5
-        head_parameter.iloc[4, -1] = val6
 
         # Write the updated DataFrame back to the sheet
         worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
