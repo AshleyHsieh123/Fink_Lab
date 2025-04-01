@@ -99,18 +99,22 @@ def update_data(val1, val2, val3):
         head_parameter.loc[new_mouse_id, "Weight before surgery (g)"] = val2
         head_parameter.loc[new_mouse_id, "Mouse date of birth"] = val3
 
-        # Parse date columns for all mice
-        head_parameter["Date of surgery"] = head_parameter["Date of surgery"].dt.date
-        head_parameter["Mouse date of birth"] = head_parameter["Mouse date of birth"].dt.date
-
-        # Calculate mouse age in days
+        # Step 1: Parse all date strings into datetime
+        head_parameter["Date of surgery"] = pd.to_datetime(head_parameter["Date of surgery"], errors="coerce")
+        head_parameter["Mouse date of birth"] = pd.to_datetime(head_parameter["Mouse date of birth"], errors="coerce")
+        
+        # Step 2: Calculate mouse age in days
         head_parameter["Mouse age (days)"] = (
             head_parameter["Date of surgery"] - head_parameter["Mouse date of birth"]
         ).dt.days
-
-        # Format date columns as strings: MM/DD/YYYY (no time)
-        head_parameter["Date of surgery"] = head_parameter["Date of surgery"].dt.strftime("%m/%d/%Y")
-        head_parameter["Mouse date of birth"] = head_parameter["Mouse date of birth"].dt.strftime("%m/%d/%Y")
+        
+        # Step 3: Now safely format the datetimes into strings (for clean display in sheet)
+        head_parameter["Date of surgery"] = head_parameter["Date of surgery"].apply(
+            lambda x: x.strftime("%m/%d/%Y") if pd.notnull(x) else ""
+        )
+        head_parameter["Mouse date of birth"] = head_parameter["Mouse date of birth"].apply(
+            lambda x: x.strftime("%m/%d/%Y") if pd.notnull(x) else ""
+        )
 
         # Transpose back to original layout
         head_parameter = head_parameter.T.reset_index()
