@@ -753,5 +753,3 @@ output.register_callback('notebook.finish_correction', finish_correction)
 output.register_callback('notebook.update_figure_1', update_figure_1)
 output.register_callback('notebook.update_figure_2', update_figure_2)
 output.register_callback('notebook.update_figure_3', update_figure_3)
-
-
