@@ -461,6 +461,23 @@ def finish_correction():
     print("Calling update_figure_3...")
     update_figure_3()
 
+def display_inline_image(base64_img, target_id):
+    display(HTML(f"""
+        <script>
+        const img = document.createElement('img');
+        img.src = "data:image/png;base64,{base64_img}";
+        img.style.maxWidth = "100%";
+        img.style.height = "auto";
+        const container = document.getElementById('{target_id}');
+        if (container) {{
+            container.innerHTML = '';
+            container.appendChild(img);
+        }} else {{
+            console.error("Container {target_id} not found.");
+        }}
+        </script>
+    """))
+    
 # Figure 1
 def update_figure_1():
     global axs, fig1
@@ -598,35 +615,8 @@ def update_figure_1():
     fig1.savefig(img_buf1, format='png')
     img_buf1.seek(0)
     img_base641 = base64.b64encode(img_buf1.read()).decode('utf-8')
-
-    print(img_base641[:100])
-    display(Javascript(f'''
-        setTimeout(function() {{
-            var plotBox1 = document.getElementById("plotBox1");
-            if (plotBox1) {{
-                plotBox1.innerHTML = '<img src="data:image/png;base64,{img_base641}" />';
-            }} else {{
-                console.log("plotBox1 not found");
-            }}
-        }}, 500);
-    '''))
     
-    display(Javascript(f"""
-        (function() {{
-            const box = document.getElementById('plotBox1');
-            if (box) {{
-              const img = document.createElement('img');
-              img.src = 'data:image/png;base64,{img_base641}';
-              img.style.maxWidth = '100%';
-              img.style.height = 'auto';
-              box.innerHTML = '';
-              box.appendChild(img);
-              console.log("Image injected into plotBox1");
-            }} else {{
-                console.error("plotBox1 not found in DOM");
-            }}
-          }})();
-    """))
+    display_inline_image(img_base641, "plotBox1")
 
     print("Figure 1 has been embedded in plotBox1.")
     
@@ -671,33 +661,8 @@ def update_figure_2():
     img_buf2.seek(0)
     img_base642 = base64.b64encode(img_buf2.read()).decode('utf-8')
 
-    display(Javascript(f'''
-        setTimeout(function() {{
-            var plotBox2 = document.getElementById("plotBox2");
-            if (plotBox2) {{
-                plotBox2.innerHTML = '<img src="data:image/png;base64,{img_base642}" />';
-            }} else {{
-                console.log("plotBox2 not found");
-            }}
-        }}, 500);
-    '''))
-
-    display(Javascript(f"""
-        (function() {{
-            const box = document.getElementById('plotBox2');
-            if (box) {{
-              const img = document.createElement('img');
-              img.src = 'data:image/png;base64,{img_base642}';
-              img.style.maxWidth = '100%';
-              img.style.height = 'auto';
-              box.innerHTML = '';
-              box.appendChild(img);
-              console.log("Image injected into plotBox2");
-            }} else {{
-                console.error("plotBox2 not found in DOM");
-            }}
-          }})();
-    """))
+    display_inline_image(img_base642, "plotBox2")
+    
     print("Figure 2 has been embedded in plotBox2.")
 
     display(fig2)
@@ -741,33 +706,7 @@ def update_figure_3():
     img_buf3.seek(0)
     img_base643 = base64.b64encode(img_buf3.read()).decode('utf-8')
 
-    display(Javascript(f'''
-        setTimeout(function() {{
-            var plotBox3 = document.getElementById("plotBox3");
-            if (plotBox3) {{
-                plotBox3.innerHTML = '<img src="data:image/png;base64,{img_base643}" />';
-            }} else {{
-                console.log("plotBox3 not found");
-            }}
-        }}, 500);
-    '''))
-
-    display(Javascript(f"""
-        (function() {{
-            const box = document.getElementById('plotBox3');
-            if (box) {{
-              const img = document.createElement('img');
-              img.src = 'data:image/png;base64,{img_base643}';
-              img.style.maxWidth = '100%';
-              img.style.height = 'auto';
-              box.innerHTML = '';
-              box.appendChild(img);
-              console.log("Image injected into plotBox3");
-            }} else {{
-                console.error("plotBox3 not found in DOM");
-            }}
-          }})();
-    """))
+    display_inline_image(img_base643, "plotBox3")
 
     print("Figure 3 has been embedded in plotBox3.")
     
