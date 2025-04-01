@@ -424,6 +424,11 @@ leftRidgeZ.columns = head_parameter.iloc[0,60:]
 rightRidgeZ = head_parameter.iloc[33:41,60:]
 rightRidgeZ.columns = head_parameter.iloc[0,60:]
 
+leftRidge = leftRidge.apply(pd.to_numeric, errors='coerce')
+rightRidge = rightRidge.apply(pd.to_numeric, errors='coerce')
+leftRidgeZ = leftRidgeZ.apply(pd.to_numeric, errors='coerce')
+rightRidgeZ = rightRidgeZ.apply(pd.to_numeric, errors='coerce')
+
 animalWeight = head_parameter.iloc[0,60:]
 LeftEarBarInitial = head_parameter.iloc[3,60:]
 RightEarBarInitial = head_parameter.iloc[4,60:]
