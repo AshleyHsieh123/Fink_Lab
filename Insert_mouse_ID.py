@@ -108,6 +108,10 @@ def update_data(val1, val2, val3):
             head_parameter["Date of surgery"] - head_parameter["Mouse date of birth"]
         ).dt.days
 
+        # Format date columns as strings: MM/DD/YYYY (no time)
+        head_parameter["Date of surgery"] = head_parameter["Date of surgery"].dt.strftime("%m/%d/%Y")
+        head_parameter["Mouse date of birth"] = head_parameter["Mouse date of birth"].dt.strftime("%m/%d/%Y")
+
         # Transpose back to original layout
         head_parameter = head_parameter.T.reset_index()
 
