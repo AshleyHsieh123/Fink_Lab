@@ -588,6 +588,8 @@ def update_figure_1():
     HistoSubplot(RightEarBarInitial,'Right ear bar',2,2,'mm',mouseData1[0][2])
     HistoSubplot(NoseDVposition,'Nose DV position',2,3,'˚',mouseData1[0][3])
     HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1[0][4])
+
+    plt.text(-5, 60, 'midline', fontsize = 22)
     
     fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
     plt.tight_layout()
