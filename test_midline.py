@@ -434,14 +434,14 @@ RightEarBarInitial = head_parameter.iloc[4,60:].values
 NoseDVposition = head_parameter.iloc[8,60:].values
 RCSlambdaDistance = head_parameter.iloc[7,60:].values
 
-meanL = leftRidge.mean(axis=1).values
-stdL = leftRidge.std(axis=1).values
-meanR = rightRidge.mean(axis=1).values
-stdR = rightRidge.std(axis=1).values
-meanLz = leftRidgeZ.mean(axis=1).values
-stdLz = leftRidgeZ.std(axis=1).values
-meanRz = rightRidgeZ.mean(axis=1).values
-stdRz = rightRidgeZ.std(axis=1).values
+meanL = leftRidge.mean(axis=1).values.astype(float)
+stdL = leftRidge.std(axis=1).values.astype(float)
+meanR = rightRidge.mean(axis=1).values.astype(float)
+stdR = rightRidge.std(axis=1).values.astype(float)
+meanLz = leftRidgeZ.mean(axis=1).values.astype(float)
+stdLz = leftRidgeZ.std(axis=1).values.astype(float)
+meanRz = rightRidgeZ.mean(axis=1).values.astype(float)
+stdRz = rightRidgeZ.std(axis=1).values.astype(float)
 
 def display_inline_image(base64_img, target_id):
     display(HTML(f"""
