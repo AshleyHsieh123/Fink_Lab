@@ -57,18 +57,6 @@ def create_input_boxes():
     button.style.borderRadius = "8px";
     button.style.cursor = "pointer";
 
-    // Finish correction button
-    var finishButton = document.createElement("button");
-    finishButton.innerHTML = "Finish Correction";
-    finishButton.style.margin = "10px";
-    finishButton.style.padding = "12px 20px";
-    finishButton.style.fontSize = "16px";
-    finishButton.style.backgroundColor = "#FF5733";
-    finishButton.style.color = "white";
-    finishButton.style.border = "none";
-    finishButton.style.borderRadius = "8px";
-    finishButton.style.cursor = "pointer";
-
     // Result output box
     var resultBox = document.createElement("textarea");
     resultBox.id = "resultBox";
@@ -107,7 +95,6 @@ def create_input_boxes():
 
     container.appendChild(inputContainer);
     container.appendChild(button);
-    container.appendChild(finishButton);
     container.appendChild(resultBox);
     document.body.appendChild(container);
 
@@ -237,7 +224,7 @@ def finish_correction(final_xR1000,final_xR3000,final_zR1000,final_zR3000,final_
 
 # Register the callbacks for updating corrections and finishing the process
 output.register_callback('notebook.update_correction_result', update_correction_result)
-output.register_callback('notebook.finish_correction', finish_correction)
+#output.register_callback('notebook.finish_correction', finish_correction)
 
 # Initialize the input boxes and the callback
 create_input_boxes()
