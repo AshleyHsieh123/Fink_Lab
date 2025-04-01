@@ -83,28 +83,33 @@ def update_data(val1, val2, val3):
         file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Use the correct Google Sheet ID here
         # Fetch the head_parameter DataFrame from Google Sheets
         worksheet = gc.open_by_key(file_id).sheet1
-        head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
-
         
-        # Convert date strings to datetime objects
+        # After reading from the sheet
+        head_parameter = pd.DataFrame(worksheet.get_all_records())
+        
+        # Transpose so that each mouse is a row, fields become columns
+        head_parameter = head_parameter.set_index(head_parameter.columns[0]).T
+        
+        # Insert new data
+        head_parameter.loc[new_mouse_id, "Date of surgery"] = val1
+        head_parameter.loc[new_mouse_id, "Weight before surgery (g)"] = val2
+        head_parameter.loc[new_mouse_id, "Mouse date of birth"] = val3
+        
+        # Convert dates
         head_parameter["Date of surgery"] = pd.to_datetime(head_parameter["Date of surgery"])
         head_parameter["Mouse date of birth"] = pd.to_datetime(head_parameter["Mouse date of birth"])
         
-        # Calculate age in days
+        # Calculate age
         head_parameter["Mouse age (days)"] = (
             head_parameter["Date of surgery"] - head_parameter["Mouse date of birth"]
         ).dt.days
-
-        head_parameter[new_mouse_id] = ""
-
-        # Overwrite the values in the sheet (you can change the rows and columns as needed)
-        head_parameter.iloc[49, -1] = val1
-        head_parameter.iloc[0, -1] = val2
-        head_parameter.iloc[50, -1] = val3
-
-        # Write the updated DataFrame back to the sheet
-        worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
-        set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+        
+        # Transpose back to original layout before writing
+        head_parameter = head_parameter.T.reset_index()
+        
+        # Write back
+        worksheet.clear()
+        set_with_dataframe(worksheet, head_parameter)
 
         print("Values have been updated successfully in the sheet.")
     except Exception as e:
