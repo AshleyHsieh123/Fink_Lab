@@ -386,9 +386,9 @@ head_parameter = head_parameter.replace('lost', np.nan)
 
 global mouse_id
 mice = np.array(head_parameter.columns[60:])
-num_mice = len(mice[60:]) # count the number of mice
+num_mice = len(mice) # count the number of mice
 mouse_id = mice[-1]
-mouse_index = np.where(mice == mouse_id)[0][0]  # Find the index of the mouse
+mouse_index = np.where(head_parameter.columns == mouse_id)[0][0]  # Find the index of the mouse
 mousefile = head_parameter.iloc[0:53,mouse_index]
 mousefile.index = head_parameter.iloc[0:53,0].to_list()
 
