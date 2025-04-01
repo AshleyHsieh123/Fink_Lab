@@ -81,7 +81,7 @@ def create_input_boxes():
     var plotBox1 = document.createElement("div");
     plotBox1.id = "plotBox1";
     plotBox1.style.margin = "10px";
-    plotBox1.style.height = "2000px";  // Adjusted height for better image display
+    plotBox1.style.height = "1500";  // Adjusted height for better image display
     plotBox1.style.width = "80%";
     plotBox1.style.display = "block";
     plotBox1.style.backgroundColor = "#ffe0e0";  // Light red-pink for Plot 1
@@ -89,7 +89,7 @@ def create_input_boxes():
     var plotBox2 = document.createElement("div");
     plotBox2.id = "plotBox2";
     plotBox2.style.margin = "10px";
-    plotBox2.style.height = "2000px";  // Adjusted height for better image display
+    plotBox2.style.height = "1500";  // Adjusted height for better image display
     plotBox2.style.width = "80%";
     plotBox2.style.display = "block";
     plotBox2.style.backgroundColor = "#e0f7ff";  // Light blue for Plot 2
@@ -97,7 +97,7 @@ def create_input_boxes():
     var plotBox3 = document.createElement("div");
     plotBox3.id = "plotBox3";
     plotBox3.style.margin = "10px";
-    plotBox3.style.height = "2000px";  // Adjusted height for better image display
+    plotBox3.style.height = "1500";  // Adjusted height for better image display
     plotBox3.style.width = "80%";
     plotBox3.style.display = "block";
     plotBox3.style.backgroundColor = "#e9ffe0";  // Light green for Plot 3
@@ -599,10 +599,10 @@ def update_figure_1():
     plt.tight_layout(rect=[0, 0, 1, 0.98])
 
     # Convert plot to image and display in result box
-    img_buf1 = BytesIO()
-    fig1.savefig(img_buf1, format='png')
-    img_buf1.seek(0)
-    img_base641 = base64.b64encode(img_buf1.read()).decode('utf-8')
+    img_buf = BytesIO()
+    fig1.savefig(img_buf, format='png')
+    img_buf.seek(0)
+    img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
     
     display_inline_image(img_base641, "plotBox1")
     plt.close(fig1)
@@ -639,12 +639,12 @@ def update_figure_2():
     plt.tight_layout()
     
     # Convert plot to image and display in result box
-    img_buf2 = BytesIO()
-    fig2.savefig(img_buf2, format='png')
-    img_buf2.seek(0)
-    img_base642 = base64.b64encode(img_buf2.read()).decode('utf-8')
+    img_buf = BytesIO()
+    fig2.savefig(img_buf, format='png')
+    img_buf.seek(0)
+    img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
 
-    display_inline_image(img_base642, "plotBox2")
+    display_inline_image(img_base64, "plotBox2")
     plt.close(fig2)
     print('\n\n')
 
@@ -679,12 +679,12 @@ def update_figure_3():
     plt.tight_layout()
 
     # Convert plot to image and display in result box
-    img_buf3 = BytesIO()
-    fig3.savefig(img_buf3, format='png')
-    img_buf3.seek(0)
-    img_base643 = base64.b64encode(img_buf3.read()).decode('utf-8')
+    img_buf = BytesIO()
+    fig3.savefig(img_buf, format='png')
+    img_buf.seek(0)
+    img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
 
-    display_inline_image(img_base643, "plotBox3")
+    display_inline_image(img_base64, "plotBox3")
     plt.close(fig3)
     print('\n\n')
 
