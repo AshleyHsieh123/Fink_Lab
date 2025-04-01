@@ -95,11 +95,18 @@ def update_data(val1, val2, val3):
         head_parameter.loc[new_mouse_id, "Weight before surgery (g)"] = val2
         head_parameter.loc[new_mouse_id, "Mouse date of birth"] = val3
         
-        # Convert dates
-        head_parameter["Date of surgery"] = pd.to_datetime(head_parameter["Date of surgery"], format='mixed', errors='coerce')
-        head_parameter["Mouse date of birth"] = pd.to_datetime(head_parameter["Mouse date of birth"], format='mixed', errors='coerce')
-
+        # Replace any ellipsis or non-string junk with NaN
+        head_parameter.replace(to_replace=[...], value=pd.NA, inplace=True)
         
+        # Now safely convert to datetime
+        head_parameter["Date of surgery"] = pd.to_datetime(
+            head_parameter["Date of surgery"], format='mixed', errors='coerce'
+        )
+        head_parameter["Mouse date of birth"] = pd.to_datetime(
+            head_parameter["Mouse date of birth"], format='mixed', errors='coerce'
+)
+
+
         # Calculate age
         head_parameter["Mouse age (days)"] = (
             head_parameter["Date of surgery"] - head_parameter["Mouse date of birth"]
