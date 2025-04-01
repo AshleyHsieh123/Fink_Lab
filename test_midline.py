@@ -604,7 +604,7 @@ def update_figure_1():
     img_buf.seek(0)
     img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
     
-    display_inline_image(img_base641, "plotBox1")
+    display_inline_image(img_base64, "plotBox1")
     plt.close(fig1)
     print('\n\n')
 
