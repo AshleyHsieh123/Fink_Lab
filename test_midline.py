@@ -704,7 +704,6 @@ def update_figure_3():
 
 def finish_correction():
     print("Finish correction button clicked!")
-    create_input_boxes()
     
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())
