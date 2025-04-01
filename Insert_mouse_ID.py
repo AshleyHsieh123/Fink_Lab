@@ -72,61 +72,54 @@ def create_input_boxes():
     '''))
 
 # Python callback to update the sheet
-def update_data(val1, val2, val3, val4):
+def update_data(val1, val2, val3):
     try:
+        from datetime import datetime
+
         # Mount Google Drive and authenticate
         drive.mount('/content/drive')
-        auth.authenticate_user()  # Authenticate manually to avoid errors
+        auth.authenticate_user()
         creds, _ = default()
         gc = gspread.authorize(creds)
 
-        file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Use the correct Google Sheet ID here
-        # Fetch the head_parameter DataFrame from Google Sheets
+        # Open the Google Sheet
+        file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'
         worksheet = gc.open_by_key(file_id).sheet1
-        
-        # After reading from the sheet
         head_parameter = pd.DataFrame(worksheet.get_all_records())
-        
-        # Transpose so that each mouse is a row, fields become columns
+
+        # Transpose: field names become columns, mice become rows
         head_parameter = head_parameter.set_index(head_parameter.columns[0]).T
-        
-        # Insert new data
-        head_parameter.iloc[49, -1] = val1
-        head_parameter.iloc[0, -1] = val2
-        head_parameter.iloc[50, -1] = val3
-        head_parameter.iloc[48, -1] = val4
-        
-        # Step 1: Replace all actual Python Ellipsis objects
-        head_parameter = head_parameter.applymap(lambda x: pd.NA if type(x) is type(...) else x)
-        
-        # Step 2: Replace string "..." just in case
+
+        # Clean ellipsis issues
+        head_parameter = head_parameter.applymap(lambda x: pd.NA if isinstance(x, type(...)) else x)
         head_parameter.replace("...", pd.NA, inplace=True)
-        
-        # Step 3: Convert to datetime (coerce invalids to NaT)
-        val1 = pd.to_datetime(
-            head_parameter["Date of surgery"], format="mixed", errors="coerce"
-        )
-        val3 = pd.to_datetime(
-            head_parameter["Mouse date of birth"], format="mixed", errors="coerce"
-        )
-        
-        # Calculate age
-        val4 = (
-            val1 - val3
+
+        # Insert new data for this mouse
+        head_parameter.loc[new_mouse_id, "Date of surgery"] = val1
+        head_parameter.loc[new_mouse_id, "Weight before surgery (g)"] = val2
+        head_parameter.loc[new_mouse_id, "Mouse date of birth"] = val3
+
+        # Parse date columns for all mice
+        head_parameter["Date of surgery"] = pd.to_datetime(head_parameter["Date of surgery"], format="mixed", errors="coerce")
+        head_parameter["Mouse date of birth"] = pd.to_datetime(head_parameter["Mouse date of birth"], format="mixed", errors="coerce")
+
+        # Calculate mouse age in days
+        head_parameter["Mouse age (days)"] = (
+            head_parameter["Date of surgery"] - head_parameter["Mouse date of birth"]
         ).dt.days
-        
-        # Transpose back to original layout before writing
+
+        # Transpose back to original layout
         head_parameter = head_parameter.T.reset_index()
-        
-        # Write back
+
+        # Write back to the sheet
         worksheet.clear()
         set_with_dataframe(worksheet, head_parameter)
 
-        print("Values have been updated successfully in the sheet.")
-    except Exception as e:
-        # Print the error message if something goes wrong
-        print(f"Error while updating the sheet: {e}")
+        print("✅ Values updated successfully in the sheet.")
 
+    except Exception as e:
+        print(f"❌ Error while updating the sheet: {e}")
+        
 # Register the callback function
 from google.colab import output
 output.register_callback('notebook.update_data', update_data)
