@@ -25,8 +25,7 @@ def create_input_boxes():
     var input1 = createInput("dateofsurgery", "Enter Date of surgery");
     var input2 = createInput("animalWeight", "Enter Weight before surgery (g)");
     var input3 = createInput("mousebirth", "Mouse date of birth ");
-    var input4 = createInput("mouseage", "Enter Mouse age (days)");
-
+    
     // Submit button
     var button = document.createElement("button");
     button.innerHTML = "Submit";
@@ -39,18 +38,17 @@ def create_input_boxes():
     button.style.borderRadius = "8px";
     button.style.cursor = "pointer";
 
-    // Create a container for the input fields and arrange them in 2 columns
+    // Create a container for the input fields and arrange them in 3 columns
     var inputContainer = document.createElement("div");
     inputContainer.style.display = "grid";
-    inputContainer.style.gridTemplateColumns = "1fr 1fr"; // 2 columns
+    inputContainer.style.gridTemplateColumns = "1fr 1fr 1fr"; // 3 columns
     inputContainer.style.gridGap = "10px";
     inputContainer.style.marginTop = "20px";
 
-    // Append inputs to the container in the desired order (2 columns)
+    // Append inputs to the container in the desired order (3 columns)
     inputContainer.appendChild(input1); // dateofsurgery
     inputContainer.appendChild(input2); // animalWeight
     inputContainer.appendChild(input3); // mousebirth
-    inputContainer.appendChild(input4); // mouseage
 
     // Add the container and buttons to the page
     var container = document.createElement("div");
@@ -69,10 +67,7 @@ def create_input_boxes():
         var val1 = document.getElementById("dateofsurgery").value;
         var val2 = document.getElementById("animalWeight").value;
         var val3 = document.getElementById("mousebirth").value;
-        var val4 = document.getElementById("mouseage").value;
-        var val5 = document.getElementById("LeftEarBarInitial").value;
-        var val6 = document.getElementById("RightEarBarInitial").value;
-        google.colab.kernel.invokeFunction("notebook.update_data", [val1, val2, val3, val4], {});
+        google.colab.kernel.invokeFunction("notebook.update_data", [val1, val2, val3], {});
     }
     '''))
 
@@ -89,6 +84,16 @@ def update_data(val1, val2, val3, val4):
         # Fetch the head_parameter DataFrame from Google Sheets
         worksheet = gc.open_by_key(file_id).sheet1
         head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
+
+        
+        # Convert date strings to datetime objects
+        head_parameter["Date of surgery"] = pd.to_datetime(head_parameter["Date of surgery"])
+        head_parameter["Mouse date of birth"] = pd.to_datetime(head_parameter["Mouse date of birth"])
+        
+        # Calculate age in days
+        head_parameter["Mouse age (days)"] = (
+            head_parameter["Date of surgery"] - head_parameter["Mouse date of birth"]
+        ).dt.days
 
         head_parameter[new_mouse_id] = ""
 
