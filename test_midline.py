@@ -43,30 +43,38 @@ def create_input_boxes():
         return input;
     }
 
-    var input1 = createInput("xL1500", "Enter xL1500");
-    var input2 = createInput("xL2000", "Enter xL2000");
-    var input3 = createInput("xL2500", "Enter xL2500");
-    var input4 = createInput("xL3500", "Enter xL3500");
-    var input5 = createInput("xL4000", "Enter xL4000");
-    var input6 = createInput("xL4500", "Enter xL4500");
-    var input7 = createInput("xR1500", "Enter xR1500");
-    var input8 = createInput("xR2000", "Enter xR2000");
-    var input9 = createInput("xR2500", "Enter xR2500");
-    var input10 = createInput("xR3500", "Enter xR3500");
-    var input11 = createInput("xR4000", "Enter xR4000");
-    var input12 = createInput("xR4500", "Enter xR4500");
-    var input13 = createInput("zL1500", "Enter zL1500");
-    var input14 = createInput("zL2000", "Enter zL2000");
-    var input15 = createInput("zL2500", "Enter zL2500");
-    var input16 = createInput("zL3500", "Enter zL3500");
-    var input17 = createInput("zL4000", "Enter zL4000");
-    var input18 = createInput("zL4500", "Enter zL4500");
-    var input19 = createInput("zR1500", "Enter zR1500");
-    var input20 = createInput("zR2000", "Enter zR2000");
-    var input21 = createInput("zR2500", "Enter zR2500");
-    var input22 = createInput("zR3500", "Enter zR3500");
-    var input23 = createInput("zR4000", "Enter zR4000");
-    var input24 = createInput("zR4500", "Enter zR4500");
+    var input1 = createInput("xL1000", "Enter xL1000");
+    var input2 = createInput("xL1500", "Enter xL1500");
+    var input3 = createInput("xL2000", "Enter xL2000");
+    var input4 = createInput("xL2500", "Enter xL2500");
+    var input5 = createInput("xL3000", "Enter xL3000");
+    var input6 = createInput("xL3500", "Enter xL3500");
+    var input7 = createInput("xL4000", "Enter xL4000");
+    var input8 = createInput("xL4500", "Enter xL4500");
+    var input9 = createInput("xR1000", "Enter xR1000");
+    var input10 = createInput("xR1500", "Enter xR1500");
+    var input11 = createInput("xR2000", "Enter xR2000");
+    var input12 = createInput("xR2500", "Enter xR2500");
+    var input13 = createInput("xR3000", "Enter xR3000");
+    var input14 = createInput("xR3500", "Enter xR3500");
+    var input15 = createInput("xR4000", "Enter xR4000");
+    var input16 = createInput("xR4500", "Enter xR4500");
+    var input17 = createInput("zL1000", "Enter zL1000");
+    var input18 = createInput("zL1500", "Enter zL1500");
+    var input19 = createInput("zL2000", "Enter zL2000");
+    var input20 = createInput("zL2500", "Enter zL2500");
+    var input21 = createInput("zL3000", "Enter zL3000");
+    var input22 = createInput("zL3500", "Enter zL3500");
+    var input23 = createInput("zL4000", "Enter zL4000");
+    var input24 = createInput("zL4500", "Enter zL4500");
+    var input25 = createInput("zR1000", "Enter zR1000");
+    var input26 = createInput("zR1500", "Enter zR1500");
+    var input27 = createInput("zR2000", "Enter zR2000");
+    var input28 = createInput("zR2500", "Enter zR2500");
+    var input29 = createInput("zR3000", "Enter zR3000");
+    var input30 = createInput("zR3500", "Enter zR3500");
+    var input31 = createInput("zR4000", "Enter zR4000");
+    var input32 = createInput("zR4500", "Enter zR4500");
 
     // Plot result box (for embedding the plot)
     var plotBox1 = document.createElement("div");
@@ -99,9 +107,9 @@ def create_input_boxes():
     button.style.borderRadius = "8px";
     button.style.cursor = "pointer";
 
-    // Finish correction button
+    // Finish correction and write into the sheet button
     var finishButton = document.createElement("button");
-    finishButton.innerHTML = "Finish Correction";
+    finishButton.innerHTML = "Finish Correction and write into the sheet";
     finishButton.style.margin = "10px";
     finishButton.style.padding = "12px 20px";
     finishButton.style.fontSize = "16px";
@@ -111,38 +119,46 @@ def create_input_boxes():
     finishButton.style.borderRadius = "8px";
     finishButton.style.cursor = "pointer";
 
-    // Create a container for the input fields and arrange them in 6 columns
+    // Create a container for the input fields and arrange them in 8 columns
     var inputContainer = document.createElement("div");
     inputContainer.style.display = "grid";
-    inputContainer.style.gridTemplateColumns = "1fr 1fr 1fr 1fr 1fr 1fr"; // 6 columns
+    inputContainer.style.gridTemplateColumns = "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"; // 8 columns
     inputContainer.style.gridGap = "10px";
     inputContainer.style.marginTop = "20px";
 
-    // Append inputs to the container in the desired order (6 columns)
-    inputContainer.appendChild(input1); // xL1500
-    inputContainer.appendChild(input2); // xL2000
-    inputContainer.appendChild(input3); // xL2500
-    inputContainer.appendChild(input4); // xL3500
-    inputContainer.appendChild(input5); // xL4000
-    inputContainer.appendChild(input6); // xL4500
-    inputContainer.appendChild(input7); // xR1500
-    inputContainer.appendChild(input8); // xR2000
-    inputContainer.appendChild(input9); // xR2500
-    inputContainer.appendChild(input10); // xR3500
-    inputContainer.appendChild(input11); // xR4000
-    inputContainer.appendChild(input12); // xR4500
-    inputContainer.appendChild(input13); // zL1500
-    inputContainer.appendChild(input14); // zL2000
-    inputContainer.appendChild(input15); // zL2500
-    inputContainer.appendChild(input16); // zL3500
-    inputContainer.appendChild(input17); // zL4000
-    inputContainer.appendChild(input18); // zL4500
-    inputContainer.appendChild(input19); // zR1500
-    inputContainer.appendChild(input20); // zR2000
-    inputContainer.appendChild(input21); // zR2500
-    inputContainer.appendChild(input22); // zR3500
-    inputContainer.appendChild(input23); // zR4000
-    inputContainer.appendChild(input24); // zR4500
+    // Append inputs to the container in the desired order (8 columns)
+    inputContainer.appendChild(input1); // xL1000
+    inputContainer.appendChild(input2); // xL1500
+    inputContainer.appendChild(input3); // xL2000
+    inputContainer.appendChild(input4); // xL2500
+    inputContainer.appendChild(input5); // xL3000
+    inputContainer.appendChild(input6); // xL3500
+    inputContainer.appendChild(input7); // xL4000
+    inputContainer.appendChild(input8); // xL4500
+    inputContainer.appendChild(input9); // xR1000
+    inputContainer.appendChild(input10); // xR1500
+    inputContainer.appendChild(input11); // xR2000
+    inputContainer.appendChild(input12); // xR2500
+    inputContainer.appendChild(input13); // xR3000
+    inputContainer.appendChild(input14); // xR3500
+    inputContainer.appendChild(input15); // xR4000
+    inputContainer.appendChild(input16); // xR4500
+    inputContainer.appendChild(input17); // zL1000
+    inputContainer.appendChild(input18); // zL1500
+    inputContainer.appendChild(input19); // zL2000
+    inputContainer.appendChild(input20); // zL2500
+    inputContainer.appendChild(input21); // zL3000
+    inputContainer.appendChild(input22); // zL3500
+    inputContainer.appendChild(input23); // zL4000
+    inputContainer.appendChild(input24); // zL4500
+    inputContainer.appendChild(input25); // zR1000
+    inputContainer.appendChild(input26); // zR1500
+    inputContainer.appendChild(input27); // zR2000
+    inputContainer.appendChild(input28); // zR2500
+    inputContainer.appendChild(input29); // zR3000
+    inputContainer.appendChild(input30); // zR3500
+    inputContainer.appendChild(input31); // zR4000
+    inputContainer.appendChild(input32); // zR4500
 
     // Add the container, buttons, and result box to the page
     var container = document.createElement("div");
@@ -162,32 +178,40 @@ def create_input_boxes():
 
     // Button click actions for Submit and Finish correction
     button.onclick = function() {
-        var val1 = document.getElementById("xL1500").value;
-        var val2 = document.getElementById("xL2000").value;
-        var val3 = document.getElementById("xL2500").value;
-        var val4 = document.getElementById("xL3500").value;
-        var val5 = document.getElementById("xL4000").value;
-        var val6 = document.getElementById("xL4500").value;
-        var val7 = document.getElementById("xR1500").value;
-        var val8 = document.getElementById("xR2000").value;
-        var val9 = document.getElementById("xR2500").value;
-        var val10 = document.getElementById("xR3500").value;
-        var val11 = document.getElementById("xR4000").value;
-        var val12 = document.getElementById("xR4500").value;
-        var val13 = document.getElementById("zL1500").value;
-        var val14 = document.getElementById("zL2000").value;
-        var val15 = document.getElementById("zL2500").value;
-        var val16 = document.getElementById("zL3500").value;
-        var val17 = document.getElementById("zL4000").value;
-        var val18 = document.getElementById("zL4500").value;
-        var val19 = document.getElementById("zR1500").value;
-        var val20 = document.getElementById("zR2000").value;
-        var val21 = document.getElementById("zR2500").value;
-        var val22 = document.getElementById("zR3500").value;
-        var val23 = document.getElementById("zR4000").value;
-        var val24 = document.getElementById("zR4500").value;
-        console.log("Submitting data to Python:", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24]);
-        google.colab.kernel.invokeFunction("notebook.update_correction_result", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24], {});
+        var val1 = document.getElementById("xL1000").value;
+        var val2 = document.getElementById("xL1500").value;
+        var val3 = document.getElementById("xL2000").value;
+        var val4 = document.getElementById("xL2500").value;
+        var val5 = document.getElementById("xL3000").value;
+        var val6 = document.getElementById("xL3500").value;
+        var val7 = document.getElementById("xL4000").value;
+        var val8 = document.getElementById("xL4500").value;
+        var val9 = document.getElementById("xR1000").value;
+        var val10 = document.getElementById("xR1500").value;
+        var val11 = document.getElementById("xR2000").value;
+        var val12 = document.getElementById("xR2500").value;
+        var val13 = document.getElementById("xR3000").value;
+        var val14 = document.getElementById("xR3500").value;
+        var val15 = document.getElementById("xR4000").value;
+        var val16 = document.getElementById("xR4500").value;
+        var val17 = document.getElementById("zL1000").value;
+        var val18 = document.getElementById("zL1500").value;
+        var val19 = document.getElementById("zL2000").value;
+        var val20 = document.getElementById("zL2500").value;
+        var val21 = document.getElementById("zL3000").value;
+        var val22 = document.getElementById("zL3500").value;
+        var val23 = document.getElementById("zL4000").value;
+        var val24 = document.getElementById("zL4500").value;
+        var val25 = document.getElementById("zR1000").value;
+        var val26 = document.getElementById("zR1500").value;
+        var val27 = document.getElementById("zR2000").value;
+        var val28 = document.getElementById("zR2500").value;
+        var val29 = document.getElementById("zR3000").value;
+        var val30 = document.getElementById("zR3500").value;
+        var val31 = document.getElementById("zR4000").value;
+        var val32 = document.getElementById("zR4500").value;
+        console.log("Submitting data to Python:", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24, val25, val26, val27, val28, val29, val30, val31, val32]);
+        google.colab.kernel.invokeFunction("notebook.update_correction_result", [val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24, val25, val26, val27, val28, val29, val30, val31, val32], {});
     }
 
         finishButton.onclick = function() {
@@ -203,37 +227,45 @@ def midline_correction(xL_values, xR_values):
     return midline
     
 # Python callback to update the sheet and calculate the midline
-def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24):
+def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24, val25, val26, val27, val28, val29, val30, val31, val32):
     try:
         # Fetch the head_parameter DataFrame from Google Sheets
         worksheet = gc.open_by_key(file_id).sheet1
         head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
 
         # Overwrite the values in the sheet
-        head_parameter.iloc[10, -1] = val1
-        head_parameter.iloc[11, -1] = val2
-        head_parameter.iloc[12, -1] = val3
-        head_parameter.iloc[14, -1] = val4
-        head_parameter.iloc[15, -1] = val5
-        head_parameter.iloc[16, -1] = val6
-        head_parameter.iloc[18, -1] = val7
-        head_parameter.iloc[19, -1] = val8
-        head_parameter.iloc[20, -1] = val9
-        head_parameter.iloc[22, -1] = val10
-        head_parameter.iloc[23, -1] = val11
-        head_parameter.iloc[24, -1] = val12
-        head_parameter.iloc[26, -1] = val13
-        head_parameter.iloc[27, -1] = val14
-        head_parameter.iloc[28, -1] = val15
-        head_parameter.iloc[30, -1] = val16
-        head_parameter.iloc[31, -1] = val17
-        head_parameter.iloc[32, -1] = val18
-        head_parameter.iloc[34, -1] = val19
-        head_parameter.iloc[35, -1] = val20
-        head_parameter.iloc[36, -1] = val21
-        head_parameter.iloc[38, -1] = val22
-        head_parameter.iloc[39, -1] = val23
-        head_parameter.iloc[40, -1] = val24
+        head_parameter.iloc[9, -1] = val1
+        head_parameter.iloc[10, -1] = val2
+        head_parameter.iloc[11, -1] = val3
+        head_parameter.iloc[12, -1] = val4
+        head_parameter.iloc[13, -1] = val5
+        head_parameter.iloc[14, -1] = val6
+        head_parameter.iloc[15, -1] = val7
+        head_parameter.iloc[16, -1] = val8
+        head_parameter.iloc[17, -1] = val9
+        head_parameter.iloc[18, -1] = val10
+        head_parameter.iloc[19, -1] = val11
+        head_parameter.iloc[20, -1] = val12
+        head_parameter.iloc[21, -1] = val13
+        head_parameter.iloc[22, -1] = val14
+        head_parameter.iloc[23, -1] = val15
+        head_parameter.iloc[24, -1] = val16
+        head_parameter.iloc[25, -1] = val17
+        head_parameter.iloc[26, -1] = val18
+        head_parameter.iloc[27, -1] = val19
+        head_parameter.iloc[28, -1] = val20
+        head_parameter.iloc[29, -1] = val21
+        head_parameter.iloc[30, -1] = val22
+        head_parameter.iloc[31, -1] = val23
+        head_parameter.iloc[32, -1] = val24
+        head_parameter.iloc[33, -1] = val25
+        head_parameter.iloc[34, -1] = val26
+        head_parameter.iloc[35, -1] = val27
+        head_parameter.iloc[36, -1] = val28
+        head_parameter.iloc[37, -1] = val29
+        head_parameter.iloc[38, -1] = val30
+        head_parameter.iloc[39, -1] = val31
+        head_parameter.iloc[40, -1] = val32
 
         xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
         xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
@@ -345,6 +377,8 @@ def linear_regression(x,y):
     intercept = model.intercept_
     return [slope,intercept]
 
+# Initialize the input boxes and the callback
+create_input_boxes()
 
 def finish_correction():
     print("Finish correction button clicked!")
@@ -578,12 +612,29 @@ def update_figure_1():
                 console.log("plotBox1 not found");
             }}
         }}, 500);
-    '''))
+    
+    display(Javascript(f"""
+        (function() {{
+    const box = document.getElementById('plotBox1');
+    if (box) {{
+      const img = document.createElement('img');
+      img.src = 'data:image/png;base64,{img_base641}';
+      img.style.maxWidth = '100%';
+      img.style.height = 'auto';
+      box.innerHTML = '';
+      box.appendChild(img);
+      console.log("Image injected into plotBox1");
+    }} else {{
+      console.error("plotBox1 not found in DOM");
+    }}
+  }})();
+"""))
 
     print("Figure 1 has been embedded in plotBox1.")
     
     display(fig1)
     plt.show()
+    plt.close(fig1)
     print('\n\n')
 
 # Figure 2, histograms showing the L-R x-positions
@@ -636,6 +687,7 @@ def update_figure_2():
 
     display(fig2)
     plt.show()
+    plt.close(fig2)
     print('\n\n')
 
 # Figure 3, histograms showing the L-R z-positions
@@ -688,6 +740,7 @@ def update_figure_3():
     
     display(fig3)
     plt.show()
+    plt.close(fig3)
     print('\n\n')
 
     print("Figures saved and encoded in base64.")
@@ -701,5 +754,4 @@ output.register_callback('notebook.update_figure_1', update_figure_1)
 output.register_callback('notebook.update_figure_2', update_figure_2)
 output.register_callback('notebook.update_figure_3', update_figure_3)
 
-# Initialize the input boxes and the callback
-create_input_boxes()
+
