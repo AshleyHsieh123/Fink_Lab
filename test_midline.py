@@ -723,7 +723,7 @@ def update_figure_3():
     img_buf3.seek(0)
     img_base643 = base64.b64encode(img_buf3.read()).decode('utf-8')
 
-    display(Javascript(f'''
+    display(Javascript(f"""
         setTimeout(function() {{
             var plotBox3 = document.getElementById("plotBox3");
             if (plotBox3) {{
@@ -732,7 +732,7 @@ def update_figure_3():
                 console.log("plotBox3 not found");
             }}
         }}, 500);
-    '''))
+    """))
     print("Figure 3 has been embedded in plotBox3.")
     
     display(fig3)
