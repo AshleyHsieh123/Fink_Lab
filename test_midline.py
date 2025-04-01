@@ -83,18 +83,21 @@ def create_input_boxes():
     plotBox1.style.margin = "10px";
     plotBox1.style.height = "600px";  // Adjusted height for better image display
     plotBox1.style.width = "100%";
+    plotBox1.style.display = "block";
 
     var plotBox2 = document.createElement("div");
     plotBox2.id = "plotBox2";
     plotBox2.style.margin = "10px";
     plotBox2.style.height = "600px";  // Adjusted height for better image display
     plotBox2.style.width = "100%";
+    plotBox2.style.display = "block";
 
     var plotBox3 = document.createElement("div");
     plotBox3.id = "plotBox3";
     plotBox3.style.margin = "10px";
     plotBox3.style.height = "600px";  // Adjusted height for better image display
     plotBox3.style.width = "100%";
+    plotBox3.style.display = "block";
     
     // Submit button
     var button = document.createElement("button");
