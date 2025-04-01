@@ -714,9 +714,5 @@ def finish_correction():
 from google.colab import output
 output.register_callback('notebook.update_correction_result', update_correction_result)
 output.register_callback('notebook.finish_correction', finish_correction)
-output.register_callback('notebook.update_figure_1', update_figure_1)
-output.register_callback('notebook.update_figure_2', update_figure_2)
-output.register_callback('notebook.update_figure_3', update_figure_3)
-
 # Initialize the input boxes and the callback
 create_input_boxes()
