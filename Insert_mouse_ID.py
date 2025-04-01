@@ -72,7 +72,7 @@ def create_input_boxes():
     '''))
 
 # Python callback to update the sheet
-def update_data(val1, val2, val3):
+def update_data(val1, val2, val3, val4):
     try:
         # Mount Google Drive and authenticate
         drive.mount('/content/drive')
@@ -91,9 +91,10 @@ def update_data(val1, val2, val3):
         head_parameter = head_parameter.set_index(head_parameter.columns[0]).T
         
         # Insert new data
-        head_parameter.loc[new_mouse_id, "Date of surgery"] = val1
-        head_parameter.loc[new_mouse_id, "Weight before surgery (g)"] = val2
-        head_parameter.loc[new_mouse_id, "Mouse date of birth"] = val3
+        head_parameter.iloc[49, -1] = val1
+        head_parameter.iloc[0, -1] = val2
+        head_parameter.iloc[50, -1] = val3
+        head_parameter.iloc[48, -1] = val4
         
         # Step 1: Replace all actual Python Ellipsis objects
         head_parameter = head_parameter.applymap(lambda x: pd.NA if type(x) is type(...) else x)
@@ -101,24 +102,18 @@ def update_data(val1, val2, val3):
         # Step 2: Replace string "..." just in case
         head_parameter.replace("...", pd.NA, inplace=True)
         
-        # Step 3: Print to confirm nothing weird is left
-        print("Unique values in Date of surgery:", head_parameter["Date of surgery"].unique())
-        print("Unique values in Mouse date of birth:", head_parameter["Mouse date of birth"].unique())
-        
-        # Step 4: Convert to datetime (coerce invalids to NaT)
-        head_parameter["Date of surgery"] = pd.to_datetime(
+        # Step 3: Convert to datetime (coerce invalids to NaT)
+        val1 = pd.to_datetime(
             head_parameter["Date of surgery"], format="mixed", errors="coerce"
         )
-        head_parameter["Mouse date of birth"] = pd.to_datetime(
+        val3 = pd.to_datetime(
             head_parameter["Mouse date of birth"], format="mixed", errors="coerce"
         )
         
         # Calculate age
-        head_parameter["Mouse age (days)"] = (
-            head_parameter["Date of surgery"] - head_parameter["Mouse date of birth"]
+        val4 = (
+            val1 - val3
         ).dt.days
-
-        pd.to_datetime(..., format='mixed', dayfirst=True)
         
         # Transpose back to original layout before writing
         head_parameter = head_parameter.T.reset_index()
