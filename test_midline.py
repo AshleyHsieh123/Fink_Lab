@@ -377,9 +377,6 @@ def linear_regression(x,y):
     intercept = model.intercept_
     return [slope,intercept]
 
-# Initialize the input boxes and the callback
-create_input_boxes()
-
 def finish_correction():
     print("Finish correction button clicked!")
     
@@ -753,3 +750,6 @@ output.register_callback('notebook.finish_correction', finish_correction)
 output.register_callback('notebook.update_figure_1', update_figure_1)
 output.register_callback('notebook.update_figure_2', update_figure_2)
 output.register_callback('notebook.update_figure_3', update_figure_3)
+
+# Initialize the input boxes and the callback
+create_input_boxes()
