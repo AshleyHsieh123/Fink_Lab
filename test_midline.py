@@ -425,23 +425,12 @@ leftRidgeZ.columns = head_parameter.iloc[0,60:]
 rightRidgeZ = head_parameter.iloc[33:41,60:]
 rightRidgeZ.columns = head_parameter.iloc[0,60:]
 
-def enforce_numeric(df, name):
-    df = df.apply(pd.to_numeric, errors='coerce')
-    if df.isnull().values.any():
-        print(f"⚠️ Warning: Non-numeric values found in {name} — some values coerced to NaN")
-    return df
 
-leftRidge = enforce_numeric(leftRidge, "leftRidge")
-rightRidge = enforce_numeric(rightRidge, "rightRidge")
-leftRidgeZ = enforce_numeric(leftRidgeZ, "leftRidgeZ")
-rightRidgeZ = enforce_numeric(rightRidgeZ, "rightRidgeZ")
-
-
-animalWeight = head_parameter.iloc[0,60:]
-LeftEarBarInitial = head_parameter.iloc[3,60:]
-RightEarBarInitial = head_parameter.iloc[4,60:]
-NoseDVposition = head_parameter.iloc[8,60:]
-RCSlambdaDistance = head_parameter.iloc[7,60:]
+animalWeight = [float(x) for x in list(head_parameter.iloc[0,60:])]
+LeftEarBarInitial = [float(x) for x in list(head_parameter.iloc[3,60:])]
+RightEarBarInitial = [float(x) for x in list(head_parameter.iloc[4,60:])]
+NoseDVposition = [float(x) for x in list(head_parameter.iloc[8,60:])]
+RCSlambdaDistance = [float(x) for x in list(head_parameter.iloc[7,60:])]
 
 meanL = leftRidge.mean(axis=1).values
 stdL = leftRidge.std(axis=1).values
