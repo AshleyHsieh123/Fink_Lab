@@ -73,6 +73,10 @@ def create_input_boxes():
 
 # Python callback to update the sheet
 def update_data(val1, val2, val3):
+    print("🧪 Input values:")
+    print("Date of surgery:", val1)
+    print("Weight:", val2)
+    print("Mouse birth:", val3)
     try:
         from datetime import datetime
 
