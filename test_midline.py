@@ -425,10 +425,17 @@ leftRidgeZ.columns = head_parameter.iloc[0,60:]
 rightRidgeZ = head_parameter.iloc[33:41,60:]
 rightRidgeZ.columns = head_parameter.iloc[0,60:]
 
-leftRidge = leftRidge.apply(pd.to_numeric, errors='coerce')
-rightRidge = rightRidge.apply(pd.to_numeric, errors='coerce')
-leftRidgeZ = leftRidgeZ.apply(pd.to_numeric, errors='coerce')
-rightRidgeZ = rightRidgeZ.apply(pd.to_numeric, errors='coerce')
+def enforce_numeric(df, name):
+    df = df.apply(pd.to_numeric, errors='coerce')
+    if df.isnull().values.any():
+        print(f"⚠️ Warning: Non-numeric values found in {name} — some values coerced to NaN")
+    return df
+
+leftRidge = enforce_numeric(leftRidge, "leftRidge")
+rightRidge = enforce_numeric(rightRidge, "rightRidge")
+leftRidgeZ = enforce_numeric(leftRidgeZ, "leftRidgeZ")
+rightRidgeZ = enforce_numeric(rightRidgeZ, "rightRidgeZ")
+
 
 animalWeight = head_parameter.iloc[0,60:]
 LeftEarBarInitial = head_parameter.iloc[3,60:]
@@ -721,17 +728,23 @@ def finish_correction():
     print("Finished updating the sheet")
     
     print("Calling update_figure_1...")
-    update_figure_1()
-    # TEMPORARY debug output
-    fig1, ax = plt.subplots()
-    ax.plot([1, 2, 3], [4, 5, 6])
-    plt.title("Test Figure")
-    plt.show()
-    print("Display inline image JS injected.")
+    try:
+        update_figure_1()
+    except Exception as e:
+        print(f"Error in update_figure_1: {e}")
+        
     print("Calling update_figure_2...")
-    update_figure_2()
+    try:
+        update_figure_2()
+    except Exception as e:
+        print(f"Error in update_figure_2: {e}")
+        
     print("Calling update_figure_3...")
-    update_figure_3()
+    try:
+        update_figure_3()
+    except Exception as e:
+        print(f"Error in update_figure_3: {e}")
+
 
 # Register the callback function
 from google.colab import output
