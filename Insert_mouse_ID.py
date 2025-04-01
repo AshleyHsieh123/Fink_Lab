@@ -95,21 +95,24 @@ def update_data(val1, val2, val3):
         head_parameter.loc[new_mouse_id, "Weight before surgery (g)"] = val2
         head_parameter.loc[new_mouse_id, "Mouse date of birth"] = val3
         
-        # Step 1: Convert ellipsis (...) to actual NaN
-        # Some cells may be the actual Python Ellipsis object
-        head_parameter = head_parameter.applymap(lambda x: pd.NA if x is ... else x)
+        # Step 1: Replace all actual Python Ellipsis objects
+        head_parameter = head_parameter.applymap(lambda x: pd.NA if type(x) is type(...) else x)
         
-        # Step 2: Also clean up any string "..." (just in case it's typed as a string)
+        # Step 2: Replace string "..." just in case
         head_parameter.replace("...", pd.NA, inplace=True)
         
-        # Step 3: Convert to datetime
+        # Step 3: Print to confirm nothing weird is left
+        print("Unique values in Date of surgery:", head_parameter["Date of surgery"].unique())
+        print("Unique values in Mouse date of birth:", head_parameter["Mouse date of birth"].unique())
+        
+        # Step 4: Convert to datetime (coerce invalids to NaT)
         head_parameter["Date of surgery"] = pd.to_datetime(
             head_parameter["Date of surgery"], format="mixed", errors="coerce"
         )
         head_parameter["Mouse date of birth"] = pd.to_datetime(
             head_parameter["Mouse date of birth"], format="mixed", errors="coerce"
         )
-
+        
         # Calculate age
         head_parameter["Mouse age (days)"] = (
             head_parameter["Date of surgery"] - head_parameter["Mouse date of birth"]
