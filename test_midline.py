@@ -603,7 +603,6 @@ def update_figure_1():
     print("Figure 1 has been embedded in plotBox1.")
     
     display(fig1)
-    plt.show()
     plt.close(fig1)
     print('\n\n')
 
@@ -648,7 +647,6 @@ def update_figure_2():
     print("Figure 2 has been embedded in plotBox2.")
 
     display(fig2)
-    plt.show()
     plt.close(fig2)
     print('\n\n')
 
@@ -693,7 +691,6 @@ def update_figure_3():
     print("Figure 3 has been embedded in plotBox3.")
     
     display(fig3)
-    plt.show()
     plt.close(fig3)
     print('\n\n')
 
