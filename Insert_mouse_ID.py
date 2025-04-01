@@ -95,17 +95,20 @@ def update_data(val1, val2, val3):
         head_parameter.loc[new_mouse_id, "Weight before surgery (g)"] = val2
         head_parameter.loc[new_mouse_id, "Mouse date of birth"] = val3
         
-        # Replace any ellipsis or non-string junk with NaN
-        head_parameter.replace(to_replace=[...], value=pd.NA, inplace=True)
+        # Step 1: Convert ellipsis (...) to actual NaN
+        # Some cells may be the actual Python Ellipsis object
+        head_parameter = head_parameter.applymap(lambda x: pd.NA if x is ... else x)
         
-        # Now safely convert to datetime
+        # Step 2: Also clean up any string "..." (just in case it's typed as a string)
+        head_parameter.replace("...", pd.NA, inplace=True)
+        
+        # Step 3: Convert to datetime
         head_parameter["Date of surgery"] = pd.to_datetime(
-            head_parameter["Date of surgery"], format='mixed', errors='coerce'
+            head_parameter["Date of surgery"], format="mixed", errors="coerce"
         )
         head_parameter["Mouse date of birth"] = pd.to_datetime(
-            head_parameter["Mouse date of birth"], format='mixed', errors='coerce'
-)
-
+            head_parameter["Mouse date of birth"], format="mixed", errors="coerce"
+        )
 
         # Calculate age
         head_parameter["Mouse age (days)"] = (
