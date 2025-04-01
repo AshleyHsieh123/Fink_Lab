@@ -704,23 +704,11 @@ def finish_correction():
     print("Finished updating the sheet")
     
     print("Calling update_figure_1...")
-    try:
-        update_figure_1()
-    except Exception as e:
-        print(f"Error in update_figure_1: {e}")
-        
+    update_figure_1()
     print("Calling update_figure_2...")
-    try:
-        update_figure_2()
-    except Exception as e:
-        print(f"Error in update_figure_2: {e}")
-        
+    update_figure_2()
     print("Calling update_figure_3...")
-    try:
-        update_figure_3()
-    except Exception as e:
-        print(f"Error in update_figure_3: {e}")
-
+    update_figure_3()
 
 # Register the callback function
 from google.colab import output
