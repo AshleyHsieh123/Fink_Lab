@@ -381,6 +381,9 @@ def linear_regression(x,y):
 # Data
 worksheet = gc.open_by_key(file_id).sheet1
 head_parameter = pd.DataFrame(worksheet.get_all_records())
+head_parameter = head_parameter.replace('', np.nan)
+head_parameter = head_parameter.replace('lost', np.nan)
+
 global mouse_id
 mice = np.array(head_parameter.iloc[0,:])
 num_mice = len(mice[60:]) # count the number of mice
@@ -425,11 +428,11 @@ leftRidgeZ.columns = head_parameter.iloc[0,60:]
 rightRidgeZ = head_parameter.iloc[33:41,60:]
 rightRidgeZ.columns = head_parameter.iloc[0,60:]
 
-animalWeight = [float(x) for x in head_parameter.iloc[0,60:].values if x != '']
-LeftEarBarInitial = [float(x) for x in head_parameter.iloc[3,60:].values if x != '']
-RightEarBarInitial = [float(x) for x in head_parameter.iloc[4,60:].values if x != '']
-NoseDVposition = [float(x) for x in head_parameter.iloc[8,60:].values if x != '']
-RCSlambdaDistance = [float(x) for x in head_parameter.iloc[7,60:].values if x != '']
+animalWeight = head_parameter.iloc[0,60:].values
+LeftEarBarInitial = head_parameter.iloc[3,60:].values
+RightEarBarInitial = head_parameter.iloc[4,60:].values
+NoseDVposition = head_parameter.iloc[8,60:].values
+RCSlambdaDistance = head_parameter.iloc[7,60:].values
 
 meanL = leftRidge.mean(axis=1).values
 stdL = leftRidge.std(axis=1).values
