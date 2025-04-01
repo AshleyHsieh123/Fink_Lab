@@ -378,6 +378,8 @@ def linear_regression(x,y):
     return [slope,intercept]
 
 # Data
+worksheet = gc.open_by_key(file_id).sheet1
+head_parameter = pd.DataFrame(worksheet.get_all_records())
 global mouse_id
 mice = np.array(head_parameter.iloc[0,:])
 num_mice = len(mice[60:]) # count the number of mice
