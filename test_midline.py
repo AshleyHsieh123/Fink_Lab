@@ -377,89 +377,65 @@ def linear_regression(x,y):
     intercept = model.intercept_
     return [slope,intercept]
 
-def finish_correction():
-    print("Finish correction button clicked!")
-    
-    worksheet = gc.open_by_key(file_id).sheet1
-    head_parameter = pd.DataFrame(worksheet.get_all_records())
-    xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
-    xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
-    
-    midline = midline_correction(xL_values,xR_values)
-    
-    head_parameter.iloc[9:17, -1] += midline
-    head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
-    head_parameter.iloc[17:25, -1] += midline
-    head_parameter.iloc[17:25, -1] = head_parameter.iloc[17:25, -1].round(0).astype(int)
-    worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
-    set_with_dataframe(worksheet, head_parameter)  # Update the sheet
-    print("Finished updating the sheet")
+# Data
+global mouse_id
+mice = np.array(head_parameter.iloc[0,:])
+num_mice = len(mice[60:]) # count the number of mice
+mouse_id = mice[-1]
+mouse_index = np.where(mice == mouse_id)[0][0]  # Find the index of the mouse
+mousefile = head_parameter.iloc[0:53,mouse_index]
+mousefile.index = head_parameter.iloc[0:53,0].to_list()
 
-    global mouse_id
-    mice = np.array(head_parameter.iloc[0,:])
-    num_mice = len(mice[60:]) # count the number of mice
-    mouse_id = mice[-1]
-    mouse_index = np.where(mice == mouse_id)[0][0]  # Find the index of the mouse
-    mousefile = head_parameter.iloc[0:53,mouse_index]
-    mousefile.index = head_parameter.iloc[0:53,0].to_list()
+global mouseXLR, mouseZLR, yPositions
+global meanL, stdL, meanR, stdR, meanLz, stdLz, meanRz, stdRz
 
-    global mouseXLR, mouseZLR, yPositions
-    global meanL, stdL, meanR, stdR, meanLz, stdLz, meanRz, stdRz
-    
-    mouseData1 = [[mousefile['Weight before surgery (g)'],mousefile['Left ear bar (initial) (mm)'],mousefile['Right ear bar (initial) (mm)'],mousefile['Nose DV position º'],mousefile['RCS-lambda distance (µm)']]]
-    mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 2000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, L positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 2500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, L positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 3000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, L positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 3500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, L positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 4000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, L positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 4500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, L positions of RIGHT temporal ridge (µm)']]]
-    mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, V positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 1500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, V positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 2000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, V positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 2500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, V positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 3000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, V positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 3500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, V positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 4000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, V positions of RIGHT temporal ridge (µm)']],
-                  [mousefile['At 4500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, V positions of RIGHT temporal ridge (µm)']]]
+mouseData1 = [[mousefile['Weight before surgery (g)'],mousefile['Left ear bar (initial) (mm)'],mousefile['Right ear bar (initial) (mm)'],mousefile['Nose DV position º'],mousefile['RCS-lambda distance (µm)']]]
+mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, L positions of RIGHT temporal ridge (µm)']]]
+mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 1500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, V positions of RIGHT temporal ridge (µm)']]]
 
-    mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
-    mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
-    yPositions = np.arange(1000, 4501, 500)
+mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
+mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
+yPositions = np.arange(1000, 4501, 500)
 
-     # All previous MetaData
+ # All previous MetaData
 
-    leftRidge = head_parameter.iloc[9:17,60:]
-    leftRidge.columns = head_parameter.iloc[0,60:]
-    rightRidge = head_parameter.iloc[17:25,60:]
-    rightRidge.columns = head_parameter.iloc[0,60:]
-    leftRidgeZ = head_parameter.iloc[25:33,60:]
-    leftRidgeZ.columns = head_parameter.iloc[0,60:]
-    rightRidgeZ = head_parameter.iloc[33:41,60:]
-    rightRidgeZ.columns = head_parameter.iloc[0,60:]
+leftRidge = head_parameter.iloc[9:17,60:]
+leftRidge.columns = head_parameter.iloc[0,60:]
+rightRidge = head_parameter.iloc[17:25,60:]
+rightRidge.columns = head_parameter.iloc[0,60:]
+leftRidgeZ = head_parameter.iloc[25:33,60:]
+leftRidgeZ.columns = head_parameter.iloc[0,60:]
+rightRidgeZ = head_parameter.iloc[33:41,60:]
+rightRidgeZ.columns = head_parameter.iloc[0,60:]
 
-    animalWeight = head_parameter.iloc[0,60:]
-    LeftEarBarInitial = head_parameter.iloc[3,60:]
-    RightEarBarInitial = head_parameter.iloc[4,60:]
-    NoseDVposition = head_parameter.iloc[8,60:]
-    RCSlambdaDistance = head_parameter.iloc[7,60:]
+animalWeight = head_parameter.iloc[0,60:]
+LeftEarBarInitial = head_parameter.iloc[3,60:]
+RightEarBarInitial = head_parameter.iloc[4,60:]
+NoseDVposition = head_parameter.iloc[8,60:]
+RCSlambdaDistance = head_parameter.iloc[7,60:]
 
-    meanL = leftRidge.mean(axis=1).values
-    stdL = leftRidge.std(axis=1).values
-    meanR = rightRidge.mean(axis=1).values
-    stdR = rightRidge.std(axis=1).values
-    meanLz = leftRidgeZ.mean(axis=1).values
-    stdLz = leftRidgeZ.std(axis=1).values
-    meanRz = rightRidgeZ.mean(axis=1).values
-    stdRz = rightRidgeZ.std(axis=1).values
-    
-    print("Calling update_figure_1...")
-    update_figure_1()
-    print("Calling update_figure_2...")
-    update_figure_2()
-    print("Calling update_figure_3...")
-    update_figure_3()
+meanL = leftRidge.mean(axis=1).values
+stdL = leftRidge.std(axis=1).values
+meanR = rightRidge.mean(axis=1).values
+stdR = rightRidge.std(axis=1).values
+meanLz = leftRidgeZ.mean(axis=1).values
+stdLz = leftRidgeZ.std(axis=1).values
+meanRz = rightRidgeZ.mean(axis=1).values
+stdRz = rightRidgeZ.std(axis=1).values
 
 def display_inline_image(base64_img, target_id):
     display(HTML(f"""
@@ -717,6 +693,31 @@ def update_figure_3():
 
     print("Figures saved and encoded in base64.")
     print("JavaScript for embedding images executed.")    
+
+def finish_correction():
+    print("Finish correction button clicked!")
+    
+    worksheet = gc.open_by_key(file_id).sheet1
+    head_parameter = pd.DataFrame(worksheet.get_all_records())
+    xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
+    xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
+    
+    midline = midline_correction(xL_values,xR_values)
+    
+    head_parameter.iloc[9:17, -1] += midline
+    head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
+    head_parameter.iloc[17:25, -1] += midline
+    head_parameter.iloc[17:25, -1] = head_parameter.iloc[17:25, -1].round(0).astype(int)
+    worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
+    set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+    print("Finished updating the sheet")
+    
+    print("Calling update_figure_1...")
+    update_figure_1()
+    print("Calling update_figure_2...")
+    update_figure_2()
+    print("Calling update_figure_3...")
+    update_figure_3()
 
 # Register the callback function
 from google.colab import output
