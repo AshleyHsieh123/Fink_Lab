@@ -570,12 +570,14 @@ def update_figure_1():
 
     print(img_base641[:100])
     display(Javascript(f'''
-        var plotBox1 = document.getElementById("plotBox1");
-        if (plotBox1) {{
-            plotBox1.innerHTML = '<img src="data:image/png;base64,' + "{img_base641}" + '" />';
-        }} else {{
-            console.log("Error: plotBox1 is not available.");
-        }}
+        setTimeout(function() {{
+            var plotBox1 = document.getElementById("plotBox1");
+            if (plotBox1) {{
+                plotBox1.innerHTML = '<img src="data:image/png;base64,{img_base641}" />';
+            }} else {{
+                console.log("plotBox1 not found");
+            }}
+        }}, 500);
     '''))
 
     print("Figure 1 has been embedded in plotBox1.")
@@ -621,12 +623,14 @@ def update_figure_2():
     img_base642 = base64.b64encode(img_buf2.read()).decode('utf-8')
 
     display(Javascript(f'''
-        var plotBox2 = document.getElementById("plotBox2");
-        if (plotBox2) {{
-            plotBox2.innerHTML = '<img src="data:image/png;base64,' + "{img_base642}" + '" />';
-        }} else {{
-            console.log("Error: plotBox2 is not available.");
-        }}
+        setTimeout(function() {{
+            var plotBox2 = document.getElementById("plotBox2");
+            if (plotBox2) {{
+                plotBox2.innerHTML = '<img src="data:image/png;base64,{img_base642}" />';
+            }} else {{
+                console.log("plotBox2 not found");
+            }}
+        }}, 500);
     '''))
     print("Figure 2 has been embedded in plotBox2.")
 
@@ -671,12 +675,14 @@ def update_figure_3():
     img_base643 = base64.b64encode(img_buf3.read()).decode('utf-8')
 
     display(Javascript(f'''
-        var plotBox3 = document.getElementById("plotBox3");
-        if (plotBox3) {{
-            plotBox3.innerHTML = '<img src="data:image/png;base64,' + "{img_base643}" + '" />';
-        }} else {{
-            console.log("Error: plotBox3 is not available.");
-        }}
+        setTimeout(function() {{
+            var plotBox3 = document.getElementById("plotBox3");
+            if (plotBox3) {{
+                plotBox3.innerHTML = '<img src="data:image/png;base64,{img_base643}" />';
+            }} else {{
+                console.log("plotBox3 not found");
+            }}
+        }}, 500);
     '''))
     print("Figure 3 has been embedded in plotBox3.")
     
