@@ -91,7 +91,7 @@ def update_data(val1, val2, val3):
         head_parameter = head_parameter.set_index(head_parameter.columns[0]).T
 
         # Clean ellipsis issues
-        head_parameter = head_parameter.applymap(lambda x: pd.NA if isinstance(x, type(...)) else x)
+        head_parameter = head_parameter.apply(lambda col: col.map(lambda x: pd.NA if isinstance(x, type(...)) else x))
         head_parameter.replace("...", pd.NA, inplace=True)
 
         # Insert new data for this mouse
