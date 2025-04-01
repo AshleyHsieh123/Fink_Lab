@@ -722,6 +722,12 @@ def finish_correction():
     
     print("Calling update_figure_1...")
     update_figure_1()
+    # TEMPORARY debug output
+    fig1, ax = plt.subplots()
+    ax.plot([1, 2, 3], [4, 5, 6])
+    plt.title("Test Figure")
+    plt.show()
+    print("Display inline image JS injected.")
     print("Calling update_figure_2...")
     update_figure_2()
     print("Calling update_figure_3...")
