@@ -100,8 +100,8 @@ def update_data(val1, val2, val3):
         head_parameter.loc[new_mouse_id, "Mouse date of birth"] = val3
 
         # Parse date columns for all mice
-        head_parameter["Date of surgery"] = pd.to_datetime(head_parameter["Date of surgery"], format="mixed", errors="coerce")
-        head_parameter["Mouse date of birth"] = pd.to_datetime(head_parameter["Mouse date of birth"], format="mixed", errors="coerce")
+        head_parameter["Date of surgery"] = head_parameter["Date of surgery"].dt.date
+        head_parameter["Mouse date of birth"] = head_parameter["Mouse date of birth"].dt.date
 
         # Calculate mouse age in days
         head_parameter["Mouse age (days)"] = (
