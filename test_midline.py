@@ -598,6 +598,8 @@ def update_figure_1():
     HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1[0][4])
     
     fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
+    fig1.text(0.5, 0.985, f"Calculated midline: {midline:.1f} µm → {midline_direction}", 
+              fontsize=10, ha='center', color='darkred', fontweight='bold')
     plt.tight_layout(rect=[0, 0, 1, 0.98])
 
     # Convert plot to image and display in result box
@@ -634,9 +636,9 @@ def update_figure_2():
         for j in range(8):
             HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData2[j][i],bins = bins)
             axs[j,i].set_xlim(xlim[i])
-    plt.figtext(0.265,1,f'Left side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
-    plt.figtext(0.755,1,f'Right side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
-    plt.tight_layout(rect=[0, 0, 1, 0.98])
+    plt.figtext(0.265,0.97,f'Left side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
+    plt.figtext(0.755,0.97,f'Right side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
     
     # Convert plot to image and display in result box
     img_buf = BytesIO()
@@ -672,9 +674,9 @@ def update_figure_3():
         for j in range(8):
             HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData3[j][i],bins = bins)
             axs[j,i].set_xlim(xlim[i])
-    plt.figtext(0.265,1,f'Left side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
-    plt.figtext(0.755,1,f'Right side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
-    plt.tight_layout(rect=[0, 0, 1, 0.98])
+    plt.figtext(0.265,0.97,f'Left side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
+    plt.figtext(0.755,0.97,f'Right side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
 
     # Convert plot to image and display in result box
     img_buf = BytesIO()
