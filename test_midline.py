@@ -81,7 +81,7 @@ def create_input_boxes():
     var plotBox1 = document.createElement("div");
     plotBox1.id = "plotBox1";
     plotBox1.style.margin = "10px";
-    plotBox1.style.height = "1600";  // Adjusted height for better image display
+    plotBox1.style.height = "1600px";  // Adjusted height for better image display
     plotBox1.style.width = "80%";
     plotBox1.style.display = "block";
     plotBox1.style.backgroundColor = "#ffe0e0";  // Light red-pink for Plot 1
@@ -89,7 +89,7 @@ def create_input_boxes():
     var plotBox2 = document.createElement("div");
     plotBox2.id = "plotBox2";
     plotBox2.style.margin = "10px";
-    plotBox2.style.height = "1500";  // Adjusted height for better image display
+    plotBox2.style.height = "1500px";  // Adjusted height for better image display
     plotBox2.style.width = "80%";
     plotBox2.style.display = "block";
     plotBox2.style.backgroundColor = "#e0f7ff";  // Light blue for Plot 2
@@ -97,7 +97,7 @@ def create_input_boxes():
     var plotBox3 = document.createElement("div");
     plotBox3.id = "plotBox3";
     plotBox3.style.margin = "10px";
-    plotBox3.style.height = "1500";  // Adjusted height for better image display
+    plotBox3.style.height = "1500px";  // Adjusted height for better image display
     plotBox3.style.width = "80%";
     plotBox3.style.display = "block";
     plotBox3.style.backgroundColor = "#e9ffe0";  // Light green for Plot 3
