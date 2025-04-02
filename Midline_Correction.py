@@ -612,7 +612,7 @@ def update_figure_1():
     fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
     fig1.text(0.5, 0.985, f"Calculated midline: {midline:.1f} µm → {midline_direction}", 
               fontsize=10, ha='center', color='darkred', fontweight='bold')
-    plt.tight_layout(rect=[0, 0, 1, 0.98])
+    plt.tight_layout()
 
     # Convert plot to image and display in result box
     img_buf = BytesIO()
