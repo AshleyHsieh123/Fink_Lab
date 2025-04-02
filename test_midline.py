@@ -81,7 +81,7 @@ def create_input_boxes():
     var plotBox1 = document.createElement("div");
     plotBox1.id = "plotBox1";
     plotBox1.style.margin = "10px";
-    plotBox1.style.height = "1550";  // Adjusted height for better image display
+    plotBox1.style.height = "1600";  // Adjusted height for better image display
     plotBox1.style.width = "80%";
     plotBox1.style.display = "block";
     plotBox1.style.backgroundColor = "#ffe0e0";  // Light red-pink for Plot 1
