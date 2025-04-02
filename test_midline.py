@@ -476,6 +476,12 @@ def update_figure_1():
         for j in range(5):
             axs[i,j].spines['top'].set_visible(False)
             axs[i,j].spines['right'].set_visible(False)
+
+    # Compute midline
+    xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
+    xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
+    midline = midline_correction(xL_values, xR_values)
+    midline_direction = "Left" if midline > 0 else "Right"
     
     # Left - Right Ridge x/z-Positions for specific mouse
     # axs[1].plot(leftRidge, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
