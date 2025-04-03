@@ -1,6 +1,7 @@
 # Required imports
 import math
 from google.colab import output
+from google.colab import drive
 from IPython.display import display, Javascript
 import gspread
 import pandas as pd
@@ -13,6 +14,7 @@ from io import BytesIO
 import base64
 
 # Google Drive authentication
+drive.mount('/content/drive')
 auth.authenticate_user()  # Authenticate manually to avoid errors
 # Get authenticated credentials
 creds, _ = default()
