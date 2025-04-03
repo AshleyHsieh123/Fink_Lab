@@ -1,13 +1,11 @@
 import gspread
 import pandas as pd
-from google.colab import drive
 from gspread_dataframe import set_with_dataframe
 from google.auth import default
 from google.colab import auth
 from IPython.display import display, Javascript
 
-# Mount Google Drive and authenticate
-drive.mount('/content/drive')
+# Google Drive authentication
 auth.authenticate_user()  # Authenticate manually to avoid errors
 # Get authenticated credentials
 creds, _ = default()
