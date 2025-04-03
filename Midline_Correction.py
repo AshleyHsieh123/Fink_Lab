@@ -233,10 +233,11 @@ def create_input_boxes():
     '''))
 
 def midline_correction(xL_values, xR_values):
-    differences = []
-    for xL, xR in zip(xL_values, xR_values):
-        differences.append(xL + xR)  # Difference between corresponding xL and xR
-    midline = np.mean(differences) / 2  # Calculate the midline by averaging differences and dividing by 2
+    meanL = abs(np.mean(xL_values))
+    meanR = abs(np.mean(xR_values))
+    midline = abs(meanL-meanR) / 2  # Calculate the midline by averaging differences and dividing by 2
+    if meanL - meanR < 0:
+        midline = midline * -1
     return midline
     
 # Python callback to update the sheet and calculate the midline
@@ -286,9 +287,9 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         
         # Display result in result box
         if midline > 0:
-            print(f"Calculated midline: {midline}", 'To the left')
+            print(f"Calculated midline: {abs(midline)}", 'To the left')
         else:
-            print(f"Calculated midline: {midline}", 'To the right')
+            print(f"Calculated midline: {abs(midline)}", 'To the right')
         
         # Write the updated DataFrame back to the sheet
         worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
@@ -610,7 +611,7 @@ def update_figure_1():
     HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1[0][4])
     
     fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
-    fig1.text(0.5, 0.985, f"Calculated midline: {midline:.1f} µm → {midline_direction}", 
+    fig1.text(0.5, 0.985, f"Calculated midline: {abs(midline:.1f)} µm → {midline_direction}", 
               fontsize=10, ha='center', color='darkred', fontweight='bold')
     plt.tight_layout()
 
