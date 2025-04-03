@@ -487,8 +487,7 @@ def update_figure_1():
     xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
     xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
     midline = midline_correction(xL_values, xR_values)
-    midline_direction = "L
-    eft" if midline > 0 else "Right"
+    midline_direction = "Left" if midline > 0 else "Right"
     
     # Left - Right Ridge x/z-Positions for specific mouse
     # axs[1].plot(leftRidge, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
@@ -707,6 +706,7 @@ def finish_correction():
     xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
     
     midline = midline_correction(xL_values,xR_values)
+    print(midline)
     
     head_parameter.iloc[9:17, -1] -= midline
     head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
