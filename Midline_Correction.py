@@ -404,7 +404,7 @@ mouse_id = mice[-1]
 mouse_index = np.where(head_parameter.columns == mouse_id)[0][0]  # Find the index of the mouse
 mousefile = head_parameter.iloc[0:53,mouse_index]
 mousefile.index = head_parameter.iloc[0:53,0].to_list()
-
+print(mousefile)
 global mouseXLR, mouseZLR, yPositions
 global meanL, stdL, meanR, stdR, meanLz, stdLz, meanRz, stdRz
 
