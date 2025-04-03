@@ -28,6 +28,12 @@ file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Use the correct Goog
 sh = gc.open_by_key(file_id)  # Open the Google Sheet with the file_id
 worksheet = sh.get_worksheet(0)  # Select the first sheet
 
+# mouse ID
+global mouse_id, num_mice
+mice = np.array(head_parameter.columns[60:])
+num_mice = len(mice) # count the number of mice
+mouse_id = mice[-1]
+
 # Function to create input boxes and submit button using JS
 def create_input_boxes():
     display(Javascript('''
@@ -290,7 +296,7 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
             print(f"Calculated midline: {abs(midline):.3f}", 'To the left')
         else:
             print(f"Calculated midline: {abs(midline):.3f}", 'To the right')
-        
+        head_parameter.iloc[53, -1] = midline
         # Write the updated DataFrame back to the sheet
         worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
         set_with_dataframe(worksheet, head_parameter)  # Update the sheet
@@ -391,25 +397,6 @@ def linear_regression(x,y):
     intercept = model.intercept_
     return [slope,intercept]
 
-# Data
-worksheet = gc.open_by_key(file_id).sheet1
-head_parameter = pd.DataFrame(worksheet.get_all_records())
-head_parameter = head_parameter.replace('', np.nan)
-head_parameter = head_parameter.replace('lost', np.nan)
-
-global mouse_id
-mice = np.array(head_parameter.columns[60:])
-num_mice = len(mice) # count the number of mice
-mouse_id = mice[-1]
-mouse_index = np.where(head_parameter.columns == mouse_id)[0][0]  # Find the index of the mouse
-mousefile = head_parameter.iloc[0:53,mouse_index]
-mousefile.index = head_parameter.iloc[0:53,0].to_list()
-print(mousefile)
-global mouseXLR, mouseZLR, yPositions
-global meanL, stdL, meanR, stdR, meanLz, stdLz, meanRz, stdRz
-
-mouseData1 = [[mousefile['Weight before surgery (g)'],mousefile['Left ear bar (initial) (mm)'],mousefile['Right ear bar (initial) (mm)'],mousefile['Nose DV position º'],mousefile['RCS-lambda distance (µm)']]]
-
 def display_inline_image(base64_img, target_id):
     display(HTML(f"""
         <script>
@@ -430,45 +417,24 @@ def display_inline_image(base64_img, target_id):
     """))
     
 # Figure 1
-def update_figure_1(head_parameter):
-    mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, L positions of RIGHT temporal ridge (µm)']]]
-    mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 1500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, V positions of RIGHT temporal ridge (µm)']]]
-
+def update_figure_1(head_parameter,mouseData1,mouseData2,mouseData3,midline):
     
-    mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
-    mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
+    mouseXLR = [np.array([d.values[0] for d in mouseData2]), np.array([d.values[1] for d in mouseData2])]
+    mouseZLR = [np.array([d.values[0] for d in mouseData3]), np.array([d.values[1] for d in mouseData3])]
     yPositions = np.arange(1000, 4501, 500)
     
      # All previous MetaData
     leftRidge = head_parameter.iloc[9:17,60:]
-    leftRidge.columns = head_parameter.iloc[0,60:]
     rightRidge = head_parameter.iloc[17:25,60:]
-    rightRidge.columns = head_parameter.iloc[0,60:]
     leftRidgeZ = head_parameter.iloc[25:33,60:]
-    leftRidgeZ.columns = head_parameter.iloc[0,60:]
     rightRidgeZ = head_parameter.iloc[33:41,60:]
-    rightRidgeZ.columns = head_parameter.iloc[0,60:]
-    
+
     animalWeight = head_parameter.iloc[0,60:].values
     LeftEarBarInitial = head_parameter.iloc[3,60:].values
     RightEarBarInitial = head_parameter.iloc[4,60:].values
     NoseDVposition = head_parameter.iloc[8,60:].values
     RCSlambdaDistance = head_parameter.iloc[7,60:].values
-    
+
     meanL = leftRidge.mean(axis=1).values.astype(float)
     stdL = leftRidge.std(axis=1).values.astype(float)
     meanR = rightRidge.mean(axis=1).values.astype(float)
@@ -479,18 +445,13 @@ def update_figure_1(head_parameter):
     stdRz = rightRidgeZ.std(axis=1).values.astype(float)
 
     global axs, fig1
+
     fig1, axs = plt.subplots(3,5,figsize = (22,18))
     for i in range(3):
         for j in range(5):
             axs[i,j].spines['top'].set_visible(False)
             axs[i,j].spines['right'].set_visible(False)
 
-    # Compute midline
-    xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
-    xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
-    midline = midline_correction(xL_values, xR_values)
-    midline_direction = "Left" if midline > 0 else "Right"
-    
     # Left - Right Ridge x/z-Positions for specific mouse
     # axs[1].plot(leftRidge, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
     axs[0,0].plot(meanL, yPositions, color = 'red', linestyle = '-', linewidth = 2)
@@ -502,7 +463,7 @@ def update_figure_1(head_parameter):
     axs[0,0].set_ylabel('A/P position (µm)')
     axs[0,0].set_xlim([5000,2500])
     axs[0,0].set_ylim([1000-100,4500+100])
-    
+
     # axs[1].plot(rightRidge, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
     axs[0,1].plot(meanR, yPositions, color = 'red', linestyle = '-', linewidth = 2)
     axs[0,1].plot(mouseXLR[1], yPositions, color = 'black', linestyle = '-', linewidth = 2)
@@ -513,7 +474,7 @@ def update_figure_1(head_parameter):
     axs[0,1].set_ylabel('A/P position (µm)')
     axs[0,1].set_xlim([-2500,-5000])
     axs[0,1].set_ylim([1000-100,4500+100])
-    
+
     # axs[5].plot(leftRidgeZ, yPositions, color = 'grey', linestyle = '--', linewidth = 0.1, alpha = 0.5)
     axs[1,0].plot(meanLz, yPositions, color = 'red', linestyle = '-', linewidth = 2)
     axs[1,0].plot(mouseZLR[0], yPositions, color = 'black', linestyle = '-', linewidth = 2)
@@ -524,7 +485,7 @@ def update_figure_1(head_parameter):
     axs[1,0].set_ylabel('A/P position (µm)')
     axs[1,0].set_xlim([1600,400])
     axs[1,0].set_ylim([1000-100,4500+100])
-    
+
     # axs[6].plot(rightRidgeZ, yPositions, color = 'grey', linestyle = '-.', linewidth = 0.1, alpha = 0.5)
     axs[1,1].plot(meanRz, yPositions, color = 'red', linestyle = '-', linewidth = 2)
     axs[1,1].plot(mouseZLR[1], yPositions, color = 'black', linestyle = '-', linewidth = 2)
@@ -535,7 +496,7 @@ def update_figure_1(head_parameter):
     axs[1,1].set_ylabel('A/P position (µm)')
     axs[1,1].set_xlim([400,1600])
     axs[1,1].set_ylim([1000-100,4500+100])
-    
+
     # Specific Mouse Regression
     # row 0, col 2
     linespace = np.arange(2500,5000,100)
@@ -546,7 +507,7 @@ def update_figure_1(head_parameter):
     axs[0,2].set_title(f'Regression for current mouse', size = 10)
     axs[0,2].set_xlabel('L lateral displacement (µm)')
     axs[0,2].set_ylabel('R lateral displacement (µm)')
-    
+
     # row 1, col 2
     linespace = np.arange(400,1500,100)
     axs[1,2].plot(leftRidgeZ, rightRidgeZ, color = 'gray', linestyle = '-')
@@ -556,7 +517,6 @@ def update_figure_1(head_parameter):
     axs[1,2].set_title(f'Regression for current mouse', size = 10)
     axs[1,2].set_xlabel('L vertical displacement (µm)')
     axs[1,2].set_ylabel('R vertical displacement (µm)')
-    
     mouseLRregression = [linear_regression(mouseXLR[0],mouseXLR[1]),linear_regression(mouseZLR[0],mouseZLR[1])]
     # Calculate lateral linear regression
     linespace = np.linspace(3000, 5000, 100)
@@ -572,15 +532,15 @@ def update_figure_1(head_parameter):
         else:
             XAllslope.append(np.nan)
             XAllintercept.append(np.nan)
-    
+
     HistoSubplot(XAllslope,'',0,3,'',mouseLRregression[0][0])
     axs[0,3].set_xlabel('Slopes')
     axs[0,3].set_title('Slope of L-R lateral displacement')
-    
+
     HistoSubplot(XAllintercept,'',0,4,'',mouseLRregression[0][1])
     axs[0,4].set_xlabel('Intercepts')
     axs[0,4].set_title('Intercept of L-R lateral displacement')
-    
+
     # Calculate vertical linear regression
     linespace = np.linspace(500, 1500, 100)
     ZAllintercept = []
@@ -605,11 +565,17 @@ def update_figure_1(head_parameter):
     axs[1,4].set_title('Intercept of L-R vertical displacement')
     
     # histograms of all values
-    HistoSubplot(animalWeight,'Animal Weight',2,0,'g',mouseData1[0][0])
-    HistoSubplot(LeftEarBarInitial,'Left ear bar',2,1,'mm',mouseData1[0][1])
-    HistoSubplot(RightEarBarInitial,'Right ear bar',2,2,'mm',mouseData1[0][2])
-    HistoSubplot(NoseDVposition,'Nose DV position',2,3,'˚',mouseData1[0][3])
-    HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1[0][4])
+    HistoSubplot(animalWeight,'Animal Weight',2,0,'g',mouseData1.iloc[0])
+    HistoSubplot(LeftEarBarInitial,'Left ear bar',2,1,'mm',mouseData1.iloc[1])
+    HistoSubplot(RightEarBarInitial,'Right ear bar',2,2,'mm',mouseData1.iloc[2])
+    HistoSubplot(NoseDVposition,'Nose DV position',2,3,'˚',mouseData1.iloc[3])
+    HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1.iloc[4])
+
+    # load midline from doc
+    if midline < 0:
+      midline_direction = 'To the left'
+    else:
+      midline_direction = 'To the right'
     
     fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
     fig1.text(0.5, 0.985, f"Calculated midline: {abs(midline):.1f} µm → {midline_direction}", 
@@ -621,21 +587,12 @@ def update_figure_1(head_parameter):
     fig1.savefig(img_buf, format='png')
     img_buf.seek(0)
     img_base64 = base64.b64encode(img_buf.read()).decode('utf-8')
-    
     display_inline_image(img_base64, "plotBox1")
 
 # Figure 2, histograms showing the L-R x-positions
-def update_figure_2(head_parameter):
-    mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, L positions of RIGHT temporal ridge (µm)']]]
-    yPositions = np.arange(1000, 4501, 500)
+def update_figure_2(head_parameter,mouseData2):
     
+    yPositions = np.arange(1000, 4501, 500)
      # All previous MetaData
     leftRidge = head_parameter.iloc[9:17,60:]
     leftRidge.columns = head_parameter.iloc[0,60:]
@@ -675,7 +632,7 @@ def update_figure_2(head_parameter):
     fig2,axs = plt.subplots(8,2,figsize = (12,12))
     for i in range(2):
         for j in range(8):
-            HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData2[j][i],bins = bins)
+            HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData2[j].iloc[i],bins = bins)
             axs[j,i].set_xlim(xlim[i])
     plt.figtext(0.265,0.97,f'Left side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
     plt.figtext(0.755,0.97,f'Right side lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
@@ -690,26 +647,13 @@ def update_figure_2(head_parameter):
     display_inline_image(img_base64, "plotBox2")
 
 # Figure 3, histograms showing the L-R z-positions
-def update_figure_3(head_parameter):
-    mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 1500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, V positions of RIGHT temporal ridge (µm)']]]
-
-    yPositions = np.arange(1000, 4501, 500)
-    
-     # All previous MetaData
+def update_figure_3(head_parameter,mouseData3):
+  
     yPositions = np.arange(1000, 4501, 500)
     
      # All previous MetaData
     leftRidgeZ = head_parameter.iloc[25:33,60:]
-    leftRidgeZ.columns = head_parameter.iloc[0,60:]
     rightRidgeZ = head_parameter.iloc[33:41,60:]
-    rightRidgeZ.columns = head_parameter.iloc[0,60:]
     
     animalWeight = head_parameter.iloc[0,60:].values
     LeftEarBarInitial = head_parameter.iloc[3,60:].values
@@ -744,7 +688,7 @@ def update_figure_3(head_parameter):
     fig3,axs = plt.subplots(8,2,figsize = (12,12))
     for i in range(2):
         for j in range(8):
-            HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData3[j][i],bins = bins)
+            HistoSubplot(MasterListData[i].loc[j,:],MasterListName[j][i],j,i,MasterListUnit[j][i],mouseData3[j].iloc[i],bins = bins)
             axs[j,i].set_xlim(xlim[i])
     plt.figtext(0.265,0.97,f'Left side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
     plt.figtext(0.755,0.97,f'Right side z-lateral displacement (µm) for mouse {mouse_id} (red asterisk)', va="center", ha="center", size=9, fontweight="bold")
@@ -762,6 +706,9 @@ def finish_correction():
     
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())
+    head_parameter = head_parameter.replace('', np.nan)
+    head_parameter = head_parameter.replace('lost', np.nan)
+
     xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
     xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
     
@@ -773,14 +720,23 @@ def finish_correction():
     head_parameter.iloc[17:25, -1] = head_parameter.iloc[17:25, -1].round(0).astype(int)
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+
+    mousefile = head_parameter[mouse_id]
+    # Weight before surgery (g), Left ear bar (initial) (mm), Right ear bar (initial) (mm), Nose DV position, RCS-lambda distance (µm)
+    mouseData1 = mousefile.iloc[[0,3,4,8,7]]
+    # (XL, XR) (1000:4500:500)
+    mouseData2 = [mousefile.iloc[[9,17]],mousefile.iloc[[10,18]],mousefile.iloc[[11,19]],mousefile.iloc[[12,20]],mousefile.iloc[[13,21]],mousefile.iloc[[14,22]],mousefile.iloc[[15,23]],mousefile.iloc[[16,24]]]
+    # (ZL, ZR) (1000:4500:500)
+    mouseData3 = [mousefile.iloc[[25,33]],mousefile.iloc[[26,34]],mousefile.iloc[[27,35]],mousefile.iloc[[28,36]],mousefile.iloc[[29,37]],mousefile.iloc[[30,38]],mousefile.iloc[[31,39]],mousefile.iloc[[32,40]]]
+
     print("Finished updating the sheet")
     
     print("Calling update_figure_1...")
-    update_figure_1(head_parameter)
+    update_figure_1(head_parameter,mouseData1,mouseData2,mouseData3,midline)
     print("Calling update_figure_2...")
-    update_figure_2(head_parameter)
+    update_figure_2(head_parameter,mouseData2)
     print("Calling update_figure_3...")
-    update_figure_3(head_parameter)
+    update_figure_3(head_parameter,mouseData3)
 
 # Register the callback function
 from google.colab import output
