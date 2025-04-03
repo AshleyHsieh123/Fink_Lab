@@ -3,6 +3,7 @@ import pandas as pd
 from gspread_dataframe import set_with_dataframe
 from google.auth import default
 from google.colab import auth
+from google.colab import drive
 from IPython.display import display, Javascript
 
 # Function to create input boxes and submit button using JS
@@ -76,6 +77,7 @@ def update_data(val1, val2, val3):
         from datetime import datetime
 
         # Google Drive authenticate
+        drive.mount('/content/drive')
         creds, _ = default()
         gc = gspread.authorize(creds)
 
