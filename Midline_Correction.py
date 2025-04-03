@@ -287,9 +287,9 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         
         # Display result in result box
         if midline > 0:
-            print(f"Calculated midline: {abs(midline)}", 'To the left')
+            print(f"Calculated midline: {abs(midline):.3f}", 'To the left')
         else:
-            print(f"Calculated midline: {abs(midline)}", 'To the right')
+            print(f"Calculated midline: {abs(midline):.3f}", 'To the right')
         
         # Write the updated DataFrame back to the sheet
         worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
@@ -708,9 +708,9 @@ def finish_correction():
     
     midline = midline_correction(xL_values,xR_values)
     
-    head_parameter.iloc[9:17, -1] -= midline
+    head_parameter.iloc[9:17, -1] += midline
     head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
-    head_parameter.iloc[17:25, -1] -= midline
+    head_parameter.iloc[17:25, -1] += midline
     head_parameter.iloc[17:25, -1] = head_parameter.iloc[17:25, -1].round(0).astype(int)
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
