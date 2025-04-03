@@ -611,7 +611,7 @@ def update_figure_1():
     HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1[0][4])
     
     fig1.suptitle(f'Data for mouse {mouse_id}', fontweight="bold", y = 1)
-    fig1.text(0.5, 0.985, f"Calculated midline: {abs(midline:.1f)} µm → {midline_direction}", 
+    fig1.text(0.5, 0.985, f"Calculated midline: {abs(midline):.1f} µm → {midline_direction}", 
               fontsize=10, ha='center', color='darkred', fontweight='bold')
     plt.tight_layout()
 
@@ -708,9 +708,9 @@ def finish_correction():
     
     midline = midline_correction(xL_values,xR_values)
     
-    head_parameter.iloc[9:17, -1] += midline
+    head_parameter.iloc[9:17, -1] -= midline
     head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
-    head_parameter.iloc[17:25, -1] += midline
+    head_parameter.iloc[17:25, -1] -= midline
     head_parameter.iloc[17:25, -1] = head_parameter.iloc[17:25, -1].round(0).astype(int)
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
