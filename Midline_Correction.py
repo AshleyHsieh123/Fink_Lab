@@ -426,36 +426,6 @@ mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'
               [mousefile['At 4000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, V positions of RIGHT temporal ridge (µm)']],
               [mousefile['At 4500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, V positions of RIGHT temporal ridge (µm)']]]
 
-mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
-mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
-yPositions = np.arange(1000, 4501, 500)
-
- # All previous MetaData
-
-leftRidge = head_parameter.iloc[9:17,60:]
-leftRidge.columns = head_parameter.iloc[0,60:]
-rightRidge = head_parameter.iloc[17:25,60:]
-rightRidge.columns = head_parameter.iloc[0,60:]
-leftRidgeZ = head_parameter.iloc[25:33,60:]
-leftRidgeZ.columns = head_parameter.iloc[0,60:]
-rightRidgeZ = head_parameter.iloc[33:41,60:]
-rightRidgeZ.columns = head_parameter.iloc[0,60:]
-
-animalWeight = head_parameter.iloc[0,60:].values
-LeftEarBarInitial = head_parameter.iloc[3,60:].values
-RightEarBarInitial = head_parameter.iloc[4,60:].values
-NoseDVposition = head_parameter.iloc[8,60:].values
-RCSlambdaDistance = head_parameter.iloc[7,60:].values
-
-meanL = leftRidge.mean(axis=1).values.astype(float)
-stdL = leftRidge.std(axis=1).values.astype(float)
-meanR = rightRidge.mean(axis=1).values.astype(float)
-stdR = rightRidge.std(axis=1).values.astype(float)
-meanLz = leftRidgeZ.mean(axis=1).values.astype(float)
-stdLz = leftRidgeZ.std(axis=1).values.astype(float)
-meanRz = rightRidgeZ.mean(axis=1).values.astype(float)
-stdRz = rightRidgeZ.std(axis=1).values.astype(float)
-
 def display_inline_image(base64_img, target_id):
     display(HTML(f"""
         <script>
@@ -477,6 +447,36 @@ def display_inline_image(base64_img, target_id):
     
 # Figure 1
 def update_figure_1():
+    mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
+    mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
+    yPositions = np.arange(1000, 4501, 500)
+    
+     # All previous MetaData
+    
+    leftRidge = head_parameter.iloc[9:17,60:]
+    leftRidge.columns = head_parameter.iloc[0,60:]
+    rightRidge = head_parameter.iloc[17:25,60:]
+    rightRidge.columns = head_parameter.iloc[0,60:]
+    leftRidgeZ = head_parameter.iloc[25:33,60:]
+    leftRidgeZ.columns = head_parameter.iloc[0,60:]
+    rightRidgeZ = head_parameter.iloc[33:41,60:]
+    rightRidgeZ.columns = head_parameter.iloc[0,60:]
+    
+    animalWeight = head_parameter.iloc[0,60:].values
+    LeftEarBarInitial = head_parameter.iloc[3,60:].values
+    RightEarBarInitial = head_parameter.iloc[4,60:].values
+    NoseDVposition = head_parameter.iloc[8,60:].values
+    RCSlambdaDistance = head_parameter.iloc[7,60:].values
+    
+    meanL = leftRidge.mean(axis=1).values.astype(float)
+    stdL = leftRidge.std(axis=1).values.astype(float)
+    meanR = rightRidge.mean(axis=1).values.astype(float)
+    stdR = rightRidge.std(axis=1).values.astype(float)
+    meanLz = leftRidgeZ.mean(axis=1).values.astype(float)
+    stdLz = leftRidgeZ.std(axis=1).values.astype(float)
+    meanRz = rightRidgeZ.mean(axis=1).values.astype(float)
+    stdRz = rightRidgeZ.std(axis=1).values.astype(float)
+
     global axs, fig1
     fig1, axs = plt.subplots(3,5,figsize = (22,18))
     for i in range(3):
@@ -625,6 +625,28 @@ def update_figure_1():
 
 # Figure 2, histograms showing the L-R x-positions
 def update_figure_2():
+    mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
+    mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
+    yPositions = np.arange(1000, 4501, 500)
+    
+     # All previous MetaData
+    
+    leftRidge = head_parameter.iloc[9:17,60:]
+    leftRidge.columns = head_parameter.iloc[0,60:]
+    rightRidge = head_parameter.iloc[17:25,60:]
+    rightRidge.columns = head_parameter.iloc[0,60:]
+    
+    animalWeight = head_parameter.iloc[0,60:].values
+    LeftEarBarInitial = head_parameter.iloc[3,60:].values
+    RightEarBarInitial = head_parameter.iloc[4,60:].values
+    NoseDVposition = head_parameter.iloc[8,60:].values
+    RCSlambdaDistance = head_parameter.iloc[7,60:].values
+    
+    meanL = leftRidge.mean(axis=1).values.astype(float)
+    stdL = leftRidge.std(axis=1).values.astype(float)
+    meanR = rightRidge.mean(axis=1).values.astype(float)
+    stdR = rightRidge.std(axis=1).values.astype(float)
+    
     # collecting master data from file
     MasterListData = [leftRidge.reset_index(drop = True),rightRidge.reset_index(drop = True)]
     MasterListName = [['LEFT displacement at y=1000 µm PRCS','RIGHT displacement at y=1000 µm PRCS'],
@@ -663,6 +685,27 @@ def update_figure_2():
 
 # Figure 3, histograms showing the L-R z-positions
 def update_figure_3():
+    mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
+    mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
+    yPositions = np.arange(1000, 4501, 500)
+    
+     # All previous MetaData
+    leftRidgeZ = head_parameter.iloc[25:33,60:]
+    leftRidgeZ.columns = head_parameter.iloc[0,60:]
+    rightRidgeZ = head_parameter.iloc[33:41,60:]
+    rightRidgeZ.columns = head_parameter.iloc[0,60:]
+    
+    animalWeight = head_parameter.iloc[0,60:].values
+    LeftEarBarInitial = head_parameter.iloc[3,60:].values
+    RightEarBarInitial = head_parameter.iloc[4,60:].values
+    NoseDVposition = head_parameter.iloc[8,60:].values
+    RCSlambdaDistance = head_parameter.iloc[7,60:].values
+    
+    meanLz = leftRidgeZ.mean(axis=1).values.astype(float)
+    stdLz = leftRidgeZ.std(axis=1).values.astype(float)
+    meanRz = rightRidgeZ.mean(axis=1).values.astype(float)
+    stdRz = rightRidgeZ.std(axis=1).values.astype(float)
+
     # collecting master data from file
     MasterListData = [leftRidgeZ.reset_index(drop = True),rightRidgeZ.reset_index(drop = True)]
     MasterListName = [['LEFT Z-displacement at y=1000 µm PRCS','RIGHT Z-displacement at y=1000 µm PRCS'],
@@ -708,9 +751,9 @@ def finish_correction():
     
     midline = midline_correction(xL_values,xR_values)
     
-    head_parameter.iloc[9:17, -1] += midline
+    head_parameter.iloc[9:17, -1] -= midline
     head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
-    head_parameter.iloc[17:25, -1] += midline
+    head_parameter.iloc[17:25, -1] -= midline
     head_parameter.iloc[17:25, -1] = head_parameter.iloc[17:25, -1].round(0).astype(int)
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
