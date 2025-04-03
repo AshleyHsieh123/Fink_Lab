@@ -26,7 +26,8 @@ gc = gspread.authorize(creds)
 # Open the Google Sheet
 file_id = '17t6CB6Nze274z1od3cmfdKnHZ2OMLdFFay7yMQ_Ofi0'  # Use the correct Google Sheet ID here
 sh = gc.open_by_key(file_id)  # Open the Google Sheet with the file_id
-worksheet = sh.get_worksheet(0)  # Select the first sheet
+worksheet = gc.open_by_key(file_id).sheet1
+head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
 
 # mouse ID
 global mouse_id, num_mice
