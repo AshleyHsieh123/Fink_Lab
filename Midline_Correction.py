@@ -430,7 +430,7 @@ def display_inline_image(base64_img, target_id):
     """))
     
 # Figure 1
-def update_figure_1():
+def update_figure_1(head_parameter):
     mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
               [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
               [mousefile['At 2000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, L positions of RIGHT temporal ridge (µm)']],
@@ -454,9 +454,6 @@ def update_figure_1():
     yPositions = np.arange(1000, 4501, 500)
     
      # All previous MetaData
-    worksheet = gc.open_by_key(file_id).sheet1
-    head_parameter = pd.DataFrame(worksheet.get_all_records())
-    
     leftRidge = head_parameter.iloc[9:17,60:]
     leftRidge.columns = head_parameter.iloc[0,60:]
     rightRidge = head_parameter.iloc[17:25,60:]
@@ -628,7 +625,7 @@ def update_figure_1():
     display_inline_image(img_base64, "plotBox1")
 
 # Figure 2, histograms showing the L-R x-positions
-def update_figure_2():
+def update_figure_2(head_parameter):
     mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
               [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
               [mousefile['At 2000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, L positions of RIGHT temporal ridge (µm)']],
@@ -640,9 +637,6 @@ def update_figure_2():
     yPositions = np.arange(1000, 4501, 500)
     
      # All previous MetaData
-    worksheet = gc.open_by_key(file_id).sheet1
-    head_parameter = pd.DataFrame(worksheet.get_all_records())
-    
     leftRidge = head_parameter.iloc[9:17,60:]
     leftRidge.columns = head_parameter.iloc[0,60:]
     rightRidge = head_parameter.iloc[17:25,60:]
@@ -696,7 +690,7 @@ def update_figure_2():
     display_inline_image(img_base64, "plotBox2")
 
 # Figure 3, histograms showing the L-R z-positions
-def update_figure_3():
+def update_figure_3(head_parameter):
     mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, V positions of RIGHT temporal ridge (µm)']],
               [mousefile['At 1500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, V positions of RIGHT temporal ridge (µm)']],
               [mousefile['At 2000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, V positions of RIGHT temporal ridge (µm)']],
@@ -709,8 +703,6 @@ def update_figure_3():
     yPositions = np.arange(1000, 4501, 500)
     
      # All previous MetaData
-    worksheet = gc.open_by_key(file_id).sheet1
-    head_parameter = pd.DataFrame(worksheet.get_all_records())
     yPositions = np.arange(1000, 4501, 500)
     
      # All previous MetaData
@@ -784,11 +776,11 @@ def finish_correction():
     print("Finished updating the sheet")
     
     print("Calling update_figure_1...")
-    update_figure_1()
+    update_figure_1(head_parameter)
     print("Calling update_figure_2...")
-    update_figure_2()
+    update_figure_2(head_parameter)
     print("Calling update_figure_3...")
-    update_figure_3()
+    update_figure_3(head_parameter)
 
 # Register the callback function
 from google.colab import output
