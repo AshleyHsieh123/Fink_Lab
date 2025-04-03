@@ -1,6 +1,5 @@
 import gspread
 import pandas as pd
-from google.colab import drive
 from gspread_dataframe import set_with_dataframe
 from google.auth import default
 from google.colab import auth
@@ -76,9 +75,7 @@ def update_data(val1, val2, val3):
     try:
         from datetime import datetime
 
-        # Mount Google Drive and authenticate
-        drive.mount('/content/drive')
-        auth.authenticate_user()
+        # Google Drive authenticate
         creds, _ = default()
         gc = gspread.authorize(creds)
 
