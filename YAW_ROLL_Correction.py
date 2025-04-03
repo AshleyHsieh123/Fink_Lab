@@ -7,12 +7,14 @@ import pandas as pd
 from gspread_dataframe import set_with_dataframe
 from google.auth import default
 from google.colab import auth
+from google.colab import drive
 import matplotlib.pyplot as plt
 import numpy as np
 from io import BytesIO
 import base64
 
 # Google Drive authentication
+drive.mount('/content/drive')
 auth.authenticate_user()  # Authenticate manually to avoid errors
 # Get authenticated credentials
 creds, _ = default()
