@@ -409,22 +409,6 @@ global mouseXLR, mouseZLR, yPositions
 global meanL, stdL, meanR, stdR, meanLz, stdLz, meanRz, stdRz
 
 mouseData1 = [[mousefile['Weight before surgery (g)'],mousefile['Left ear bar (initial) (mm)'],mousefile['Right ear bar (initial) (mm)'],mousefile['Nose DV position º'],mousefile['RCS-lambda distance (µm)']]]
-mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, L positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, L positions of RIGHT temporal ridge (µm)']]]
-mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 1500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 2500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 3500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, V positions of RIGHT temporal ridge (µm)']],
-              [mousefile['At 4500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, V positions of RIGHT temporal ridge (µm)']]]
 
 def display_inline_image(base64_img, target_id):
     display(HTML(f"""
@@ -447,11 +431,31 @@ def display_inline_image(base64_img, target_id):
     
 # Figure 1
 def update_figure_1():
+    mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, L positions of RIGHT temporal ridge (µm)']]]
+    mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 1500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, V positions of RIGHT temporal ridge (µm)']]]
+
+    
     mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
     mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
     yPositions = np.arange(1000, 4501, 500)
     
      # All previous MetaData
+    worksheet = gc.open_by_key(file_id).sheet1
+    head_parameter = pd.DataFrame(worksheet.get_all_records())
     
     leftRidge = head_parameter.iloc[9:17,60:]
     leftRidge.columns = head_parameter.iloc[0,60:]
@@ -625,11 +629,19 @@ def update_figure_1():
 
 # Figure 2, histograms showing the L-R x-positions
 def update_figure_2():
-    mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
-    mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
+    mouseData2 = [[mousefile['At 1000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 1500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4000PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, L positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4500PRCS, L positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, L positions of RIGHT temporal ridge (µm)']]]
     yPositions = np.arange(1000, 4501, 500)
     
      # All previous MetaData
+    worksheet = gc.open_by_key(file_id).sheet1
+    head_parameter = pd.DataFrame(worksheet.get_all_records())
     
     leftRidge = head_parameter.iloc[9:17,60:]
     leftRidge.columns = head_parameter.iloc[0,60:]
@@ -685,8 +697,20 @@ def update_figure_2():
 
 # Figure 3, histograms showing the L-R z-positions
 def update_figure_3():
-    mouseXLR = [np.array([d[0] for d in mouseData2]), np.array([d[1] for d in mouseData2])]
-    mouseZLR = [np.array([d[0] for d in mouseData3]), np.array([d[1] for d in mouseData3])]
+    mouseData3 = [[mousefile['At 1000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 1500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 1500PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 2500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 2500PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 3500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 3500PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4000PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4000PRCS, V positions of RIGHT temporal ridge (µm)']],
+              [mousefile['At 4500PRCS, V positions of LEFT temporal ridge (µm)'],mousefile['At 4500PRCS, V positions of RIGHT temporal ridge (µm)']]]
+
+    yPositions = np.arange(1000, 4501, 500)
+    
+     # All previous MetaData
+    worksheet = gc.open_by_key(file_id).sheet1
+    head_parameter = pd.DataFrame(worksheet.get_all_records())
     yPositions = np.arange(1000, 4501, 500)
     
      # All previous MetaData
