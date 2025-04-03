@@ -84,6 +84,17 @@ def create_input_boxes():
     var input31 = createInput("zR4000", "Enter zR4000");
     var input32 = createInput("zR4500", "Enter zR4500");
 
+    // correction result box
+    var resultBox = document.createElement("textarea");
+    resultBox.id = "resultBox";
+    resultBox.style.margin = "10px";
+    resultBox.style.padding = "12px";
+    resultBox.style.fontSize = "16px";
+    resultBox.style.width = "300px";
+    resultBox.style.height = "50px";
+    resultBox.style.display = "block";  // Ensure it's visible by default
+    resultBox.readOnly = true;
+
     // Plot result box (for embedding the plot)
     var plotBox1 = document.createElement("div");
     plotBox1.id = "plotBox1";
@@ -191,6 +202,7 @@ def create_input_boxes():
     container.appendChild(inputContainer);
     container.appendChild(button);
     container.appendChild(finishButton);
+    container.appendChild(resultBox);
     container.appendChild(plotBox1);
     container.appendChild(plotBox2);
     container.appendChild(plotBox3);
@@ -238,6 +250,13 @@ def create_input_boxes():
           google.colab.kernel.invokeFunction("notebook.finish_correction", [], {});
         }
     '''))
+    
+def output_result(result):
+    display(Javascript(f'''
+    var resultBox = document.getElementById("resultBox");
+    resultBox.style.display = "block";
+    resultBox.value = `{result}`;
+    '''))
 
 def midline_correction(xL_values, xR_values):
     meanL = abs(np.mean(xL_values))
@@ -249,61 +268,58 @@ def midline_correction(xL_values, xR_values):
     
 # Python callback to update the sheet and calculate the midline
 def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24, val25, val26, val27, val28, val29, val30, val31, val32):
-    try:
-        # Fetch the head_parameter DataFrame from Google Sheets
-        worksheet = gc.open_by_key(file_id).sheet1
-        head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
+    # Fetch the head_parameter DataFrame from Google Sheets
+    worksheet = gc.open_by_key(file_id).sheet1
+    head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
 
-        # Overwrite the values in the sheet
-        head_parameter.iloc[9, -1] = val1
-        head_parameter.iloc[10, -1] = val2
-        head_parameter.iloc[11, -1] = val3
-        head_parameter.iloc[12, -1] = val4
-        head_parameter.iloc[13, -1] = val5
-        head_parameter.iloc[14, -1] = val6
-        head_parameter.iloc[15, -1] = val7
-        head_parameter.iloc[16, -1] = val8
-        head_parameter.iloc[17, -1] = val9
-        head_parameter.iloc[18, -1] = val10
-        head_parameter.iloc[19, -1] = val11
-        head_parameter.iloc[20, -1] = val12
-        head_parameter.iloc[21, -1] = val13
-        head_parameter.iloc[22, -1] = val14
-        head_parameter.iloc[23, -1] = val15
-        head_parameter.iloc[24, -1] = val16
-        head_parameter.iloc[25, -1] = val17
-        head_parameter.iloc[26, -1] = val18
-        head_parameter.iloc[27, -1] = val19
-        head_parameter.iloc[28, -1] = val20
-        head_parameter.iloc[29, -1] = val21
-        head_parameter.iloc[30, -1] = val22
-        head_parameter.iloc[31, -1] = val23
-        head_parameter.iloc[32, -1] = val24
-        head_parameter.iloc[33, -1] = val25
-        head_parameter.iloc[34, -1] = val26
-        head_parameter.iloc[35, -1] = val27
-        head_parameter.iloc[36, -1] = val28
-        head_parameter.iloc[37, -1] = val29
-        head_parameter.iloc[38, -1] = val30
-        head_parameter.iloc[39, -1] = val31
-        head_parameter.iloc[40, -1] = val32
+    # Overwrite the values in the sheet
+    head_parameter.iloc[9, -1] = val1
+    head_parameter.iloc[10, -1] = val2
+    head_parameter.iloc[11, -1] = val3
+    head_parameter.iloc[12, -1] = val4
+    head_parameter.iloc[13, -1] = val5
+    head_parameter.iloc[14, -1] = val6
+    head_parameter.iloc[15, -1] = val7
+    head_parameter.iloc[16, -1] = val8
+    head_parameter.iloc[17, -1] = val9
+    head_parameter.iloc[18, -1] = val10
+    head_parameter.iloc[19, -1] = val11
+    head_parameter.iloc[20, -1] = val12
+    head_parameter.iloc[21, -1] = val13
+    head_parameter.iloc[22, -1] = val14
+    head_parameter.iloc[23, -1] = val15
+    head_parameter.iloc[24, -1] = val16
+    head_parameter.iloc[25, -1] = val17
+    head_parameter.iloc[26, -1] = val18
+    head_parameter.iloc[27, -1] = val19
+    head_parameter.iloc[28, -1] = val20
+    head_parameter.iloc[29, -1] = val21
+    head_parameter.iloc[30, -1] = val22
+    head_parameter.iloc[31, -1] = val23
+    head_parameter.iloc[32, -1] = val24
+    head_parameter.iloc[33, -1] = val25
+    head_parameter.iloc[34, -1] = val26
+    head_parameter.iloc[35, -1] = val27
+    head_parameter.iloc[36, -1] = val28
+    head_parameter.iloc[37, -1] = val29
+    head_parameter.iloc[38, -1] = val30
+    head_parameter.iloc[39, -1] = val31
+    head_parameter.iloc[40, -1] = val32
 
-        xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
-        xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
-        midline = midline_correction(xL_values,xR_values)
-        
-        # Display result in result box
-        if midline > 0:
-            print(f"Calculated midline: {abs(midline):.3f}", 'To the left')
-        else:
-            print(f"Calculated midline: {abs(midline):.3f}", 'To the right')
-        head_parameter.iloc[53, -1] = midline
-        # Write the updated DataFrame back to the sheet
-        worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
-        set_with_dataframe(worksheet, head_parameter)  # Update the sheet
-        
-    except Exception as e:
-        print(f"Error in callback: {e}")
+    xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
+    xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
+    midline = midline_correction(xL_values,xR_values)
+    
+    # Display result in result box
+    if midline > 0:
+        result = (f"Calculated midline: \\n {abs(midline):.3f} To the left")
+    else:
+        result = (f"Calculated midline: \\n {abs(midline):.3f} To the right")
+    head_parameter.iloc[53, -1] = midline
+    # Write the updated DataFrame back to the sheet
+    worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
+    set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+    output_result(result)
 
 # Functions
 
@@ -573,7 +589,7 @@ def update_figure_1(head_parameter,mouseData1,mouseData2,mouseData3,midline):
     HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1.iloc[4])
 
     # load midline from doc
-    if midline < 0:
+    if midline > 0:
       midline_direction = 'To the left'
     else:
       midline_direction = 'To the right'
@@ -703,8 +719,6 @@ def update_figure_3(head_parameter,mouseData3):
     display_inline_image(img_base64, "plotBox3")
 
 def finish_correction():
-    print("Finish correction button clicked!")
-    
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())
     head_parameter = head_parameter.replace('', np.nan)
