@@ -236,7 +236,7 @@ def midline_correction(xL_values, xR_values):
     meanL = abs(np.mean(xL_values))
     meanR = abs(np.mean(xR_values))
     midline = abs(meanL-meanR) / 2  # Calculate the midline by averaging differences and dividing by 2
-    if meanL - meanR > 0:
+    if meanL - meanR < 0:
         midline = midline * -1
     return midline
     
