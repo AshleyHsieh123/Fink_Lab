@@ -236,7 +236,7 @@ def midline_correction(xL_values, xR_values):
     meanL = abs(np.mean(xL_values))
     meanR = abs(np.mean(xR_values))
     midline = abs(meanL-meanR) / 2  # Calculate the midline by averaging differences and dividing by 2
-    if meanL - meanR < 0:
+    if meanL - meanR > 0:
         midline = midline * -1
     return midline
     
@@ -708,9 +708,9 @@ def finish_correction():
     
     midline = midline_correction(xL_values,xR_values)
     
-    head_parameter.iloc[9:17, -1] += midline
+    head_parameter.iloc[9:17, -1] -= midline
     head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
-    head_parameter.iloc[17:25, -1] += midline
+    head_parameter.iloc[17:25, -1] -= midline
     head_parameter.iloc[17:25, -1] = head_parameter.iloc[17:25, -1].round(0).astype(int)
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
