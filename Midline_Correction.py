@@ -585,7 +585,7 @@ def update_figure_1(head_parameter,mouseData1,mouseData2,mouseData3,midline):
     HistoSubplot(animalWeight,'Animal Weight',2,0,'g',mouseData1.iloc[0])
     HistoSubplot(LeftEarBarInitial,'Left ear bar',2,1,'mm',mouseData1.iloc[1])
     HistoSubplot(RightEarBarInitial,'Right ear bar',2,2,'mm',mouseData1.iloc[2])
-    HistoSubplot(NoseDVposition,'Nose DV position',2,3,'˚',mouseData1.iloc[3])
+    HistoSubplot(NoseDVposition,'Pitch angle (º)',2,3,'˚',mouseData1.iloc[3])
     HistoSubplot(RCSlambdaDistance,'RCS - lambda distance',2,4,'µm',mouseData1.iloc[4])
 
     # load midline from doc
