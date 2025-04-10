@@ -1,8 +1,11 @@
 import gspread
 import pandas as pd
+import pickle
 from gspread_dataframe import set_with_dataframe
-from google.auth import default
 from google.colab import auth
+auth.authenticate_user()
+from google.auth import default
+from google.auth.transport.requests import Request
 from google.colab import drive
 from IPython.display import display, Javascript
 
@@ -79,6 +82,7 @@ def update_data(val1, val2, val3):
         # Google Drive authenticate
         drive.mount('/content/drive')
         creds, _ = default()
+        creds.refresh(Request())
         gc = gspread.authorize(creds)
 
         # Open the Google Sheet
