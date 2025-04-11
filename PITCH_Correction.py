@@ -163,6 +163,12 @@ def update_angle_result(val1, val2, val3):
     # Plot the histogram with the advised angle
     plot_histogram(advised_angle)
 
+    print("Notebook will shut down in 60 seconds...")
+    
+    # Wait 60 seconds (1 minute) before shutting down
+    time.sleep(60)
+    os._exit(0)
+
 # Function to plot histogram with the advised angle
 def plot_histogram(mousedata):
     # Fetch data for histogram
