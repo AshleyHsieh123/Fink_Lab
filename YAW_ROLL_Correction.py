@@ -199,6 +199,12 @@ def update_correction_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1
     # Display the result in the result box
     output_result(result)
 
+    print("Notebook will shut down in 60 seconds...")
+    
+    # Wait 60 seconds (1 minute) before shutting down
+    time.sleep(60)
+    os._exit(0)
+
 # Callback function to finish correction and update the Google Sheet
 def finish_correction(final_xR1000,final_xR3000,final_zR1000,final_zR3000,final_xL1000,final_xL3000,final_zL1000,final_zL3000):
     # Fetch the head_parameter DataFrame from Google Sheets
