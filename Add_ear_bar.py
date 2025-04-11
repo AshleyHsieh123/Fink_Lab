@@ -1,3 +1,5 @@
+import os
+import time
 import gspread
 import pandas as pd
 from gspread_dataframe import set_with_dataframe
@@ -93,6 +95,12 @@ def update_data(val1, val2):
         set_with_dataframe(worksheet, head_parameter)  # Update the sheet
 
         print("Values have been updated successfully in the sheet.")
+        print("Notebook will shut down in 60 seconds...")
+
+        # Wait 60 seconds (1 minute) before shutting down
+        time.sleep(60)
+        os._exit(0)
+        
     except Exception as e:
         # Print the error message if something goes wrong
         print(f"Error while updating the sheet: {e}")
