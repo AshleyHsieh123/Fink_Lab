@@ -99,7 +99,7 @@ def update_data(val1, val2):
 
         # Wait 60 seconds (1 minute) before shutting down
         time.sleep(60)
-        os._exit(0)
+        display(Javascript('google.colab.kernel.shutdown()'))
         
     except Exception as e:
         # Print the error message if something goes wrong
