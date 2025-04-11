@@ -169,7 +169,7 @@ def update_angle_result(val1, val2, val3):
     
     # Wait 60 seconds (1 minute) before shutting down
     time.sleep(60)
-    os._exit(0)
+    display(Javascript('google.colab.kernel.shutdown()'))
 
 # Function to plot histogram with the advised angle
 def plot_histogram(mousedata):
