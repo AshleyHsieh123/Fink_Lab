@@ -1,3 +1,5 @@
+import os
+import time
 import gspread
 import pandas as pd
 import pickle
@@ -127,9 +129,14 @@ def update_data(val1, val2, val3):
         set_with_dataframe(worksheet, head_parameter)
 
         print("Values updated successfully in the sheet.")
+        print("Notebook will shut down in 60 seconds...")
+
+        # Wait 60 seconds (1 minute) before shutting down
+        time.sleep(60)
+        os._exit(0)
 
     except Exception as e:
-        print(f"❌ Error while updating the sheet: {e}")
+        print(f"Error while updating the sheet: {e}")
         
 # Register the callback function
 from google.colab import output
