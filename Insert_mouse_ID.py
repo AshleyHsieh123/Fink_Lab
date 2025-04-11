@@ -133,7 +133,7 @@ def update_data(val1, val2, val3):
 
         # Wait 60 seconds (1 minute) before shutting down
         time.sleep(60)
-        os._exit(0)
+        display(Javascript('google.colab.kernel.shutdown()'))
 
     except Exception as e:
         print(f"Error while updating the sheet: {e}")
