@@ -163,9 +163,9 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
             Yawdirection = 'counterclockwise'
 
         if RollCorrection > 0:
-            Rolldirection = 'clockwise'
-        elif RollCorrection < 0:
             Rolldirection = 'counterclockwise'
+        elif RollCorrection < 0:
+            Rolldirection = 'clockwise'
         
         # Compose result
         result = (
