@@ -265,6 +265,60 @@ def midline_correction(xL_values, xR_values):
     if meanL - meanR < 0:
         midline = midline * -1
     return midline
+
+# Python callback to compute corrections and update Google Sheets
+def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
+    try:
+        # Convert all values to float
+        xR1000 = float(xR1000)
+        xR3000 = float(xR3000)
+        zR1000 = float(zR1000)
+        zR3000 = float(zR3000)
+        xL1000 = float(xL1000)
+        xL3000 = float(xL3000)
+        zL1000 = float(zL1000)
+        zL3000 = float(zL3000)
+
+        # Theta Calculations
+        Theta_L = round(-math.atan((xL3000 - xL1000) / 2000) * 180 /  math.pi, 4)
+        Theta_R = round(math.atan((xR3000 - xR1000) / 2000) * 180 / math.pi, 4)
+        YawCorrection = round((Theta_R - Theta_L) / 2, 3)
+
+        # Offsets and Ratios
+        Zoffset1000 = zL1000 - zR1000
+        Zoffset3000 = zL3000 - zR3000
+        Xoffset1000 = xR1000 - xL1000
+        Xoffset3000 = xR3000 - xL3000
+        Ratio1000 = Zoffset1000 / Xoffset1000
+        Ratio3000 = Zoffset3000 / Xoffset3000
+
+        # Angle Calculations
+        Angle1000 = round(math.atan(Ratio1000) * 180 /math.pi, 2)
+        Angle3000 = round(math.atan(Ratio3000) * 180 /math.pi, 2)
+        RollCorrection = round((Angle1000 + Angle3000) / 2, 2)
+
+        if YawCorrection > 0:
+            Yawdirection = 'clockwise'
+        elif YawCorrection < 0:
+            Yawdirection = 'counterclockwise'
+
+        if RollCorrection > 0:
+            Rolldirection = 'counterclockwise'
+        elif RollCorrection < 0:
+            Rolldirection = 'clockwise'
+        
+        # Compose result
+        result = (
+            f"Yaw correction: {abs(YawCorrection)}°, {Yawdirection}\\n\\n"
+            f"Roll correction: {abs(RollCorrection)}°, {Rolldirection}\\n\\n"
+        )
+
+        # Return results
+        return YawCorrection, RollCorrection, result
+
+    except ValueError:
+        result = "Please enter valid numerical values."
+        return None, None, result
     
 # Python callback to update the sheet and calculate the midline
 def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19, val20, val21, val22, val23, val24, val25, val26, val27, val28, val29, val30, val31, val32):
@@ -728,6 +782,15 @@ def finish_correction():
     xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
     
     midline = midline_correction(xL_values,xR_values)
+
+    xR1000 = head_parameter.iloc[17, -1]
+    xR3000 = head_parameter.iloc[21, -1]
+    zR1000 = head_parameter.iloc[33, -1]
+    zR3000 = head_parameter.iloc[37, -1]
+    xL1000 = head_parameter.iloc[9, -1]
+    xL3000 = head_parameter.iloc[13, -1]
+    zL1000 = head_parameter.iloc[25, -1]
+    zL3000 = head_parameter.iloc[29, -1]
     
     head_parameter.iloc[9:17, -1] -= midline
     head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
@@ -735,6 +798,7 @@ def finish_correction():
     head_parameter.iloc[17:25, -1] = head_parameter.iloc[17:25, -1].round(0).astype(int)
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+
 
     mousefile = head_parameter[mouse_id]
     # Weight before surgery (g), Left ear bar (initial) (mm), Right ear bar (initial) (mm), Nose DV position, RCS-lambda distance (µm)
