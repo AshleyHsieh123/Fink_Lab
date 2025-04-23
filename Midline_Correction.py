@@ -383,8 +383,8 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     # Write the updated DataFrame back to the sheet
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
-    output_result(result_m)
-    output_result(result_yr)
+    output_result(result_m, append=False)  # Replace old content first
+    output_result(result_yr, append=True)
     
 # Functions
 # Function to determine if the value is in the range mean ± STD
