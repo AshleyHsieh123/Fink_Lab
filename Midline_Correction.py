@@ -91,8 +91,8 @@ def create_input_boxes():
     resultBox.style.margin = "10px";
     resultBox.style.padding = "12px";
     resultBox.style.fontSize = "16px";
-    resultBox.style.width = "300px";
-    resultBox.style.height = "50px";
+    resultBox.style.width = "500px";
+    resultBox.style.height = "200px";
     resultBox.style.display = "block";  // Ensure it's visible by default
     resultBox.readOnly = true;
 
@@ -252,12 +252,13 @@ def create_input_boxes():
         }
     '''))
     
-def output_result(result):
-    display(Javascript(f'''
+def output_result(result, append=True):
+    js_code = f'''
     var resultBox = document.getElementById("resultBox");
     resultBox.style.display = "block";
-    resultBox.value = `{result}`;
-    '''))
+    {"resultBox.value += `\\n\\n" + `" + result + "`;" if append else "resultBox.value = `" + result + "`;"} 
+    '''
+    display(Javascript(js_code))
 
 def midline_correction(xL_values, xR_values):
     meanL = abs(np.mean(xL_values))
