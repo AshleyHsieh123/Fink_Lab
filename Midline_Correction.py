@@ -325,7 +325,7 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     # Fetch the head_parameter DataFrame from Google Sheets
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
-
+    print(0)
     # Overwrite the values in the sheet
     head_parameter.iloc[9, -1] = val1
     head_parameter.iloc[10, -1] = val2
@@ -359,33 +359,33 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     head_parameter.iloc[38, -1] = val30
     head_parameter.iloc[39, -1] = val31
     head_parameter.iloc[40, -1] = val32
-
+    print(1)
     xL_values = [float(x) for x in list(head_parameter.iloc[9:12,-1])]
     xR_values = [float(x) for x in list(head_parameter.iloc[17:20,-1])]
     midline = midline_correction(xL_values,xR_values)
-    
+    print(2)
     # Display result in result box
     if midline > 0:
         result = (f"Calculated midline: \\n {abs(midline):.3f} To the left")
     else:
         result = (f"Calculated midline: \\n {abs(midline):.3f} To the right")
-
+    print(3)
     YawCorrection, RollCorrection, result = CorrectionCalculation(val9, val13, val25, val29, val1, val5, val17, val21)
-
+    print(4)
     # If no valid result, show error and return
     if not YawCorrection or not RollCorrection:
         output_result(result)
         return
-
+    print(5)
     head_parameter.iloc[53, -1] = midline
     head_parameter.iloc[54, -1] = YawCorrection
     head_parameter.iloc[55, -1] = RollCorrection
-    
+    print(6)
     # Write the updated DataFrame back to the sheet
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
     output_result(result)
-
+    print(7)
 # Functions
 
 # Function to determine if the value is in the range mean ± STD
