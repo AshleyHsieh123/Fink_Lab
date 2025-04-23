@@ -1,6 +1,8 @@
 import gspread
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import math
 import base64
@@ -849,8 +851,6 @@ def download_figures():
     fig1.savefig(fig1_path)
     fig2.savefig(fig2_path)
     fig3.savefig(fig3_path)
-
-    plt.close()
     
     # Trigger downloads
     files.download(fig1_path)
