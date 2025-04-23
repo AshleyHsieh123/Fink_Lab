@@ -375,6 +375,23 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
     output_result(result)
 
+def update_YRcorrection_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
+    # Capture the YawCorrection, RollCorrection, and result from the calculation
+    YawCorrection, RollCorrection, result = CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000)
+
+    # If no valid result, show error and return
+    if not YawCorrection or not RollCorrection:
+        output_result(result)
+        return
+    
+    head_parameter.iloc[54, -1] = yaw
+    head_parameter.iloc[55, -1] = roll
+    # Write the updated DataFrame back to the sheet
+    worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
+    set_with_dataframe(worksheet, head_parameter)  # Update the sheet
+    # Display the result in the result box
+    output_result(result)
+
 # Functions
 
 # Function to determine if the value is in the range mean ± STD
@@ -783,14 +800,14 @@ def finish_correction():
     
     midline = midline_correction(xL_values,xR_values)
 
-    xR1000 = head_parameter.iloc[17, -1]
-    xR3000 = head_parameter.iloc[21, -1]
-    zR1000 = head_parameter.iloc[33, -1]
-    zR3000 = head_parameter.iloc[37, -1]
-    xL1000 = head_parameter.iloc[9, -1]
-    xL3000 = head_parameter.iloc[13, -1]
-    zL1000 = head_parameter.iloc[25, -1]
-    zL3000 = head_parameter.iloc[29, -1]
+    xR1000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'xR1000'].iloc[0, -1]
+    xR3000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'xR3000'].iloc[0, -1]
+    zR1000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'zR1000'].iloc[0, -1]
+    zR3000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'zR3000'].iloc[0, -1]
+    xL1000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'xL1000'].iloc[0, -1]
+    xL3000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'xL3000'].iloc[0, -1]
+    zL1000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'zL1000'].iloc[0, -1]
+    zL3000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'zL3000'].iloc[0, -1]
     
     head_parameter.iloc[9:17, -1] -= midline
     head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
@@ -820,6 +837,7 @@ def finish_correction():
 # Register the callback function
 from google.colab import output
 output.register_callback('notebook.update_correction_result', update_correction_result)
+output.register_callback('notebook.update_YRcorrection_result', update_YRcorrection_result)
 output.register_callback('notebook.finish_correction', finish_correction)
 # Initialize the input boxes and the callback
 create_input_boxes()
