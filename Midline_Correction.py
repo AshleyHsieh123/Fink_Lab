@@ -162,10 +162,6 @@ def create_input_boxes():
     saveButton.style.border = "none";
     saveButton.style.borderRadius = "8px";
     saveButton.style.cursor = "pointer";
-    saveButton.onclick = function() {
-      google.colab.kernel.invokeFunction("notebook.download_figures", [], {});
-    };
-    container.appendChild(saveButton);
 
     // Create a container for the input fields and arrange them in 8 columns
     var inputContainer = document.createElement("div");
@@ -220,6 +216,7 @@ def create_input_boxes():
     container.appendChild(button);
     container.appendChild(finishButton);
     container.appendChild(resultBox);
+    container.appendChild(saveButton);
     container.appendChild(plotBox1);
     container.appendChild(plotBox2);
     container.appendChild(plotBox3);
@@ -265,6 +262,9 @@ def create_input_boxes():
 
         finishButton.onclick = function() {
           google.colab.kernel.invokeFunction("notebook.finish_correction", [], {});
+        };
+        saveButton.onclick = function() {
+          google.colab.kernel.invokeFunction("notebook.download_figures", [], {});
         }
     '''))
     
