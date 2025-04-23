@@ -377,6 +377,8 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
 
 def update_YRcorrection_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
     # Capture the YawCorrection, RollCorrection, and result from the calculation
+    worksheet = gc.open_by_key(file_id).sheet1
+    head_parameter = pd.DataFrame(worksheet.get_all_records())
     YawCorrection, RollCorrection, result = CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000)
 
     # If no valid result, show error and return
@@ -384,8 +386,8 @@ def update_YRcorrection_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, z
         output_result(result)
         return
     
-    head_parameter.iloc[54, -1] = yaw
-    head_parameter.iloc[55, -1] = roll
+    head_parameter.iloc[54, -1] = YawCorrection
+    head_parameter.iloc[55, -1] = RollCorrection
     # Write the updated DataFrame back to the sheet
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
@@ -800,14 +802,14 @@ def finish_correction():
     
     midline = midline_correction(xL_values,xR_values)
 
-    xR1000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'xR1000'].iloc[0, -1]
-    xR3000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'xR3000'].iloc[0, -1]
-    zR1000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'zR1000'].iloc[0, -1]
-    zR3000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'zR3000'].iloc[0, -1]
-    xL1000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'xL1000'].iloc[0, -1]
-    xL3000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'xL3000'].iloc[0, -1]
-    zL1000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'zL1000'].iloc[0, -1]
-    zL3000 = head_parameter.loc[head_parameter.iloc[:, 0] == 'zL3000'].iloc[0, -1]
+    head_parameter.iloc[17, -1] = final_xR1000
+    head_parameter.iloc[21, -1] = final_xR3000
+    head_parameter.iloc[33, -1] = final_zR1000
+    head_parameter.iloc[37, -1] = final_zR3000
+    head_parameter.iloc[9, -1] = final_xL1000
+    head_parameter.iloc[13, -1] = final_xL3000
+    head_parameter.iloc[25, -1] = final_zL1000
+    head_parameter.iloc[29, -1] = final_zL3000
     
     head_parameter.iloc[9:17, -1] -= midline
     head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
