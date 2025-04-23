@@ -377,9 +377,9 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     
     # Display result in result box
     if midline > 0:
-        result_m = (f"Calculated midline: \\n {abs(midline):.3f} To the left")
+        result_m = (f"Calculated midline: {abs(midline):.3f} To the left")
     else:
-        result_m = (f"Calculated midline: \\n {abs(midline):.3f} To the right")
+        result_m = (f"Calculated midline: {abs(midline):.3f} To the right")
     
     YawCorrection, RollCorrection, result_yr = CorrectionCalculation(val9, val13, val25, val29, val1, val5, val17, val21)
     
