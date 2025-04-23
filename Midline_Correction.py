@@ -369,29 +369,21 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
         result = (f"Calculated midline: \\n {abs(midline):.3f} To the left")
     else:
         result = (f"Calculated midline: \\n {abs(midline):.3f} To the right")
-    head_parameter.iloc[53, -1] = midline
-    # Write the updated DataFrame back to the sheet
-    worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
-    set_with_dataframe(worksheet, head_parameter)  # Update the sheet
-    output_result(result)
 
-def update_YRcorrection_result(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
-    # Capture the YawCorrection, RollCorrection, and result from the calculation
-    worksheet = gc.open_by_key(file_id).sheet1
-    head_parameter = pd.DataFrame(worksheet.get_all_records())
     YawCorrection, RollCorrection, result = CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000)
 
     # If no valid result, show error and return
     if not YawCorrection or not RollCorrection:
         output_result(result)
         return
-    
+
+    head_parameter.iloc[53, -1] = midline
     head_parameter.iloc[54, -1] = YawCorrection
     head_parameter.iloc[55, -1] = RollCorrection
+    
     # Write the updated DataFrame back to the sheet
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
-    # Display the result in the result box
     output_result(result)
 
 # Functions
