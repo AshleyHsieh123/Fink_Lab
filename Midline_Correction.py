@@ -253,11 +253,18 @@ def create_input_boxes():
     '''))
     
 def output_result(result, append=True):
-    js_code = f'''
-    var resultBox = document.getElementById("resultBox");
-    resultBox.style.display = "block";
-    {"resultBox.value += `\\n\\n" + `" + result + "`;" if append else "resultBox.value = `" + result + "`;"} 
-    '''
+    if append:
+        js_code = f"""
+        var resultBox = document.getElementById("resultBox");
+        resultBox.style.display = "block";
+        resultBox.value += "\\n\\n{result}";
+        """
+    else:
+        js_code = f"""
+        var resultBox = document.getElementById("resultBox");
+        resultBox.style.display = "block";
+        resultBox.value = `{result}`;
+        """
     display(Javascript(js_code))
 
 def midline_correction(xL_values, xR_values):
