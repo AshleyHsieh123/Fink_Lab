@@ -158,7 +158,7 @@ def create_input_boxes():
     saveButton.style.padding = "12px 20px";
     saveButton.style.fontSize = "16px";
     saveButton.style.backgroundColor = "#007BFF";
-    saveButton.style.color = "blue";
+    saveButton.style.color = "white";
     saveButton.style.border = "none";
     saveButton.style.borderRadius = "8px";
     saveButton.style.cursor = "pointer";
