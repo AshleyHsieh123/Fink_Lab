@@ -2,6 +2,7 @@ import gspread
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 import base64
 from io import BytesIO
 import seaborn as sns
@@ -270,6 +271,7 @@ def midline_correction(xL_values, xR_values):
 def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
     try:
         # Convert all values to float
+        print(3.1)
         xR1000 = float(xR1000)
         xR3000 = float(xR3000)
         zR1000 = float(zR1000)
@@ -278,12 +280,14 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         xL3000 = float(xL3000)
         zL1000 = float(zL1000)
         zL3000 = float(zL3000)
+        print(3.2)
 
         # Theta Calculations
         Theta_L = round(-math.atan((xL3000 - xL1000) / 2000) * 180 /  math.pi, 4)
         Theta_R = round(math.atan((xR3000 - xR1000) / 2000) * 180 / math.pi, 4)
+        print(3.3)
         YawCorrection = round((Theta_R - Theta_L) / 2, 3)
-
+        print(3.4)
         # Offsets and Ratios
         Zoffset1000 = zL1000 - zR1000
         Zoffset3000 = zL3000 - zR3000
@@ -291,22 +295,22 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         Xoffset3000 = xR3000 - xL3000
         Ratio1000 = Zoffset1000 / Xoffset1000
         Ratio3000 = Zoffset3000 / Xoffset3000
-
+        print(3.5)
         # Angle Calculations
         Angle1000 = round(math.atan(Ratio1000) * 180 /math.pi, 2)
         Angle3000 = round(math.atan(Ratio3000) * 180 /math.pi, 2)
         RollCorrection = round((Angle1000 + Angle3000) / 2, 2)
-
+        print(3.6)
         if YawCorrection > 0:
             Yawdirection = 'clockwise'
         elif YawCorrection < 0:
             Yawdirection = 'counterclockwise'
-
+        print(3.7)
         if RollCorrection > 0:
             Rolldirection = 'counterclockwise'
         elif RollCorrection < 0:
             Rolldirection = 'clockwise'
-        
+        print(3.8)
         # Compose result
         result = (
             f"Yaw correction: {abs(YawCorrection)}°, {Yawdirection}\\n\\n"
@@ -325,7 +329,7 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     # Fetch the head_parameter DataFrame from Google Sheets
     worksheet = gc.open_by_key(file_id).sheet1
     head_parameter = pd.DataFrame(worksheet.get_all_records())  # Fetch all records from the sheet
-    print(0)
+    
     # Overwrite the values in the sheet
     head_parameter.iloc[9, -1] = val1
     head_parameter.iloc[10, -1] = val2
@@ -359,17 +363,17 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     head_parameter.iloc[38, -1] = val30
     head_parameter.iloc[39, -1] = val31
     head_parameter.iloc[40, -1] = val32
-    print(1)
+    
     xL_values = [float(x) for x in list(head_parameter.iloc[9:12,-1])]
     xR_values = [float(x) for x in list(head_parameter.iloc[17:20,-1])]
     midline = midline_correction(xL_values,xR_values)
-    print(2)
+    
     # Display result in result box
     if midline > 0:
         result = (f"Calculated midline: \\n {abs(midline):.3f} To the left")
     else:
         result = (f"Calculated midline: \\n {abs(midline):.3f} To the right")
-    print(3)
+    
     YawCorrection, RollCorrection, result = CorrectionCalculation(val9, val13, val25, val29, val1, val5, val17, val21)
     print(4)
     # If no valid result, show error and return
