@@ -849,7 +849,10 @@ def download_figures():
     fig1.savefig(fig1_path)
     fig2.savefig(fig2_path)
     fig3.savefig(fig3_path)
-    plt.close(fig)
+    
+    plt.close(fig1)
+    plt.close(fig2)
+    plt.close(fig3)
 
     # Trigger downloads
     files.download(fig1_path)
