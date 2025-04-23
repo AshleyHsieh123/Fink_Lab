@@ -271,7 +271,7 @@ def midline_correction(xL_values, xR_values):
 def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000):
     try:
         # Convert all values to float
-        print(3.1)
+        
         xR1000 = float(xR1000)
         xR3000 = float(xR3000)
         zR1000 = float(zR1000)
@@ -280,14 +280,13 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         xL3000 = float(xL3000)
         zL1000 = float(zL1000)
         zL3000 = float(zL3000)
-        print(3.2)
-
+        
         # Theta Calculations
         Theta_L = round(-math.atan((xL3000 - xL1000) / 2000) * 180 /  math.pi, 4)
         Theta_R = round(math.atan((xR3000 - xR1000) / 2000) * 180 / math.pi, 4)
-        print(3.3)
+        
         YawCorrection = round((Theta_R - Theta_L) / 2, 3)
-        print(3.4)
+        
         # Offsets and Ratios
         Zoffset1000 = zL1000 - zR1000
         Zoffset3000 = zL3000 - zR3000
@@ -295,22 +294,22 @@ def CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000
         Xoffset3000 = xR3000 - xL3000
         Ratio1000 = Zoffset1000 / Xoffset1000
         Ratio3000 = Zoffset3000 / Xoffset3000
-        print(3.5)
+        
         # Angle Calculations
         Angle1000 = round(math.atan(Ratio1000) * 180 /math.pi, 2)
         Angle3000 = round(math.atan(Ratio3000) * 180 /math.pi, 2)
         RollCorrection = round((Angle1000 + Angle3000) / 2, 2)
-        print(3.6)
+        
         if YawCorrection > 0:
             Yawdirection = 'clockwise'
         elif YawCorrection < 0:
             Yawdirection = 'counterclockwise'
-        print(3.7)
+        
         if RollCorrection > 0:
             Rolldirection = 'counterclockwise'
         elif RollCorrection < 0:
             Rolldirection = 'clockwise'
-        print(3.8)
+        
         # Compose result
         result = (
             f"Yaw correction: {abs(YawCorrection)}°, {Yawdirection}\\n\\n"
@@ -370,28 +369,23 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     
     # Display result in result box
     if midline > 0:
-        result = (f"Calculated midline: \\n {abs(midline):.3f} To the left")
+        result_m = (f"Calculated midline: \\n {abs(midline):.3f} To the left")
     else:
-        result = (f"Calculated midline: \\n {abs(midline):.3f} To the right")
+        result_m = (f"Calculated midline: \\n {abs(midline):.3f} To the right")
     
-    YawCorrection, RollCorrection, result = CorrectionCalculation(val9, val13, val25, val29, val1, val5, val17, val21)
-    print(4)
-    # If no valid result, show error and return
-    if not YawCorrection or not RollCorrection:
-        output_result(result)
-        return
-    print(5)
+    YawCorrection, RollCorrection, result_yr = CorrectionCalculation(val9, val13, val25, val29, val1, val5, val17, val21)
+    
     head_parameter.iloc[53, -1] = midline
     head_parameter.iloc[54, -1] = YawCorrection
     head_parameter.iloc[55, -1] = RollCorrection
-    print(6)
+    
     # Write the updated DataFrame back to the sheet
     worksheet.clear()  # Optional: Use with caution, can clear the entire sheet
     set_with_dataframe(worksheet, head_parameter)  # Update the sheet
-    output_result(result)
-    print(7)
+    output_result(result_m)
+    output_result(result_yr)
+    
 # Functions
-
 # Function to determine if the value is in the range mean ± STD
 def isInside(value,mean,std):
     if value <= mean + 2*std and value >= mean - 2*std:
