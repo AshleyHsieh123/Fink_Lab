@@ -370,7 +370,7 @@ def update_correction_result(val1, val2, val3, val4, val5, val6, val7, val8, val
     else:
         result = (f"Calculated midline: \\n {abs(midline):.3f} To the right")
 
-    YawCorrection, RollCorrection, result = CorrectionCalculation(xR1000, xR3000, zR1000, zR3000, xL1000, xL3000, zL1000, zL3000)
+    YawCorrection, RollCorrection, result = CorrectionCalculation(val9, val13, val25, val29, val1, val5, val17, val21)
 
     # If no valid result, show error and return
     if not YawCorrection or not RollCorrection:
