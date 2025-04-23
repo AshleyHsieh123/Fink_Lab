@@ -151,6 +151,22 @@ def create_input_boxes():
     finishButton.style.borderRadius = "8px";
     finishButton.style.cursor = "pointer";
 
+    // Save figure button
+    var saveButton = document.createElement("button");
+    saveButton.innerHTML = "Save Figures";
+    saveButton.style.margin = "10px";
+    saveButton.style.padding = "12px 20px";
+    saveButton.style.fontSize = "16px";
+    saveButton.style.backgroundColor = "#007BFF";
+    saveButton.style.color = "blue";
+    saveButton.style.border = "none";
+    saveButton.style.borderRadius = "8px";
+    saveButton.style.cursor = "pointer";
+    saveButton.onclick = function() {
+      google.colab.kernel.invokeFunction("notebook.download_figures", [], {});
+    };
+    container.appendChild(saveButton);
+
     // Create a container for the input fields and arrange them in 8 columns
     var inputContainer = document.createElement("div");
     inputContainer.style.display = "grid";
@@ -825,9 +841,24 @@ def finish_correction():
     print("Calling update_figure_3...")
     update_figure_3(head_parameter,mouseData3)
 
+def download_figures():
+    # Save all three figures to local temporary files
+    fig1_path = f"/content/{mouse_id} head skull shape overview.png"
+    fig2_path = f"/content/{mouse_id} skull shape lateral displacement.png"
+    fig3_path = f"/content/{mouse_id} skull shape vertical displacement.png"
+    fig1.savefig(fig1_path)
+    fig2.savefig(fig2_path)
+    fig3.savefig(fig3_path)
+
+    # Trigger downloads
+    files.download(fig1_path)
+    files.download(fig2_path)
+    files.download(fig3_path)
+
 # Register the callback function
 from google.colab import output
 output.register_callback('notebook.update_correction_result', update_correction_result)
 output.register_callback('notebook.finish_correction', finish_correction)
+output.register_callback('notebook.download_figures', download_figures)
 # Initialize the input boxes and the callback
 create_input_boxes()
