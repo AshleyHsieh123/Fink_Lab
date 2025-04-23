@@ -793,15 +793,6 @@ def finish_correction():
     xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
     
     midline = midline_correction(xL_values,xR_values)
-
-    head_parameter.iloc[17, -1] = final_xR1000
-    head_parameter.iloc[21, -1] = final_xR3000
-    head_parameter.iloc[33, -1] = final_zR1000
-    head_parameter.iloc[37, -1] = final_zR3000
-    head_parameter.iloc[9, -1] = final_xL1000
-    head_parameter.iloc[13, -1] = final_xL3000
-    head_parameter.iloc[25, -1] = final_zL1000
-    head_parameter.iloc[29, -1] = final_zL3000
     
     head_parameter.iloc[9:17, -1] -= midline
     head_parameter.iloc[9:17, -1] = head_parameter.iloc[9:17, -1].round(0).astype(int)
