@@ -812,11 +812,8 @@ def finish_correction():
     head_parameter = pd.DataFrame(worksheet.get_all_records())
     head_parameter = head_parameter.replace('', np.nan)
     head_parameter = head_parameter.replace('lost', np.nan)
-
-    xL_values = [float(x) for x in list(head_parameter.iloc[9:14,-1])]
-    xR_values = [float(x) for x in list(head_parameter.iloc[17:22,-1])]
     
-    midline = midline_correction(xL_values,xR_values)
+    midline = head_parameter.iloc[53, -1]
     
     head_parameter.iloc[9:12, -1] -= midline
     head_parameter.iloc[9:12, -1] = head_parameter.iloc[9:12, -1].round(0).astype(int)
